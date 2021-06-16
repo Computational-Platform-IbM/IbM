@@ -3,7 +3,7 @@ Individual based model on bacterial colonies
 
 Mathemathical model simulating the diffusion of compounds and bacterial growth.
 
-To execute the model:
+To execute the model (works for both the Granule and Biofilm versions):
 1. Call 'loadModelXlsx' function to load and create the model structure and parameters. A struct named R will be created in your Workspace.
 2. Save R struct as R.mat.
 3. Execute the model with 'call' function
