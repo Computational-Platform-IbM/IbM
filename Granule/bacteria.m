@@ -2,7 +2,8 @@
 % %%%% R.bac is the structure that keeps all the information related with this
 % subscript
 
-function [R, StVLiq, BacterialChange] = bacteria(L, G, X, R, detaching)
+function [R, StVLiq, BacterialChange] = bacteria(L, G, X, R)
+    detaching = 1; % set detachment to default naive way
     St = R.St;
     Sxy = R.Sxy;
     bac = R.bac;
@@ -168,7 +169,7 @@ function [bac, nCellsDetached] = detachCells(bac)
     bac_r = bac.atrib(:, 6);
     bac_yield = bac.atrib(:, 7);
     bac_Ks = bac.bac_Ks;
-    detach_method = bac.detach_method;
+    detach_method = 'naive'; % set to default detachment
 
     % Remove bacteria outside of max-granule size (naive detachment)
     mask_detach = bacterialDetachment(detach_method, bac_x, bac_y, bac);
