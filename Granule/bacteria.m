@@ -3,7 +3,7 @@
 % subscript
 
 function [R, StVLiq, BacterialChange] = bacteria(L, G, X, R)
-    detaching = 1; % set detachment to default naive way
+    detaching = 0; % disable detachment -> oxygen limitation limits the size anyway
     St = R.St;
     Sxy = R.Sxy;
     bac = R.bac;
@@ -81,25 +81,30 @@ function bac = bac_division(bac)
     bac_s = bac.atrib(:, 5);
     bac_r = bac.atrib(:, 6);
     bac_yield = bac.atrib(:, 7);
+    bac_active = bac.atrib(:, 8);
     bac_Ks = bac.bac_Ks;
     z = 1;
 
-    while sum(bac_m > bac.bac_mmax) >= 1 || sum(bac_m < bac.bac_mmin) >= 1
+    while sum(bac_m > bac.bac_mmax) >= 1 %|| sum(bac_m < bac.bac_mmin) >= 1
 
-        % if there are cells that are too small, die
+        % if there are cells that are too small, set to inactive
         mask_tooSmall = bac_m < bac.bac_mmin;
         nCellsTooSmall = sum(mask_tooSmall);
+        
+        bac_active(mask_tooSmall) = 0;
+        bac_active(~mask_tooSmall) = 1;
 
-        if nCellsTooSmall
-            bac_x(mask_tooSmall) = [];
-            bac_y(mask_tooSmall) = [];
-            bac_a(mask_tooSmall) = [];
-            bac_s(mask_tooSmall) = [];
-            bac_r(mask_tooSmall) = [];
-            bac_m(mask_tooSmall) = [];
-            bac_Ks(mask_tooSmall, :) = [];
-            bac_yield(mask_tooSmall) = [];
-        end
+%         if nCellsTooSmall % <-- previously removed too small bacteria,
+%         now make them inactive instead...
+%             bac_x(mask_tooSmall) = [];
+%             bac_y(mask_tooSmall) = [];
+%             bac_a(mask_tooSmall) = [];
+%             bac_s(mask_tooSmall) = [];
+%             bac_r(mask_tooSmall) = [];
+%             bac_m(mask_tooSmall) = [];
+%             bac_Ks(mask_tooSmall, :) = [];
+%             bac_yield(mask_tooSmall) = [];
+%         end
 
         % if there are cells that are too big, divide
         mask_tooBig = bac_m > bac.bac_mmax;
@@ -112,6 +117,7 @@ function bac = bac_division(bac)
             new_a = bac_a(mask_tooBig);
             new_s = bac_s(mask_tooBig);
             new_yield = bac_yield(mask_tooBig);
+            new_active = ones(nCellsTooBig,1);
             new_Ks = bac_Ks(mask_tooBig, :);
             % mass of child and parent
             new_m = bac_m(mask_tooBig) .* (0.45 + 0.1 * rand(nCellsTooBig, 1));
@@ -129,15 +135,16 @@ function bac = bac_division(bac)
             bac_yield = [bac_yield; new_yield];
             bac_Ks = [bac_Ks; new_Ks];
             bac_r = [bac_r; new_r];
+            bac_active = [bac_active; new_active];
         end
 
         % update number of bacteria
-        bac_n = bac_n + nCellsTooBig - nCellsTooSmall;
+        bac_n = bac_n + nCellsTooBig;% - nCellsTooSmall;
 
         % save variables
         bac.bac_n = bac_n;
         bac.bac_Ks = bac_Ks;
-        bac.atrib = [bac_x, bac_y, bac_m / bac.bac_MW, bac_a, bac_s, bac_r, bac_yield];
+        bac.atrib = [bac_x, bac_y, bac_m / bac.bac_MW, bac_a, bac_s, bac_r, bac_yield, bac_active];
 
         z = z + 1;
     end
@@ -168,6 +175,7 @@ function [bac, nCellsDetached] = detachCells(bac)
     bac_s = bac.atrib(:, 5);
     bac_r = bac.atrib(:, 6);
     bac_yield = bac.atrib(:, 7);
+    bac_active = bac.atrib(:, 8);
     bac_Ks = bac.bac_Ks;
     detach_method = 'naive'; % set to default detachment
 
@@ -212,6 +220,7 @@ function [bac, nCellsDetached] = detachCells(bac)
     bac_y(mask_detach) = [];
     bac_s(mask_detach) = [];
     bac_a(mask_detach) = [];
+    bac_active(mask_detach) = [];
     bac_yield(mask_detach) = [];
     bac_Ks(mask_detach, :) = [];
 
@@ -221,7 +230,7 @@ function [bac, nCellsDetached] = detachCells(bac)
     % save variables
     bac.bac_n = bac_n;
     bac.bac_Ks = bac_Ks;
-    bac.atrib = [bac_x, bac_y, bac_m, bac_a, bac_s, bac_r, bac_yield];
+    bac.atrib = [bac_x, bac_y, bac_m, bac_a, bac_s, bac_r, bac_yield, bac_active];
 end
 
 function mask = bacterialDetachment(method, x, y, bac)
