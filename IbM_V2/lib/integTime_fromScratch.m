@@ -15,6 +15,8 @@ function integTime_fromScratch(grid, bac, conc, directory, constants, init_param
     % set bulk layer concentrations
     conc = set_concentrations(conc, bulk_concs, ~diffusion_region);
 
+    % calculate reaction matrix
+    [reaction_matrix, bac.mu, pH] = calculate_reaction_matrix(grid2bac, grid2nBacs, bac, grid, conc, constants, constants.pHsetpoint);
     
     % set time_indices
     T_indices = struct;
@@ -24,12 +26,13 @@ function integTime_fromScratch(grid, bac, conc, directory, constants, init_param
     
        
     %% time advancements (dT / dT_steadystate)
-    % calculate reaction matrix
-    [reaction_matrix, bac.mu, pH] = calculate_reaction_matrix(grid2bac, grid2nBacs, bac, grid, conc, constants, constants.pHsetpoint);
     
     % diffuse (MG)
     conc_old = conc;
-    conc = diffusion(conc_old, reaction_matrix, grid, constants, dT);
+    conc = diffusion(conc_old, reaction_matrix, bulk_concs, grid, constants, dT);
+    
+    % calculate reaction matrix
+    [reaction_matrix, bac.mu, pH] = calculate_reaction_matrix(grid2bac, grid2nBacs, bac, grid, conc, constants, pH);
     
     % if T>T_ss: calculate residual
         
@@ -61,9 +64,12 @@ end
 
 %{
 constants:
-    Keq, chrM, StNames, pH (setpoint), Vr, Vg, Dir_k        ==> bulk_conc
+    Keq, chrM, StNames, pH (setpoint), Vr, Vg, Dir_k, ...
+        isLiquid, influent_concentrations, NH3sp, ...
+        constantN                                           ==> bulk_conc
     Keq, chrM, T, Vg, StNames, react_v, Ki, Ks, ...
         MatrixMet, MatrixDecay                              ==> react_m
+    diffusion_rates, diffusion_accuracy                     ==> diffusion
 
 init_params:
     init_conc (== Sbc_dir)                                  ==> bulk_conc
