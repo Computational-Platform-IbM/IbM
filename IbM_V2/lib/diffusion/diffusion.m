@@ -21,7 +21,8 @@ function conc = diffusion(conc, reaction_matrix, bulk_concentrations, grid, cons
     absolute_tolerance = constants.Tol_a;
     nCompounds = length(diffusion_rates);
     
-    % set parameters for V-cycle
+    % set parameters for V-cycle 
+    % <TODO: optimize under realistic conditions/>
     iter_pre = 3;
     iter_post = 3;
     iter_final = 4;
