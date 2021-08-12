@@ -10,5 +10,5 @@ function conc = set_concentrations(conc, set_concs, mask)
     % -> conc: concentration of each compound per grid cell (nX, nY, comp)
     
     set_concs = reshape(set_concs, 1,1,[]);
-    conc = bsxfun(@times,conc,~mask) + bsxfun(@times,set_concs,mask);
+    conc = ~mask .* conc + mask .* set_concs;
 end
