@@ -35,6 +35,8 @@ function integTime_fromScratch(grid, bac, conc, directory, constants, init_param
     [reaction_matrix, bac.mu, pH] = calculate_reaction_matrix(grid2bac, grid2nBacs, bac, grid, conc, constants, pH);
     
     % if T>T_ss: calculate residual
+    if T > T_ss && steadystate_is_reached(conc_0, conc)
+        
         
         %% time advancements (dT_bac)
         % update bacteria: mass (+ update reaction matrix?)
@@ -49,7 +51,8 @@ function integTime_fromScratch(grid, bac, conc, directory, constants, init_param
         % save all important variables in R.mat
     
         % update boundary conditions
-        
+    
+    end
     %% post-dT updates
     % 
     
@@ -69,7 +72,7 @@ constants:
         constantN                                           ==> bulk_conc
     Keq, chrM, T, Vg, StNames, react_v, Ki, Ks, ...
         MatrixMet, MatrixDecay                              ==> react_m
-    diffusion_rates, diffusion_accuracy                     ==> diffusion
+    diffusion_rates, diffusion_accuracy, Tol_a              ==> diffusion
 
 init_params:
     init_conc (== Sbc_dir)                                  ==> bulk_conc

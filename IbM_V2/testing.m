@@ -1,5 +1,6 @@
 %% testing
-clear ans bac constants diffusion_region grid grid2bac grid2nBacs;
+clearvars -except R;
+clc;
 addpath(genpath('lib'));
 
 
@@ -7,7 +8,6 @@ if ~exist('R', 'var')
     R = loadModelXlsx('../Granule/AOBNOBAMX.xlsx');
     clc;
 end
-
 
 
 % init for determine_where_bacteria_in_grid
@@ -33,12 +33,11 @@ clear n radius
 
 % check manually for correct indices of bacteria
 [grid2bac, grid2nBacs] = determine_where_bacteria_in_grid(grid, bac);
-% plotBacs(grid, bac);
+plotBacs(grid, bac);
 
 % check manually for correct diffusion region
 diffusion_region = determine_diffusion_region(grid2bac, grid2nBacs, bac, grid);
-% plotDiffRegion(grid, bac, diffusion_region);
-
+plotDiffRegion(grid, bac, diffusion_region);
 
 
 constants = struct;
@@ -64,25 +63,25 @@ constants.diffusion_rates = 1:5;
 constants.diffusion_accuracy = 1e-10;
 constants.Tol_a = 1e-10;
 
-% conc = ones(grid.nX, grid.nY, 8);
-% conc = set_concentrations(conc, R.St.StVIni, 1);
+conc = ones(grid.nX, grid.nY, 8);
+conc = set_concentrations(conc, R.St.StVIni, 1);
 
-% [bulk_concs, invHRT] = calculate_bulk_concentrations(constants, R.Sxy.Sbc_Dir, R.pOp.invHRT, 0, 1);
+[bulk_concs, invHRT] = calculate_bulk_concentrations(constants, R.Sxy.Sbc_Dir, R.pOp.invHRT, 0, 1);
 
-% [reaction_matrix, mu, pH] = calculate_reaction_matrix(grid2bac, grid2nBacs, bac, grid, conc, constants, 7);
+[reaction_matrix, mu, pH] = calculate_reaction_matrix(grid2bac, grid2nBacs, bac, grid, conc, constants, 7);
 
 % testing diffusion function
 conc = zeros(20,20,5); % start at all-zero
 % reaction_matrix = zeros(20,20,5);
 reaction_matrix = (rand(20,20,5)-0.5)*1e-3; % add some random noise for reactions
 bulk_concs = ones(5,1);
-dT = 20;
+dT = 1;
 conc = diffusion(conc, reaction_matrix, bulk_concs, grid, constants, dT);
 
 figure(3); clf;
 for iC = 1:5
-%     imagesc(conc(:,:,iC));
     plot(conc(:,10,iC), 'LineWidth', 2); hold on;
+%     imagesc(conc(:,:,iC));
 %     colormap(viridis());
 %     colorbar();
 end

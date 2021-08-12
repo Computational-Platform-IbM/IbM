@@ -20,8 +20,8 @@ for p = 1: R.Sxy.nT
     LL = LL + LLp;
 end
 
-Sbc_Dir = 1000*kron(R.Sxy.Sbc_Dir(1:numStVLiq2), ones(R.Sxy.nT,1));
-U = StVLiq(1:numStVLiq2*R.Sxy.nT)*1000;
+Sbc_Dir = 1000*kron(R.Sxy.Sbc_Dir(1:numStVLiq2), ones(R.Sxy.nT,1)); % mol/L -> mol/m3
+U = StVLiq(1:numStVLiq2*R.Sxy.nT)*1000; % extract liquids only
 
 ind = [R.Sxy.nT*((1:numStVLiq2)'-1)+1,R.Sxy.nT*(1:numStVLiq2)'];
 for ks = 1:numStVLiq2

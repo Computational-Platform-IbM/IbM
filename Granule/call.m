@@ -5,7 +5,8 @@ clc
 % path = [pwd '\shovingQuadTree.jar']; %Windows
 path = [pwd '/shovingQuadTree.jar']; %Windows&Cluster
 javaaddpath(path,'-end');
-load('R.mat')
+% load('R.mat')
+R = loadModelXlsx();
 R.Sxy.pos_xySys = 0;
 
 fprintf('\n> MODEL RUNNING >>>>>\n')
