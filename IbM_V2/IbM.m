@@ -25,6 +25,7 @@ function IbM(options)
     
     %% enable/disable debug disp/warning
     warning('on', 'DEBUG:noActionRequired');
+    warning('on', 'DEBUG:actionRequired');
     
     
     %% ========== Time advancements ==========

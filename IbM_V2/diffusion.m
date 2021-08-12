@@ -13,8 +13,6 @@ function conc = diffusion(conc_old, reaction_matrix, diffusion_region, bulk_conc
     % dT: time over which to solve the diffusion equations
     %
     % -> conc: concentrations after solving the diffusion equations
-
-    % set concentrations of bulk layer
     
     % create right hand side
     % - boundary conditions
