@@ -10,10 +10,10 @@ function integTime_fromScratch(grid, bac, conc, directory, constants, init_param
     diffusion_region = determine_diffusion_region(grid2bac, grid2nBacs, bac, grid, constants); 
     
     % initialise concentrations
-    conc = set_starting_concentrations(conc, constants.init_concs, diffusion_region);
+    conc = set_concentrations(conc, init_concs, diffusion_region);
     
     % set bulk layer concentrations
-    conc = set_bulk_concentrations(conc, bulk_concs, diffusion_region);
+    conc = set_concentrations(conc, bulk_concs, ~diffusion_region);
 
     
     % set time_indices
