@@ -1,5 +1,14 @@
 %% testing
 clear ans bac constants diffusion_region grid grid2bac grid2nBacs;
+addpath(genpath('lib'));
+
+
+if ~exist('R', 'var')
+    R = loadModelXlsx('../Granule/AOBNOBAMX.xlsx');
+    clc;
+end
+
+
 
 % init for determine_where_bacteria_in_grid
 grid = struct;
@@ -12,30 +21,34 @@ grid.dy = .5;
 grid.blayer_thickness = 5/3 * grid.dx;
 
 % bac init in circle
-n = 4;
+n = 40;
 radius = 2;
 bac = struct;
 [bac.x, bac.y] = rand_circle(n, grid.nX/2*grid.dx, grid.nY/2*grid.dy, radius);
 bac.r = ones(n, 1)*0.2;
+% for reaction matrix:
+bac.molarMass = ones(n, 1);
+bac.species = randi([1, 4], n, 1);
 clear n radius
 
 % check manually for correct indices of bacteria
 [grid2bac, grid2nBacs] = determine_where_bacteria_in_grid(grid, bac);
-plotBacs(grid, bac);
+% plotBacs(grid, bac);
 
 % check manually for correct diffusion region
 diffusion_region = determine_diffusion_region(grid2bac, grid2nBacs, bac, grid);
-plotDiffRegion(grid, bac, diffusion_region);
+% plotDiffRegion(grid, bac, diffusion_region);
 
 
-%%%% testing for reaction matrix:
-bac.molarMass = ones(4, 1);
-bac.species = 1:4;
 
 constants = struct;
+constants.pHsetpoint = 7;
 constants.T = 293;
+constants.isLiquid = strcmp(R.St.Phase(1:8), 'L') | strcmp(R.St.Phase(1:8), 'P');
 constants.Keq = R.pTh.Keq;
 constants.chrM = R.pTh.chrM;
+constants.Dir_k = logical(R.Inf.Dir_k);
+constants.Vr = R.pOp.Vr;
 constants.Vg = grid.dx ^ 3;
 constants.StNames = R.St.StNames(1:8);
 constants.react_v = R.pTh.react_v;
@@ -43,18 +56,37 @@ constants.Ks = R.pTh.Ks(:, 1:3);
 constants.Ki = R.pTh.Ks(:, 4:6);
 constants.MatrixMet = R.rm.MatrixMet;
 constants.MatrixDecay = R.rm.MatrixDecay_mod;
+constants.influent_concentrations = R.Inf.St;
+constants.pOp.NH3sp = R.pOp.NH3sp; %%%% <C: what is the meaning of this variable??? />
+constants.constantN = R.flagN;
 
-conc = ones(grid.nX, grid.nY, 8);
-for ci = 1:length(R.Sxy.Sbc_Dir)
-    conc(:,:, ci) = R.Sxy.Sbc_Dir(ci);
+constants.diffusion_rates = 1:5;
+constants.diffusion_accuracy = 1e-10;
+constants.Tol_a = 1e-10;
+
+% conc = ones(grid.nX, grid.nY, 8);
+% conc = set_concentrations(conc, R.St.StVIni, 1);
+
+% [bulk_concs, invHRT] = calculate_bulk_concentrations(constants, R.Sxy.Sbc_Dir, R.pOp.invHRT, 0, 1);
+
+% [reaction_matrix, mu, pH] = calculate_reaction_matrix(grid2bac, grid2nBacs, bac, grid, conc, constants, 7);
+
+% testing diffusion function
+conc = zeros(20,20,5); % start at all-zero
+% reaction_matrix = zeros(20,20,5);
+reaction_matrix = (rand(20,20,5)-0.5)*1e-3; % add some random noise for reactions
+bulk_concs = ones(5,1);
+dT = 20;
+conc = diffusion(conc, reaction_matrix, bulk_concs, grid, constants, dT);
+
+figure(3); clf;
+for iC = 1:5
+%     imagesc(conc(:,:,iC));
+    plot(conc(:,10,iC), 'LineWidth', 2); hold on;
+%     colormap(viridis());
+%     colorbar();
 end
-
-
-[reaction_matrix, mu, pH] = calculate_reaction_matrix(grid2bac, grid2nBacs, bac, grid, conc, constants, 7);
-
-
-
-
+legend('D=1','D=2','D=3','D=4','D=5')
 
 %% helper functions
 function [X, Y] = rand_circle(N, x_center, y_center, r)
