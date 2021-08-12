@@ -26,22 +26,26 @@ function [bulk_concentrations, invHRT] = calculate_bulk_concentrations(constants
     Vr = constants.Vr;
     Vg = constants.Vg;
     Dir_k = constants.Dir_k;
+    isLiquid = constants.isLiquid;
+    influent = constants.influent_concentrations;
+    NH3sp = constants.pOp.NH3sp;
+    keepNH3fixed = constants.constantN;
     
     %% set bulk_concentrations 
     if isscalar(reactionMatrix) % if no reaction matrix formed, then init with previous concentrations
         bulk_concentrations = prev_conc;
     else
-        cumulative_reacted = squeeze(sum(reactionMatrix, [1,2])) * Vg / Vr;
+        cumulative_reacted = squeeze(sum(reactionMatrix(:,:,isLiquid), [1,2])) * Vg / Vr;
         options = odeset('RelTol', 1e-8, 'AbsTol', 1e-20, 'NonNegative', ones(size(cumulative_reacted)));
-        [~, Y] = ode45(@(t, y) massbal(t, y, cumulative_reacted, Inf.St, pOp.NH3sp, flagN), [0 dT], prev_conc(1:size(cumulative_reacted, 1)), options);
+        [~, Y] = ode45(@(t, y) massbal(t, y, cumulative_reacted(isLiquid), influent, NH3sp, keepNH3fixed), [0 dT], prev_conc(isLiquid), options);
         bulk_conc_temp = Y(end, :)';
         bulk_concentrations = correct_negative_concentrations(bulk_conc_temp);
         bulk_concentrations(Dir_k) = prev_conc;
     end
     
     %% apply pH correction to bulk_concentrations
-    bulk_concentrations(strcmp(R.St.StNames, 'SO4')) = bulk_concentrations(strcmp(R.St.StNames, 'NH3')) / 2;        
-    bulk_concentrations = controlpH(Keq, chrM, StNames, pH, bulk_concentrations);
+    bulk_concentrations(strcmp(StNames, 'SO4')) = bulk_concentrations(strcmp(StNames, 'NH3')) / 2;        
+    bulk_concentrations = controlpH(Keq, chrM, StNames, pH, bulk_concentrations(isLiquid));
     
     %% helper function
     function dy = massbal(~, bulk_conc, cumulative_reacted, reactor_influx, NH3_reactor_influx, keepNH3fixed)
