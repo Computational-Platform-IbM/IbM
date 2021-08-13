@@ -39,7 +39,7 @@ plotBacs(grid, bac);
 diffusion_region = determine_diffusion_region(grid2bac, grid2nBacs, bac, grid);
 plotDiffRegion(grid, bac, diffusion_region);
 
-
+% hello eloi!
 constants = struct;
 constants.pHsetpoint = 7;
 constants.T = 293;
