@@ -35,7 +35,7 @@ function integTime_fromScratch(grid, bac, conc, directory, constants, init_param
     [reaction_matrix, bac.mu, pH] = calculate_reaction_matrix(grid2bac, grid2nBacs, bac, grid, conc, constants, pH);
     
     % if T>T_ss: calculate residual
-    if T > T_ss && steadystate_is_reached(conc_0, conc)
+    if T > T_ss && steadystate_is_reached(conc, reaction_matrix, grid.dx, bulk_concs, constants)
         
         
         %% time advancements (dT_bac)
