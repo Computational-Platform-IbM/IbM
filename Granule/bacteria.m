@@ -63,7 +63,7 @@ function [R, StVLiq, BacterialChange] = bacteria(L, G, X, R)
     else
         detachChange = 0;
     end
-    
+
     % update number of each cell type
     for i = 1:length(R.bac.bac_ns)
         R.bac.bac_ns(i) = sum(R.bac.atrib(:, 5) == i);
@@ -90,21 +90,21 @@ function bac = bac_division(bac)
         % if there are cells that are too small, set to inactive
         mask_tooSmall = bac_m < bac.bac_mmin;
         nCellsTooSmall = sum(mask_tooSmall);
-        
+
         bac_active(mask_tooSmall) = 0;
         bac_active(~mask_tooSmall) = 1;
 
-%         if nCellsTooSmall % <-- previously removed too small bacteria,
-%         now make them inactive instead...
-%             bac_x(mask_tooSmall) = [];
-%             bac_y(mask_tooSmall) = [];
-%             bac_a(mask_tooSmall) = [];
-%             bac_s(mask_tooSmall) = [];
-%             bac_r(mask_tooSmall) = [];
-%             bac_m(mask_tooSmall) = [];
-%             bac_Ks(mask_tooSmall, :) = [];
-%             bac_yield(mask_tooSmall) = [];
-%         end
+        %         if nCellsTooSmall % <-- previously removed too small bacteria,
+        %         now make them inactive instead...
+        %             bac_x(mask_tooSmall) = [];
+        %             bac_y(mask_tooSmall) = [];
+        %             bac_a(mask_tooSmall) = [];
+        %             bac_s(mask_tooSmall) = [];
+        %             bac_r(mask_tooSmall) = [];
+        %             bac_m(mask_tooSmall) = [];
+        %             bac_Ks(mask_tooSmall, :) = [];
+        %             bac_yield(mask_tooSmall) = [];
+        %         end
 
         % if there are cells that are too big, divide
         mask_tooBig = bac_m > bac.bac_mmax;
@@ -117,7 +117,7 @@ function bac = bac_division(bac)
             new_a = bac_a(mask_tooBig);
             new_s = bac_s(mask_tooBig);
             new_yield = bac_yield(mask_tooBig);
-            new_active = ones(nCellsTooBig,1);
+            new_active = ones(nCellsTooBig, 1);
             new_Ks = bac_Ks(mask_tooBig, :);
             % mass of child and parent
             new_m = bac_m(mask_tooBig) .* (0.45 + 0.1 * rand(nCellsTooBig, 1));
@@ -139,7 +139,7 @@ function bac = bac_division(bac)
         end
 
         % update number of bacteria
-        bac_n = bac_n + nCellsTooBig;% - nCellsTooSmall;
+        bac_n = bac_n + nCellsTooBig; % - nCellsTooSmall;
 
         % save variables
         bac.bac_n = bac_n;
@@ -185,33 +185,33 @@ function [bac, nCellsDetached] = detachCells(bac)
     nCellsDetached = sum(mask_detach);
     fprintf("%d cells detached. ", nCellsDetached);
 
-%     if nCellsDetached
-%         figure(1);
-%         clf;
-%         colors = hsv(2);
-%         %                         colors = [1,1,1 ; 1,1,1; 0.8, 0.1, 0.1];
-%         for i = 1:2
-%             max_mu(i) = max(bac_a(bac_s == i));
-%             min_mu(i) = min(bac_a(bac_s == i)) - 1e-20;
-%         end
-% 
-%         maxOut = 1;
-%         minOut = 0.3;
-% 
-%         for i = 1:bac.bac_n
-%             mapping = (bac_a(i) - min_mu(bac_s(i))) / (max_mu(bac_s(i)) - min_mu(bac_s(i))) * (maxOut - minOut) + minOut;
-% 
-%             if mask_detach(i)
-%                 c = [1, 1, 1];
-%             else
-%                 c = colors(bac_s(i), :) * mapping;
-%             end
-% 
-%             rectangle('Curvature', [1 1], 'Position', [bac_x(i) - bac_r(i), bac_y(i) - bac_r(i), 2 * bac_r(i), 2 * bac_r(i)], 'LineWidth', 1, 'FaceColor', c, 'EdgeColor', [0, 0, 0, 0.5]);
-%         end
-% 
-%         axis equal;
-%     end
+    %     if nCellsDetached
+    %         figure(1);
+    %         clf;
+    %         colors = hsv(2);
+    %         %                         colors = [1,1,1 ; 1,1,1; 0.8, 0.1, 0.1];
+    %         for i = 1:2
+    %             max_mu(i) = max(bac_a(bac_s == i));
+    %             min_mu(i) = min(bac_a(bac_s == i)) - 1e-20;
+    %         end
+    %
+    %         maxOut = 1;
+    %         minOut = 0.3;
+    %
+    %         for i = 1:bac.bac_n
+    %             mapping = (bac_a(i) - min_mu(bac_s(i))) / (max_mu(bac_s(i)) - min_mu(bac_s(i))) * (maxOut - minOut) + minOut;
+    %
+    %             if mask_detach(i)
+    %                 c = [1, 1, 1];
+    %             else
+    %                 c = colors(bac_s(i), :) * mapping;
+    %             end
+    %
+    %             rectangle('Curvature', [1 1], 'Position', [bac_x(i) - bac_r(i), bac_y(i) - bac_r(i), 2 * bac_r(i), 2 * bac_r(i)], 'LineWidth', 1, 'FaceColor', c, 'EdgeColor', [0, 0, 0, 0.5]);
+    %         end
+    %
+    %         axis equal;
+    %     end
 
     % delete detached bacteria
     bac_m(mask_detach) = [];
