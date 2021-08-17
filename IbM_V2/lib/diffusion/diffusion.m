@@ -1,4 +1,4 @@
-function conc = diffusion(conc, reaction_matrix, bulk_concentrations, grid, constants, dT)
+function conc = diffusion(conc, reaction_matrix, bulk_concentrations, grid, constants)
     % Solve diffusion for all molecules in the liquid phase using the 
     % multigrid method. IMPORTANT: only runs for all dirichlet conditions 
     % as of now. Future versions should include variable conditions per 
@@ -41,7 +41,7 @@ function conc = diffusion(conc, reaction_matrix, bulk_concentrations, grid, cons
     
     for iCompound = 1:nCompounds                % parfor?
         % stencil updates/declarations
-        alpha = dT * diffusion_rates(iCompound) / (2*grid.dx^2);
+        alpha = constants.dT * diffusion_rates(iCompound) / (2*grid.dx^2);
         L_lhs = I - alpha*L;                    % lefthand-side stencil 
         L_0 = alpha*L;                          % basis stencil laplacian
         L_rhs = I + alpha*L;                    % righthand-side stencil
