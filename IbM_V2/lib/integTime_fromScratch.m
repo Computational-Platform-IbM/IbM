@@ -94,6 +94,9 @@ function integTime_fromScratch(grid, bac, conc, directory, constants, init_param
                     % calculate and set bulk concentrations
                     bulk_concs = calculate_bulk_concentrations(constants, bulk_concs, invHRT, reactionMatrix, constants.dT);
                     conc = set_concentrations(conc, bulk_concs, ~diffusion_region);
+                    
+                    % recompute reaction matrix for next cycle
+                    [reaction_matrix, bac.mu, pH] = calculate_reaction_matrix(grid2bac, grid2nBacs, bac, grid, conc, constants, pH);
                 end
                 
                 % set next steadystate time
@@ -105,7 +108,6 @@ function integTime_fromScratch(grid, bac, conc, directory, constants, init_param
             %% time advancements (dT_save)
             % save all important variables
 
-            % update boundary conditions
 
         end
         
@@ -113,8 +115,7 @@ function integTime_fromScratch(grid, bac, conc, directory, constants, init_param
         % advance current simulation time
         Time.current = Time.current + constants.dT;
         
-        % recompute reaction matrix for next cycle
-        [reaction_matrix, bac.mu, pH] = calculate_reaction_matrix(grid2bac, grid2nBacs, bac, grid, conc, constants, pH);
+
     end
 end
 
