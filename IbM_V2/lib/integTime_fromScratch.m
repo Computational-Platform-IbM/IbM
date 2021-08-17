@@ -69,17 +69,17 @@ function integTime_fromScratch(grid, bac, conc, directory, constants, init_param
                             % set next division time
                             Time.divide = Time.divide + constants.dT_divide;
                             
+                            % determine radius bacteria from mass
+                            bac = update_bacterial_radius(bac, constants);
+                            
                             % bacteria: inactivate
                             bac = bacteria_inactivate(bac, constants);
                             
                             % (bacteria: die)
-                            % bac = bacteria_die(bac, constants);
+                            bac = bacteria_die(bac, constants);
 
                             % bacteria: divide
                             bac = bacteria_divide(bac, constants);
-                            
-                            % determine radius bacteria from mass
-                            bac = update_bacterial_radius(bac, constants);
                             
                             % shove bacteria
                             bac = bacteria_shove(bac, constants);
@@ -119,6 +119,7 @@ function integTime_fromScratch(grid, bac, conc, directory, constants, init_param
     end
 end
 
+
 % IMPORTANT FOR PLOTTING!!!
 % watch out with indexing in matrices: matrix(i, j) is at grid cell with:
 %   xi = i & yi = j. THIS DOES NOT CORRELATE WITH VISUAL OF MATRIX:
@@ -140,7 +141,8 @@ init_params:
 bac:
     x, y                                                    ==> where bac
     x, y                                                    ==> diff region
-    species, molarMass                                      ==> react_m
+    species, molarMass                                      ==> react_m\
+    radius
 
 grid:
     dx, dy, nX, nY                                          ==> where bac
