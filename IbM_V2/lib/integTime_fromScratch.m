@@ -1,4 +1,4 @@
-function integTime_fromScratch(grid, bac, conc, directory, constants, init_params, simulation_end)
+function integTime_fromScratch(grid, bac, conc, directory, constants, init_params)
     %% initialisation
     % calculate boundary conditions
     bulk_concs = calculate_bulk_concentrations(constants, init_params.init_conc, invHRT, reactionMatrix, constants.dT);
@@ -26,10 +26,14 @@ function integTime_fromScratch(grid, bac, conc, directory, constants, init_param
     Time.divide = constants.dT_divide;
     Time.save = constants.dT_save;
     
+    % initialise save file
+    save_init_slice();
+    save_init_plane();
+    
        
     %% time advancements (dT / dT_steadystate)
     
-    while Time.current < simulation_end
+    while Time.current < constants.simulation_end
         % diffuse (MG)
         conc = diffusion(conc_old, reaction_matrix, bulk_concs, grid, constants);
 
@@ -46,8 +50,8 @@ function integTime_fromScratch(grid, bac, conc, directory, constants, init_param
                 % set time to next bacterial activity time
                 previousTime = Time.current;
                 Time.current = Time.bac;
-                if Time.current > simulation_end
-                    Time.current = simulation_end - constants.dT;
+                if Time.current > constants.simulation_end
+                    Time.current = constants.simulation_end - constants.dT;
                 end
                 
                 % calculate actual dT for integration of bacterial mass
@@ -101,14 +105,18 @@ function integTime_fromScratch(grid, bac, conc, directory, constants, init_param
                 
                 % set next steadystate time
                 Time.steadystate = Time.current + 2*constants.dT;
+                
+                
+                %% time advancements (dT_save)
+                if Time.current >= Time.save
+                    % set next save time
+                    Time.save = Time.save + constants.dT_save;
+                    
+                    % save all important variables
+                    save_slice(bac, conc(:, ceil(grid.nX/2)), bulk_concs, pH(:, ceil(grid.nX/2)), Time, grid, constants, directory); % along central horizontal axis
+                    save_plane(bac, conc, pH, Time, grid, constants, directory); % entire plane of simulation
+                end
             end
-
-            
-            
-            %% time advancements (dT_save)
-            % save all important variables
-
-
         end
         
         %% post-dT updates
