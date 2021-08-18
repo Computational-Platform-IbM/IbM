@@ -114,7 +114,7 @@ function integTime_fromScratch(grid, bac, conc, directory, constants, init_param
                     
                     % save all important variables
                     save_slice(bac, conc(:, ceil(grid.nX/2)), bulk_concs, pH(:, ceil(grid.nX/2)), Time, grid, constants, directory); % along central horizontal axis
-                    save_plane(bac, conc, pH, Time, grid, constants, directory); % entire plane of simulation
+%                     save_plane(bac, conc, pH, Time, grid, constants, directory); % entire plane of simulation
                 end
             end
         end
