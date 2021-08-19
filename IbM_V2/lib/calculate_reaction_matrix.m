@@ -46,7 +46,7 @@ function [reaction_matrix, mu, pH] = calculate_reaction_matrix(grid2bac, grid2nB
         for iy = 1:grid.nY
             % calculate pH & speciation
             Sh_old = 10^-pH(ix, iy);
-            [spcM, Sh] = solve_pH(Sh_old, [squeeze(conc(ix, iy, :)); 1; 0], Keq, chrM, 0); % <C: remove flagpH???/> <C: why [...; 1; 0]? />
+            [spcM, Sh] = solve_pH(Sh_old, [squeeze(conc(ix, iy, :)); 1; 0], Keq, chrM, 0); % <C: remove flagpH???/> <C: why [...; 1; 0]? /> -> <E: Nop. />
             pH(ix, iy) = -log10(Sh);
                 
             if grid2nBacs(ix, iy)
@@ -61,35 +61,35 @@ function [reaction_matrix, mu, pH] = calculate_reaction_matrix(grid2bac, grid2nB
                     % update mu_max per species based on pH
                     [mu_max, maint] = determine_max_growth_rate_and_maint(curr_species, T, Sh);
 
-                    % get reactive concentrations for Ks & Ki
+                    % get reactive concentrations for soluble components
                     reactive_conc = [spcM(iNH3, reactive_form(iNH3)), ...
                         spcM(iNO2, reactive_form(iNO2)), ...
                         spcM(iO2, reactive_form(iO2))];
                     
                     % set mu for all bacteria of same species in that gridcell
-                    M = calculate_monod(Ks(curr_species,:), Ki(curr_species, :), reactive_conc);
-                    mu_noMaintenance = M * mu_max;
-                    mu_withMaintenance = mu_noMaintenance - maint;
-                    mu(iBacs(speciesGrid == curr_species)) = mu_withMaintenance;
+                    M = calculate_monod(Ks(curr_species,:), Ki(curr_species, :), reactive_conc);                        % [DN]
+                    mu_noMaintenance = mu_max * M;                                                                      % [1/h]
+                    mu_withMaintenance = mu_noMaintenance - maint;                                                      % [1/h]
+                    mu(iBacs(speciesGrid == curr_species)) = mu_withMaintenance;                                        % [1/h]
 
                     % update reaction_matrix element for this grid cell
-                    concentrationChange = mMetabolism(:, curr_species) * mu_noMaintenance;
+                    concentrationChange = mMetabolism(:, curr_species) * mu_noMaintenance;                              % [molS/molX/h]
                     if mu_withMaintenance < 0
-                        concentrationChange = concentrationChange - mDecay(:, curr_species) * mu_withMaintenance;
+                        concentrationChange = concentrationChange - mDecay(:, curr_species) * mu_withMaintenance;       % [molS/molX/h]
                     end
-                    concentrationChange = concentrationChange * sum(bac.molarMass(iBacs(speciesGrid == curr_species)));
+                    concentrationChange = concentrationChange * sum(bac.molarMass(iBacs(speciesGrid == curr_species))); % [molS/h]
                     
-                    reaction_matrix(ix, iy, :) = reaction_matrix(ix, iy, :) + reshape(concentrationChange, 1,1,[]);
+                    reaction_matrix(ix, iy, :) = reaction_matrix(ix, iy, :) + reshape(concentrationChange, 1,1,[]);     % [molS/h]
                 end
 
-                % divide by Vg?
-                reaction_matrix = reaction_matrix / Vg;
+                % <C: divide by Vg? /> -> <E: Necessary. See the units of equations [...]. />
+                reaction_matrix = reaction_matrix / Vg;                                                                 % [molS/L/h] ok!
             end
         end
     end
 end
 
-function [spcM, Sh] = solve_pH(Sh_ini, StV, Keq, chrM, flagpH)  % <C: remove flagpH???/>
+function [spcM, Sh] = solve_pH(Sh_ini, StV, Keq, chrM, flagpH)  % <C: remove flagpH???/> -> <E: Nop. />
     % Solve the pH and speciation per grid cell
     %
     % <>
@@ -98,6 +98,7 @@ function [spcM, Sh] = solve_pH(Sh_ini, StV, Keq, chrM, flagpH)  % <C: remove fla
     %
     % -> spcM: species matrix for the respective pH
     % -> Sh: proton concentration
+    % -> flagpH: flagpH = 1 -> Fix pH; flagpH = 0 -> Variable pH 
     
     w = 1;
 
@@ -282,14 +283,14 @@ function M = calculate_monod(Ks, Ki, conc)
     % conc: vector with all concentrations corresponding to the Ks and Ki
     %   values (1-by-n)
     %
-    % -> M: Monod coefficient
+    % -> M: Monod block
     
     % apply Ks
     M = prod(conc ./ (conc + Ks));
     
     % apply Ki
     for i = 1:length(Ki)
-        if Ki ~= 0
+        if Ki(i) ~= 0 % <E: W/o index "i", inhibition wasn't working well. />
             M = M * Ki(i) / (Ki(i) + conc(i));
         end
     end
