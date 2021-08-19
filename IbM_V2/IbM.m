@@ -17,6 +17,8 @@ function IbM(options)
 
     %% java import for shoving
     javaaddpath(options.path_shoving);
+    addpath(genpath('lib')); % make every subfolder with functions accessible to the code
+
 
     
     %% preset loading
