@@ -48,7 +48,7 @@ constants.Keq = R.pTh.Keq;
 constants.chrM = R.pTh.chrM;
 constants.Dir_k = logical(R.Inf.Dir_k);
 constants.Vr = R.pOp.Vr;
-constants.Vg = grid.dx ^ 3;
+constants.Vg = (grid.dx ^ 3) * 1000; % L
 constants.StNames = R.St.StNames(1:8);
 constants.react_v = R.pTh.react_v;
 constants.Ks = R.pTh.Ks(:, 1:3);
@@ -76,7 +76,7 @@ conc = zeros(20,20,5); % start at all-zero
 reaction_matrix = (rand(20,20,5)-0.5)*1e-3; % add some random noise for reactions
 bulk_concs = ones(5,1);
 dT = 1;
-conc = diffusion(conc, reaction_matrix, bulk_concs, grid, constants, dT);
+conc = diffusion(conc, reaction_matrix, bulk_concs, grid, constants);
 
 figure(3); clf;
 for iC = 1:5
