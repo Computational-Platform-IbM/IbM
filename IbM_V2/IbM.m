@@ -11,7 +11,8 @@ function IbM(options)
     arguments
         options.output_directory {checkFolder} = 'Results';
         options.preset {mustBeFile, mustBeFormat(options.preset, {'xls', 'xlsx', 'mat'})}
-        options.path_shoving {mustBeFile, mustBeFormat(options.path_shoving, {'jar'})} = [pwd '\shovingQuadTree.jar'];
+        options.path_shoving {mustBeFile, mustBeFormat(options.path_shoving, {'jar'})} = [pwd '\shovingQuadTree.jar']; 
+        % <E: Change location of shovingQuadTree.jar or 'lib\shovingQuadTree.jar' />
     end
     
 
@@ -33,7 +34,9 @@ function IbM(options)
     %% ========== Time advancements ==========
     fprintf('> SIMULATION RUNNING >>>>>\n');
     
-    R = integTimeNew(R, options.output_directory);
+    R = integTimeNew(R, options.output_directory); %#ok<NASGU>
+    % <E: Shoud it be integTime_fromScratch(...)? />
+    % <E: We could identify this funciton with only 'integTime' />
     
     fprintf('> SIMULATION FINISHED >>>>>\n');
     
