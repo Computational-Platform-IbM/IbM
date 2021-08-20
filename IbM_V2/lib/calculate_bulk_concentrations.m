@@ -58,10 +58,10 @@ function [bulk_concentrations, invHRT] = calculate_bulk_concentrations(constants
 
         if keepNH3fixed == 1 && bulk_conc(1) >= NH3_reactor_influx
             if cumulative_reacted(1) < 0
-                invHRT = -cumulative_reacted(1) / (reactor_influx(1) - bulk_conc(1));
+                invHRT = -cumulative_reacted(1) / (reactor_influx(1) - NH3_reactor_influx);
             end
         else
-            dy(1) = invHRT * (reactor_influx(1) - bulk_conc(1)) + 0;
+            dy(1) = invHRT * (reactor_influx(1) - bulk_conc(1)) + cumulative_reacted(1);
         end
 
         dy(2:end) = invHRT * (reactor_influx(2:end) - bulk_conc(2:end)) + cumulative_reacted(2:end);
