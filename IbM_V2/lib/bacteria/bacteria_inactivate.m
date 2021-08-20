@@ -12,8 +12,8 @@ function bac = bacteria_inactivate(bac, constants)
     bac.active(~mask_tooSmall) = 1;
     
     %{ 
-    <E: Bacteria can be active again if local conditions are favourable. />
-    maskd_reactivate = (~bac.active) * bac.molarMass * constants.bac_MW > constants.min_bac_mass_grams;
-    bac.active(maskd_reactivate) = 1;
+    Reactivation is implicitely done already by inactive bacteria being able to grow.
+    If at any point those bacteria become larger than the threshold, they
+    will be set to active again.
     %}
 end
