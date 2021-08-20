@@ -58,8 +58,7 @@ function integTime(grid, bac, conc, directory, constants, init_params)
                     % set next bacterial time
                     Time.bac = Time.bac + constants.dT_bac;
 
-                    % reaction_matrix & mu & pH are already calculated (steady
-                    % state, so still valid)
+                    % reaction_matrix & mu & pH are already calculated (steady state, so still valid)
 
                     % update bacteria: mass
                     bac = update_bacterial_mass(bac, dT_actual);
@@ -72,17 +71,35 @@ function integTime(grid, bac, conc, directory, constants, init_params)
                             % determine radius bacteria from mass
                             bac = update_bacterial_radius(bac, constants);
                             
+                            %{
+                              <E: bacteria_inactivate() or bacteria_die(), but not both. />
+                              <E: We could add a constant to define if we want to delete those bacteria with mass < mass_min or inactivate them. />
+                            %}
                             % bacteria: inactivate
                             bac = bacteria_inactivate(bac, constants);
                             
                             % (bacteria: die)
                             bac = bacteria_die(bac, constants);
 
+                            %{
+                              <E: In the PREV model we are able to include some evolution-adaptation of bacteria (for example Ks, Ki, Yield etc) />
+                              <E: For this reason, in R struct you can see a matrix of Ks and Ki for every single bacterium, because everyone is an entity with its own kinetic properties. />
+                              <E: In this case, I'm thinking some options here: (1) To include the Ks_Ki matrix, 
+                                                                                (2) To include a matrix with Ks and Ki multipliers for every bacterium, 
+                                                                                (3) Two IbM versions: one w/ evolution-adaptation and another w/o. />
+                            %}
                             % bacteria: divide
                             bac = bacteria_divide(bac, constants);
                             
                             % shove bacteria
                             bac = bacteria_shove(bac, constants);
+                            
+                            %{
+                              <E: Here we could add a constant to define if we want include detachment and how we simulate this detachment. />
+                              <E: For now, only the rough detachment in included. />
+                            %}
+                            % bacteria: detachment
+                            bac = bacteria_detachment(bac, grid, constants);
                             
                             % update/re-determine where bacs
                             [grid2bac, grid2nBacs] = determine_where_bacteria_in_grid(grid, bac);
