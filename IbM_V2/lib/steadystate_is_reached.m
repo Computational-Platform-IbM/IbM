@@ -9,7 +9,7 @@ function isReached = steadystate_is_reached(conc, reaction_matrix, dx, bulk_conc
     % unpack/declare variables
     correction_concentration_steadystate = constants.correction_concentration_steady_state; % [mol/L]
     steadystate_tolerance = constants.steadystate_tolerance;
-    method = constants.RESmethod; % {mean, max, norm}
+    method = constants.RESmethod; % {'mean', 'max', 'norm'}
     
     L = [0 1 0; 1 -4 1; 0 1 0];  % 2D laplacian stencil base
     nCompounds = sum(constants.isLiquid);
@@ -21,7 +21,7 @@ function isReached = steadystate_is_reached(conc, reaction_matrix, dx, bulk_conc
         padded_conc = create_dirichlet_boundary(conc(:,:,iCompound), bulk_concentrations(iCompound));
         delta_conc = convn(padded_conc, L, 'valid');
         delta_conc = delta_conc + characteristic_time(iCompound) * reaction_matrix(:,:,iCompound);
-        RES = delta_conc / (correction_concentration_steadystate + delta_conc); % ==> RES [mol/L]
+        RES = delta_conc ./ (correction_concentration_steadystate + delta_conc); % ==> RES [mol/L]
         compound_steadystate(iCompound) = isReached_compound(RES, method, steadystate_tolerance);
     end
     
