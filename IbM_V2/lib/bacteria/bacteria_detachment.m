@@ -1,4 +1,4 @@
-function bac = bacteria_detachment(bac, constants)
+function bac = bacteria_detachment(bac, grid, constants)
     % Rough detachment: Remove all bacteria that are outside of maximum radius of granule
     %
     % bac: struct containing all information regarding the bacteria
@@ -6,8 +6,8 @@ function bac = bacteria_detachment(bac, constants)
     %
     % -> bac: see above
     
-    bac_norm = sqrt((bac.x - constant.Gcenter)*(bac.x - constant.Gcenter) + (bac.y - constant.Gcenter)*(bac.y - constants.Gcenter));
-    bac_detach = bac_norm > constants.Grmax;
+    bac_distance_from_center = sqrt((bac.x - grid.dx * grid.nX/2)*(bac.x - grid.dx * grid.nX/2) + (bac.y - grid.dy * grid.nY/2)*(bac.y - grid.dy * grid.nY/2));
+    bac_detach = bac_distance_from_center > constants.max_granule_radius;
     nCellsDetach = sum(bac_detach);
 
     if nCellsDetach % <TODO: check if these are all struct-elements />
