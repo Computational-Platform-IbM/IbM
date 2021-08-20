@@ -1,7 +1,7 @@
 function integTime(grid, bac, conc, directory, constants, init_params)
     %% initialisation
     % calculate boundary conditions
-    bulk_concs = calculate_bulk_concentrations(constants, init_params.init_conc, invHRT, reactionMatrix, constants.dT);
+    bulk_concs = calculate_bulk_concentrations(constants, init_params.init_conc, init_params.invHRT, reactionMatrix, constants.dT);
     
     % make bacterial-grid matrix
     [grid2bac, grid2nBacs] = determine_where_bacteria_in_grid(grid, bac);
@@ -25,11 +25,7 @@ function integTime(grid, bac, conc, directory, constants, init_params)
     Time.bac = constants.dT_bac;
     Time.divide = constants.dT_divide;
     Time.save = constants.dT_save;
-    
-    % initialise save file
-    save_init_slice();
-    save_init_plane();
-    
+   
        
     %% time advancements (dT / dT_steadystate)
     
@@ -145,11 +141,12 @@ constants:
 
 init_params:
     init_conc (== Sbc_dir)                                  ==> bulk_conc
+    invHRT                                                  ==> bulk_conc
 
 bac:
     x, y                                                    ==> where bac
     x, y                                                    ==> diff region
-    species, molarMass                                      ==> react_m\
+    species, molarMass                                      ==> react_m
     radius
 
 grid:
