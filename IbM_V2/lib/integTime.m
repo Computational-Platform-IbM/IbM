@@ -71,15 +71,12 @@ function integTime(grid, bac, conc, directory, constants, init_params)
                             % determine radius bacteria from mass
                             bac = update_bacterial_radius(bac, constants);
                             
-                            %{
-                              <E: bacteria_inactivate() or bacteria_die(), but not both. />
-                              <E: We could add a constant to define if we want to delete those bacteria with mass < mass_min or inactivate them. />
-                            %}
-                            % bacteria: inactivate
-                            bac = bacteria_inactivate(bac, constants);
-                            
-                            % (bacteria: die)
-                            bac = bacteria_die(bac, constants);
+                            % bacteria: inactivate or die
+                            if constants.inactivationEnabled
+                                bac = bacteria_inactivate(bac, constants);
+                            else
+                                bac = bacteria_die(bac, constants);
+                            end
 
                             %{
                               <E: In the PREV model we are able to include some evolution-adaptation of bacteria (for example Ks, Ki, Yield etc) />
@@ -88,6 +85,14 @@ function integTime(grid, bac, conc, directory, constants, init_params)
                                                                                 (2) To include a matrix with Ks and Ki multipliers for every bacterium, 
                                                                                 (3) Two IbM versions: one w/ evolution-adaptation and another w/o. />
                             %}
+                            
+                            %{
+                            <C: I'm leaning towards the 3rd option, for now
+                            we don't seem to be using evolution. So doesn't
+                            seem fit to be using redundant memory space...
+                            would be easy to introduce when we need it
+                            %}
+                            
                             % bacteria: divide
                             bac = bacteria_divide(bac, constants);
                             
@@ -97,6 +102,7 @@ function integTime(grid, bac, conc, directory, constants, init_params)
                             %{
                               <E: Here we could add a constant to define if we want include detachment and how we simulate this detachment. />
                               <E: For now, only the rough detachment in included. />
+                              <C: agree, for now this works
                             %}
                             % bacteria: detachment
                             bac = bacteria_detachment(bac, grid, constants);
