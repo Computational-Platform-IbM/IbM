@@ -46,7 +46,7 @@ function [reaction_matrix, mu, pH] = calculate_reaction_matrix(grid2bac, grid2nB
         for iy = 1:grid.nY
             % calculate pH & speciation
             Sh_old = 10^-pH(ix, iy);
-            [spcM, Sh] = solve_pH(Sh_old, [squeeze(conc(ix, iy, :)); 1; 0], Keq, chrM, 0); % <C: remove flagpH???/> <C: why [...; 1; 0]? /> -> <E: Nop. />
+            [spcM, Sh] = solve_pH(Sh_old, [squeeze(conc(ix, iy, :)); 1; 0], Keq, chrM, constants.constantpH); % <C: why [...; 1; 0]? />
             pH(ix, iy) = -log10(Sh);
                 
             if grid2nBacs(ix, iy)
@@ -82,14 +82,13 @@ function [reaction_matrix, mu, pH] = calculate_reaction_matrix(grid2bac, grid2nB
                     reaction_matrix(ix, iy, :) = reaction_matrix(ix, iy, :) + reshape(concentrationChange, 1,1,[]);     % [molS/h]
                 end
 
-                % <C: divide by Vg? /> -> <E: Necessary. See the units of equations [...]. />
-                reaction_matrix = reaction_matrix / Vg;                                                                 % [molS/L/h] ok!
+                reaction_matrix = reaction_matrix / Vg;                                                                 % [molS/L/h]
             end
         end
     end
 end
 
-function [spcM, Sh] = solve_pH(Sh_ini, StV, Keq, chrM, flagpH)  % <C: remove flagpH???/> -> <E: Nop. />
+function [spcM, Sh] = solve_pH(Sh_ini, StV, Keq, chrM, keepConstantpH)
     % Solve the pH and speciation per grid cell
     %
     % <>
@@ -102,7 +101,7 @@ function [spcM, Sh] = solve_pH(Sh_ini, StV, Keq, chrM, flagpH)  % <C: remove fla
     
     w = 1;
 
-    if flagpH == 1
+    if keepConstantpH
         spcM = zeros(size(chrM));
         Sh = Sh_ini;
         Denm = (1 + Keq(:, 1) / w) * Sh^3 + Keq(:, 2) * Sh^2 + Keq(:, 3) .* Keq(:, 2) * Sh + Keq(:, 4) .* Keq(:, 3) .* Keq(:, 2);
@@ -290,7 +289,7 @@ function M = calculate_monod(Ks, Ki, conc)
     
     % apply Ki
     for i = 1:length(Ki)
-        if Ki(i) ~= 0 % <E: W/o index "i", inhibition wasn't working well. />
+        if Ki(i) ~= 0
             M = M * Ki(i) / (Ki(i) + conc(i));
         end
     end
