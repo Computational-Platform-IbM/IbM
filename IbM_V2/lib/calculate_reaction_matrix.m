@@ -81,11 +81,12 @@ function [reaction_matrix, mu, pH] = calculate_reaction_matrix(grid2bac, grid2nB
                     
                     reaction_matrix(ix, iy, :) = reaction_matrix(ix, iy, :) + reshape(concentrationChange, 1,1,[]);     % [molS/h]
                 end
-
-                reaction_matrix = reaction_matrix / Vg;                                                                 % [molS/L/h]
             end
         end
     end
+    
+    reaction_matrix = reaction_matrix / Vg;                                                                             % [molS/L/h]
+
 end
 
 function [spcM, Sh] = solve_pH(Sh_ini, StV, Keq, chrM, keepConstantpH)

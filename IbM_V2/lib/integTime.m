@@ -1,16 +1,16 @@
 function integTime(grid, bac, conc, directory, constants, init_params)
     %% initialisation
     % calculate boundary conditions
-    bulk_concs = calculate_bulk_concentrations(constants, init_params.init_conc, init_params.invHRT, reactionMatrix, constants.dT);
+    bulk_concs = calculate_bulk_concentrations(constants, init_params.init_bulk_conc, init_params.invHRT, 0, constants.dT);
     
     % make bacterial-grid matrix
     [grid2bac, grid2nBacs] = determine_where_bacteria_in_grid(grid, bac);
     
     % determine diffusion layer
-    diffusion_region = determine_diffusion_region(grid2bac, grid2nBacs, bac, grid, constants); 
+    diffusion_region = determine_diffusion_region(grid2bac, grid2nBacs, bac, grid); 
     
     % initialise concentrations
-    conc = set_concentrations(conc, init_concs, diffusion_region);
+    conc = set_concentrations(conc, init_params.init_concs, diffusion_region);
     
     % set bulk layer concentrations
     conc = set_concentrations(conc, bulk_concs, ~diffusion_region);
@@ -31,7 +31,7 @@ function integTime(grid, bac, conc, directory, constants, init_params)
     
     while Time.current < constants.simulation_end
         % diffuse (MG)
-        conc = diffusion(conc_old, reaction_matrix, bulk_concs, grid, constants);
+        conc = diffusion(conc, reaction_matrix, bulk_concs, grid, constants);
 
         % updata bacterial mass
         bac = update_bacterial_mass(bac, constants.dT);        
@@ -163,7 +163,7 @@ constants:
     dT, dT_bac, dT_division, dT_save                        ==> integ
 
 init_params:
-    init_conc (== Sbc_dir)                                  ==> bulk_conc
+    init_bulk_conc (== Sbc_dir)                                  ==> bulk_conc
     invHRT                                                  ==> bulk_conc
 
 bac:
