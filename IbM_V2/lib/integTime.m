@@ -1,4 +1,4 @@
-function integTime_fromScratch(grid, bac, conc, directory, constants, init_params)
+function integTime(grid, bac, conc, directory, constants, init_params)
     %% initialisation
     % calculate boundary conditions
     bulk_concs = calculate_bulk_concentrations(constants, init_params.init_conc, invHRT, reactionMatrix, constants.dT);
