@@ -132,6 +132,9 @@ function profiling = integTime(grid, bac, conc, directory, constants, init_param
                             bac = bacteria_detachment(bac, grid, constants);
                             profiling(iProf, 7) = profiling(iProf, 7) + toc;
                             
+                            % display number of bacteria in system
+                            fprintf('current number of bacteria: %d \n', length(bac.x))
+                            
                             % update/re-determine where bacs
                             tic;
                             [grid2bac, grid2nBacs] = determine_where_bacteria_in_grid(grid, bac);
