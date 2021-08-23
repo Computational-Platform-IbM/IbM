@@ -16,5 +16,6 @@ function bac = bacteria_detachment(bac, grid, constants)
         bac.radius(bac_detach) = [];
         bac.species(bac_detach) = [];
         bac.molarMass(bac_detach) = [];
+        bac.active(bac_detach) = [];
     end
 end

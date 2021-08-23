@@ -15,5 +15,6 @@ function bac = bacteria_die(bac, constants)
         bac.radius(mask_tooSmall) = [];
         bac.species(mask_tooSmall) = [];
         bac.molarMass(mask_tooSmall) = [];
+        bac.active(mask_tooSmall) = [];
     end
 end
