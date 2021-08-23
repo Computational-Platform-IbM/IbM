@@ -1,4 +1,4 @@
-function bac = bacteria_shove(bac, constants)
+function bac = bacteria_shove(bac, grid, constants)
     % Shove bacteria so that no overlap is present in the bio-aggregate
     %
     % bac: struct containing all information regarding the bacteria
@@ -6,7 +6,8 @@ function bac = bacteria_shove(bac, constants)
     %
     % -> bac: see above
     
-    r = quadtree.pushing2D(length(bac.x), bac.x, bac.y, bac.radius, 0.1, constants.bac_max_radius * 2, constants.kDist);
+    qt = shoving.BiomassQuadtree(0, grid.dx*grid.nX, 0, grid.dy*grid.nY);
+    r = qt.pushing2D(length(bac.x), bac.x, bac.y, bac.radius, 0.1, constants.bac_max_radius * 2); % .jar file in /lib is from granule, thus does not have kDist implemented yet
     bac.x = r.bac_x;
     bac.y = r.bac_y;
 end

@@ -6,7 +6,7 @@ function bac = bacteria_detachment(bac, grid, constants)
     %
     % -> bac: see above
     
-    bac_distance_from_center = sqrt((bac.x - grid.dx * grid.nX/2)*(bac.x - grid.dx * grid.nX/2) + (bac.y - grid.dy * grid.nY/2)*(bac.y - grid.dy * grid.nY/2));
+    bac_distance_from_center = sqrt((bac.x - grid.dx * grid.nX/2).*(bac.x - grid.dx * grid.nX/2) + (bac.y - grid.dy * grid.nY/2).*(bac.y - grid.dy * grid.nY/2));
     bac_detach = bac_distance_from_center > constants.max_granule_radius;
     nCellsDetach = sum(bac_detach);
 

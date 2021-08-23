@@ -1,4 +1,4 @@
-function conc = set_concentrations(conc, set_concs, mask)
+function conc = set_concentrations(conc_old, set_concs, mask)
     % Set the initial concentration in the bioaggregate
     %
     % conc: concentration of each compound per grid cell (nX, nY, compound)
@@ -10,5 +10,5 @@ function conc = set_concentrations(conc, set_concs, mask)
     % -> conc: concentration of each compound per grid cell (nX, nY, comp)
     
     set_concs = reshape(set_concs, 1,1,[]);
-    conc = ~mask .* conc + mask .* set_concs;
+    conc = ~mask .* conc_old + mask .* set_concs;
 end

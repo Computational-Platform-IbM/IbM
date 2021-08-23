@@ -40,7 +40,8 @@ function [bulk_concentrations, invHRT] = calculate_bulk_concentrations(constants
         [~, Y] = ode45(@(t, y) massbal(t, y, cumulative_reacted(isLiquid), influent, NH3sp, keepNH3fixed), [0 dT], prev_conc(isLiquid), options);
         bulk_conc_temp = Y(end, :)';
         bulk_concentrations = correct_negative_concentrations(bulk_conc_temp);
-        bulk_concentrations(Dir_k) = prev_conc;
+        temp = prev_conc(1:length(Dir_k)); % <C: fix that sometimes N2 is taken into account, and most of the times it is not... />
+        bulk_concentrations(Dir_k) = temp(Dir_k);
     end
     
     %% apply pH correction to bulk_concentrations
