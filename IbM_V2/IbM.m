@@ -11,7 +11,7 @@ function IbM(options)
     arguments
         options.output_directory {checkFolder} = 'Results';
         options.preset {mustBeFile, mustBeFormat(options.preset, {'xls', 'xlsx', 'mat'})}
-        options.path_shoving {mustBeFile, mustBeFormat(options.path_shoving, {'jar'})} = [pwd '\shovingQuadTree.jar']; 
+        options.path_shoving {mustBeFile, mustBeFormat(options.path_shoving, {'jar'})} = [pwd '\lib\shovingQuadTree.jar']; 
         % <E: Change location of shovingQuadTree.jar or 'lib\shovingQuadTree.jar' />
     end
     
