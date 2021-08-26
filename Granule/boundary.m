@@ -55,11 +55,11 @@ function R = boundary(R, dT, NRVliq, Flag)
         % <C: automatic renaming, no change in function />
         dy = zeros(length(bulk_conc),1);
         
-        if keepNH3fixed == 1 && bulk_conc(1) >= NH3sp
+        if keepNH3fixed == 1 && bulk_conc(1) > NH3sp
             if cumulative_reacted(1) > 0
                 invHRTaux = 0;
             else
-                invHRTaux = -cumulative_reacted(1)/(influx(1) - bulk_conc(1));
+                invHRTaux = -cumulative_reacted(1)/(influx(1) - NH3sp);
             end
             if ne(invHRTaux, 0)
                 invHRT = invHRTaux;
