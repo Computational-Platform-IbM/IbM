@@ -144,6 +144,11 @@ function profiling = integTime(grid, bac, conc, directory, constants, init_param
                             tic;
                             diffusion_region = determine_diffusion_region(grid2bac, grid2nBacs, bac, grid);
                             profiling(iProf, 9) = profiling(iProf, 9) + toc;
+                            
+                            
+                            plotBacs(grid, bac);
+                            
+                            
                         end
                         
                     % calculate and set bulk concentrations
@@ -217,3 +222,27 @@ grid:
     nX, nY                                                  ==> react_m
 
 %}
+
+function plotBacs(g, bac)
+    % testing function to visualise bacteria
+    x = bac.x;
+    y = bac.y;
+    r = bac.radius;
+    s = bac.species;
+    
+    coloring = {'#D81B60', '#1E88E5', '#FFC107', '#004D40'};
+    
+    figure(2); clf;
+    
+    for i = 1:size(x, 1)
+        rectangle('Curvature', [1 1], 'Position', [x(i) - r(i), y(i) - r(i), 2 * r(i), 2 * r(i)], 'LineWidth', 1, 'EdgeColor', [0, 0, 0], 'FaceColor', coloring{s(i)});
+    end
+    
+    axis equal;
+
+    xlim([0, g.nX*g.dx]);
+%     xticks(0:g.nX);
+    ylim([0, g.nY*g.dy]);
+%     yticks(0:g.nY);
+end
+
