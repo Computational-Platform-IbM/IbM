@@ -36,7 +36,7 @@ function [R, StVLiq, pH, Fb_layer, Bc, Lxy, CC, DD] = DiffMatrices(Bc, Lxy, R, S
             vv = (c1.*c2); vv(vv==1) = find(vv);
             ci = sparse(1: R.bac.bac_n, i, vv, R.bac.bac_n, R.Sxy.nT);
             bx = (aux_x1(i)-R.Sxy.dx/2)-center; by = (aux_y1(i)-R.Sxy.dy/2)-center;
-            di = sparse(i, 1, Mnorm_nT > sqrt(bx.*bx+by.*by), R.Sxy.nT, 1);
+            di = sparse(i, 1, Mnorm_nT > sqrt(bx.*bx+by.*by), R.Sxy.nT, 1); % only checks top-right corner...
             DD = DD + di;
             CC = CC + ci;
         end
