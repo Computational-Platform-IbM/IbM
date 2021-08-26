@@ -47,7 +47,7 @@ function [bulk_concentrations, invHRT] = calculate_bulk_concentrations(constants
     
     %% apply pH correction to bulk_concentrations
     bulk_concentrations(strcmp(StNames, 'SO4')) = bulk_concentrations(strcmp(StNames, 'NH3')) / 2;        
-    bulk_concentrations(1:sum(isLiquid)) = controlpH(Keq, chrM, StNames, pH, bulk_concentrations(isLiquid));
+    bulk_concentrations(isLiquid) = controlpH(Keq, chrM, StNames, pH, bulk_concentrations(isLiquid));
     
     if any(bulk_concentrations < 0) %<E: Negative concentration from control pH of reactor. />
         warning('DEBUG:actionRequired', 'debug: negative bulk concentration encountered... correction required?')
@@ -60,7 +60,9 @@ function [bulk_concentrations, invHRT] = calculate_bulk_concentrations(constants
 
         if keepNH3fixed == 1 && bulk_conc(1) >= NH3_reactor_influx
             if cumulative_reacted(1) < 0
-                invHRT = -cumulative_reacted(1) / (reactor_influx(1) - NH3_reactor_influx);
+                invHRT = -cumulative_reacted(1) / (reactor_influx(1) - bulk_conc(1)); 
+                % <C: was corrected to NH3_reactor_influx before, but should be bulk_conc I think: 
+                % HRT = (in - out)/reacted; where out == bulk_concentration />
             end
         else
             dy(1) = invHRT * (reactor_influx(1) - bulk_conc(1)) + cumulative_reacted(1);
