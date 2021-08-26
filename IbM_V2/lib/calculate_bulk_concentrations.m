@@ -39,7 +39,7 @@ function [bulk_concentrations, invHRT] = calculate_bulk_concentrations(constants
         options = odeset('RelTol', 1e-8, 'AbsTol', 1e-20, 'NonNegative', ones(size(cumulative_reacted)));
         [~, Y] = ode45(@(t, y) massbal(t, y, cumulative_reacted(isLiquid), influent, NH3sp, keepNH3fixed), [0 dT], prev_conc(isLiquid), options);
         bulk_conc_temp = Y(end, :)';
-        bulk_concentrations = correct_negative_concentrations(bulk_conc_temp);
+        bulk_concentrations = correct_negative_concentrations(bulk_conc_temp); %<E: Negative concentration from mass balance of reactor. />
         temp = prev_conc(1:length(Dir_k)); % <C: todo => fix that sometimes N2 is taken into account, and most of the times it is not... />
         bulk_concentrations(Dir_k) = temp(Dir_k);
         bulk_concentrations = [bulk_concentrations; prev_conc(length(Dir_k)+1:end)];
@@ -49,7 +49,7 @@ function [bulk_concentrations, invHRT] = calculate_bulk_concentrations(constants
     bulk_concentrations(strcmp(StNames, 'SO4')) = bulk_concentrations(strcmp(StNames, 'NH3')) / 2;        
     bulk_concentrations(1:sum(isLiquid)) = controlpH(Keq, chrM, StNames, pH, bulk_concentrations(isLiquid));
     
-    if any(bulk_concentrations < 0)
+    if any(bulk_concentrations < 0) %<E: Negative concentration from control pH of reactor. />
         warning('DEBUG:actionRequired', 'debug: negative bulk concentration encountered... correction required?')
     end
     
