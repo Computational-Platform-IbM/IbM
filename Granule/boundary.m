@@ -51,22 +51,23 @@ function R = boundary(R, dT, NRVliq, Flag)
     R.Sxy.Sbc_Dir(1:numStVLiq2) = Sbc_Dir_new;
     R.pOp.invHRT = invHRT;
 
-    function dy = massbal(~,y,G, Xi, NH3sp, flagN)
-        dy = zeros(length(y),1);
+    function dy = massbal(~,bulk_conc,cumulative_reacted, influx, NH3sp, keepNH3fixed)
+        % <C: automatic renaming, no change in function />
+        dy = zeros(length(bulk_conc),1);
         
-        if flagN == 1 && y(1) >= NH3sp
-            if G(1) > 0
+        if keepNH3fixed == 1 && bulk_conc(1) >= NH3sp
+            if cumulative_reacted(1) > 0
                 invHRTaux = 0;
             else
-                invHRTaux = -G(1)/(Xi(1) - y(1));
+                invHRTaux = -cumulative_reacted(1)/(influx(1) - bulk_conc(1));
             end
             if ne(invHRTaux, 0)
                 invHRT = invHRTaux;
             end
         else
-            dy(1) = invHRT*(Xi(1) - y(1)) + G(1);
+            dy(1) = invHRT*(influx(1) - bulk_conc(1)) + cumulative_reacted(1);
         end
-        dy(2:end) = invHRT*(Xi(2:end) - y(2:end)) + G(2:end);
+        dy(2:end) = invHRT*(influx(2:end) - bulk_conc(2:end)) + cumulative_reacted(2:end);
         dy(4:end) = 0;
     end
 
