@@ -21,6 +21,7 @@ function bac = bacteria_divide(bac, constants)
         new_x = bac.x(mask_tooBig) + bac.radius(mask_tooBig) .* cos(fi);
         new_y = bac.y(mask_tooBig) + bac.radius(mask_tooBig) .* sin(fi);
         new_species = bac.species(mask_tooBig);
+        new_mu = bac.mu(mask_tooBig);
         new_active = ones(nCellsTooBig, 1, 'logical');
 
         %% split mass over parent and child
@@ -37,6 +38,7 @@ function bac = bacteria_divide(bac, constants)
         bac.species = [bac.species; new_species];
         bac.molarMass = [bac.molarMass; new_molarMass];
         bac.radius = [bac.radius; new_radius];
+        bac.mu = [bac.mu; new_mu];
         bac.active = [bac.active; new_active];
         
         cycle = cycle + 1;
