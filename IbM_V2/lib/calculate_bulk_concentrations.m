@@ -54,15 +54,19 @@ function [bulk_concentrations, invHRT] = calculate_bulk_concentrations(constants
     end
     
     %% helper function
-    function dy = massbal(~, bulk_conc, cumulative_reacted, reactor_influx, NH3_reactor_influx, keepNH3fixed)
+    function dy = massbal(~, bulk_conc, cumulative_reacted, reactor_influx, NH3sp, keepNH3fixed)
         % differential equation for the mass balance over the entire reactor
         dy = zeros(length(bulk_conc), 1);
 
-        if keepNH3fixed == 1 && bulk_conc(1) >= NH3_reactor_influx
+        if keepNH3fixed == 1 && bulk_conc(1) > NH3sp
             if cumulative_reacted(1) < 0
-                invHRT = -cumulative_reacted(1) / (reactor_influx(1) - bulk_conc(1)); 
+                invHRT = -cumulative_reacted(1) / (reactor_influx(1) - NH3sp); 
                 % <C: was corrected to NH3_reactor_influx before, but should be bulk_conc I think: 
                 % HRT = (in - out)/reacted; where out == bulk_concentration />
+                % <E: It was a missnaming of that variable. The PREV
+                % NH3_reactor_influx was actually NH3sp (set point of NH3).
+                % Check inputs of massbal() in Line 40. />
+                % <E: I think that now is correct. />
             end
         else
             dy(1) = invHRT * (reactor_influx(1) - bulk_conc(1)) + cumulative_reacted(1);
