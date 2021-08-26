@@ -41,15 +41,25 @@ function [reaction_matrix, mu, pH] = calculate_reaction_matrix(grid2bac, grid2nB
     reaction_matrix = zeros(size(conc));
     mu = zeros(size(bac.x));
     
+    % pre-compute for bulk-liquid (at 1,1 there should never be diffusion
+    % layer)
+    Sh_bulk = 10^-pH(1, 1);
+    [~, Sh_bulk] = solve_pH(Sh_bulk, [squeeze(conc(1, 1, :)); 1; 0], Keq, chrM, constants.constantpH); % <C: why [...; 1; 0]? />
+    pH_bulk = -log10(Sh_bulk);
+
+    
     % for each gridcell
     for ix = 1:grid.nX % parfor?
         for iy = 1:grid.nY
-            % calculate pH & speciation
-            Sh_old = 10^-pH(ix, iy);
-            [spcM, Sh] = solve_pH(Sh_old, [squeeze(conc(ix, iy, :)); 1; 0], Keq, chrM, constants.constantpH); % <C: why [...; 1; 0]? />
-            pH(ix, iy) = -log10(Sh);
+            if ~grid2nBacs(ix, iy) % bulk layer
+                pH(ix, iy) = pH_bulk;
                 
-            if grid2nBacs(ix, iy)
+            else % in diffusion layer, thus pH calculation needs to be performed
+                % calculate pH & speciation
+                Sh_old = 10^-pH(ix, iy);
+                [spcM, Sh] = solve_pH(Sh_old, [squeeze(conc(ix, iy, :)); 1; 0], Keq, chrM, constants.constantpH); % <C: why [...; 1; 0]? />
+                pH(ix, iy) = -log10(Sh);
+                
                 % get bacteria in this grid cell
                 iBacs = squeeze(grid2bac(ix, iy, 1:grid2nBacs(ix, iy))); % n-by-1 vector of bacterial indices
                 
