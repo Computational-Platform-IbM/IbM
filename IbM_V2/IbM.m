@@ -34,6 +34,7 @@ function IbM(options)
     fprintf('> SIMULATION RUNNING >>>>>\n');
     
     R = integTime(R, options.output_directory); %#ok<NASGU>
+    % <TODO: modify inputs of integTime() function />
     
     fprintf('> SIMULATION FINISHED >>>>>\n');
     
