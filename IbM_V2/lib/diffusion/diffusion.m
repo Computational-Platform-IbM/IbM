@@ -16,10 +16,10 @@ function conc = diffusion(conc, reaction_matrix, bulk_concentrations, grid, cons
     % -> conc: concentrations after solving the diffusion equations [mol/L]
     
     % variable declarations/unpacking
-    diffusion_rates = constants.diffusion_rates;
+    diffusion_coef = constants.diffusion_rates; % [m2/h] <E: diffusion_rates -> diffusion_coef. /> 
     accuracy = constants.diffusion_accuracy;
     absolute_tolerance = constants.Tol_a;
-    nCompounds = length(diffusion_rates);
+    nCompounds = length(diffusion_coef);
     dT = constants.dT;
     
     % set parameters for V-cycle 
@@ -42,7 +42,7 @@ function conc = diffusion(conc, reaction_matrix, bulk_concentrations, grid, cons
     
     for iCompound = 1:nCompounds                % parfor?
         % stencil updates/declarations
-        alpha = constants.dT * diffusion_rates(iCompound) / (2*grid.dx^2);
+        alpha = constants.dT * diffusion_coef(iCompound) / (2*grid.dx^2);
         L_lhs = I - alpha*L;                    % lefthand-side stencil 
         L_0 = alpha*L;                          % basis stencil laplacian
         L_rhs = I + alpha*L;                    % righthand-side stencil
