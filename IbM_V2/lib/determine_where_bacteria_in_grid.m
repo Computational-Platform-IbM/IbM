@@ -7,9 +7,14 @@ function [grid2bac, grid2nBacs] = determine_where_bacteria_in_grid(grid, bac)
     %
     % -> grid2bac: matrix (nx*ny) with per grid cell the bacterial indices
     % that that grid cell contains
-    % -> grid2nBacs
+    % -> grid2nBacs: matrix (nx*ny). Number of bacteria in each node
+    % <E: Am I correct with grid2nBacs? />
 
     maxBacPerGrid = 4; % estimate of how many bacteria can be in one grid cell at most
+    % <TODO: Could we actually estimate the maxBacPerGrid using a typical density
+    % value of granules. maxBacPerGrid = f(dx, GranuleDensity, BacterialDensity...)/>
+    % <E: Idk if it is necessary to apply a formula here, but I guess that
+    % we should check this value at least one time. />
    
     %% determine grid cell per bacteria
     bac.x;
