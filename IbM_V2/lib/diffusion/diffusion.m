@@ -50,12 +50,9 @@ function conc = diffusion(conc, reaction_matrix, bulk_concentrations, grid, cons
         % create right hand side
         % - boundary conditions
         rhs = calculate_rhs_dirichlet(conc(:,:,iCompound), L_rhs, bulk_concentrations(iCompound)*1000); % (nX, nY, nCompounds)
-        % <E: Here we could name 'rhs' as BC (or somthing similar) to 
-        % differentiate rhs (Boundary Condition + reaction term)
-        % and Boundary Condition term itself, no?. />
 
-        % - Boundary conditions + reaction matrix
-        rhs = rhs + dT*1000*reaction_matrix(:,:,iCompound); %<E: e.g., rhs = BC + dT*1000*reaction_matrix(:,:,iCompound); />
+        % - reaction matrix
+        rhs = rhs + dT*1000*reaction_matrix(:,:,iCompound);
 
         % solve using multigrid
         while sum(residual(conc(:,:,iCompound), rhs, L_lhs).^2, 'all') > accuracy^2 % absolute norm of residual > accuracy
