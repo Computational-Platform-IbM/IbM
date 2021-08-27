@@ -12,7 +12,7 @@ function [grid2bac, grid2nBacs] = determine_where_bacteria_in_grid(grid, bac)
 
     maxBacPerGrid = 4; % estimate of how many bacteria can be in one grid cell at most
     % <TODO: Could we actually estimate the maxBacPerGrid using a typical density
-    % value of granules. maxBacPerGrid = f(dx, GranuleDensity, BacterialDensity...)/>
+    % value of granules. maxBacPerGrid = f(dx*dy*dz, GranuleDensity, BacterialDensity (assuming perfect spheres)...)/>
     % <E: Idk if it is necessary to apply a formula here, but I guess that
     % we should check this value at least one time. />
    
