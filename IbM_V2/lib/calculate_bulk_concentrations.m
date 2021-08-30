@@ -58,7 +58,7 @@ function [bulk_concentrations, invHRT] = calculate_bulk_concentrations(constants
         % differential equation for the mass balance over the entire reactor
         dy = zeros(length(bulk_conc), 1);
 
-        if keepNH3fixed == 1 && bulk_conc(1) > NH3sp
+        if keepNH3fixed == 1 && bulk_conc(1) > NH3sp % <C: why only change HRT when bulk > set-point? can we only increase flowspeed and not decrease?
             if cumulative_reacted(1) < 0
                 invHRT = -cumulative_reacted(1) / (reactor_influx(1) - NH3sp); 
             end
