@@ -50,7 +50,7 @@ function [bulk_concentrations, invHRT] = calculate_bulk_concentrations(constants
     bulk_concentrations(isLiquid) = controlpH(Keq, chrM, StNames, pH, bulk_concentrations(isLiquid));
     
     if any(bulk_concentrations < 0) %<E: Negative concentration from control pH of reactor. />
-        warning('DEBUG:actionRequired', 'debug: negative bulk concentration encountered... correction required?')
+        warning('DEBUG:actionRequired', 'debug: negative bulk concentration encountered after pH control... correction required?')
     end
     
     %% helper function
@@ -58,7 +58,7 @@ function [bulk_concentrations, invHRT] = calculate_bulk_concentrations(constants
         % differential equation for the mass balance over the entire reactor
         dy = zeros(length(bulk_conc), 1);
 
-        if keepNH3fixed == 1 && bulk_conc(1) > NH3sp % <C: why only change HRT when bulk > set-point? can we only increase flowspeed and not decrease?
+        if keepNH3fixed == 1 && bulk_conc(1) > NH3sp
             if cumulative_reacted(1) < 0
                 invHRT = -cumulative_reacted(1) / (reactor_influx(1) - NH3sp); 
             end
@@ -126,7 +126,7 @@ function conc = correct_negative_concentrations(conc)
     negative_indices = find(conc < 0);
 
     if negative_indices
-        warning('DEBUG:noActionRequired', 'debug: negative concentration encountered... correction applied')
+        warning('DEBUG:noActionRequired', 'debug: negative concentration encountered and corrected')
         for k = 1:length(negative_indices)
             % if [NH3] < 0, then remove excess consumption from [NO2]
             if negative_indices(k) == 1 
