@@ -49,10 +49,12 @@ function conc = diffusion(conc, reaction_matrix, bulk_concentrations, grid, cons
 
         % create right hand side
         % - boundary conditions
-        rhs = calculate_rhs_dirichlet(conc(:,:,iCompound), L_rhs, bulk_concentrations(iCompound)*1000); % (nX, nY, nCompounds)
+        rhs_bc = calculate_rhs_dirichlet(conc(:,:,iCompound), L_rhs, bulk_concentrations(iCompound)*1000); % (nX, nY, nCompounds)
 
         % - reaction matrix
-        rhs = rhs + dT*1000*reaction_matrix(:,:,iCompound);
+        rhs_react = dT*1000*reaction_matrix(:,:,iCompound);
+        
+        rhs = rhs_bc + rhs_react;
 
         % solve using multigrid
         while sum(residual(conc(:,:,iCompound), rhs, L_lhs).^2, 'all') > accuracy^2 % absolute norm of residual > accuracy

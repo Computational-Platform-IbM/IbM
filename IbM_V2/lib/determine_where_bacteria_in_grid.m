@@ -5,9 +5,9 @@ function [grid2bac, grid2nBacs] = determine_where_bacteria_in_grid(grid, bac)
     % grid: struct containing all static information about the grid
     % bac: struct containing all information regarding the bacteria
     %
-    % -> grid2bac: matrix (nx*ny) with per grid cell the bacterial indices
+    % -> grid2bac: matrix (nX * nY) with per grid cell the bacterial indices
     % that that grid cell contains
-    % -> grid2nBacs: matrix with how many bacteria per grid cell
+    % -> grid2nBacs: matrix with the number of bacteria per grid cell
 
     maxBacPerGrid = 4; % estimate of how many bacteria can be in one grid cell at most
     % <TODO: Could we actually estimate the maxBacPerGrid using a typical density
