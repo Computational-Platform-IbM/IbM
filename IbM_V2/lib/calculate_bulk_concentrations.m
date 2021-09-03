@@ -55,7 +55,21 @@ function [bulk_concentrations, invHRT] = calculate_bulk_concentrations(constants
     
     %% helper function
     function dy = massbal(~, bulk_conc, cumulative_reacted, reactor_influx, NH3sp, keepNH3fixed)
-        % differential equation for the mass balance over the entire reactor
+        % Differential equation for the mass balance over the entire reactor
+        % Will modify the HRT to match the setpoint of NH3 iff the outflow
+        % concentration is larger than the setpoint.
+        %
+        % bulk_conc: concentration in the bulk liquid [mol/L]
+        % cumulative_reacted: cumulative reaction rate [mol/L/h] per
+        %   compound
+        % reactor_influx: influx concentrations [mol/L] per compound
+        % NH3sp: setpoint for outflux of NH3
+        % keepNH3fixed: boolean representing whether we want to control the
+        %   the concentration in the outflow of the reactor
+        % (invHRT): 1/(Hydrolic retention rate) [1/h]
+        %
+        % -> dy: derivative of bulk concentration
+        
         dy = zeros(length(bulk_conc), 1);
 
         if keepNH3fixed == 1 && bulk_conc(1) > NH3sp
