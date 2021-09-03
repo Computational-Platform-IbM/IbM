@@ -3,6 +3,8 @@
 
 function R = loadModelXlsx(filename)
 R = []; % R initialization
+rng(082021);
+
 
 % GENERAL MODEL PARAMETERS from the Excel file
 fprintf('> LOADING AND CREATING MODEL STRUCTURE AND PARAMETERS...\n')
