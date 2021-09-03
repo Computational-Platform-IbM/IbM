@@ -1,4 +1,4 @@
-function plotBacs(g, bac)
+function plotBacs(g, bac, constants)
     % testing function to visualise bacteria
     x = bac.x;
     y = bac.y;
@@ -25,4 +25,18 @@ function plotBacs(g, bac)
     yticks(yt);
 
     grid on;
+    
+    % add dummy scatters to make legend 
+    hold on;
+    uniq_s = unique(s);
+    for i = 1:length(uniq_s)
+        scatter(NaN, NaN, 'Marker', 'o', 'MarkerFaceColor', coloring{uniq_s(i)}, 'MarkerEdgeColor', [0 0 0], 'LineWidth', 1);
+    end
+    
+    % increase marker size in legend - Unsupported behaviour in Matlab, but does still work...
+    [~, icons] = legend(constants.speciesNames{uniq_s}, 'FontSize', 12, 'Location', 'bestoutside');
+    icons = findobj(icons, 'type', 'patch');
+    set(icons, 'MarkerSize', 12);
+    set(icons, 'LineWidth', 1);
+    hold off;
 end
