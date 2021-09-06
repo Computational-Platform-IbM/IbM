@@ -40,9 +40,12 @@ function conc = diffusion(conc, reaction_matrix, bulk_concentrations, grid, cons
     L_restriction = base/16;
     L_prolongation = base/4;
     
+    dT = constants.dT;
+    dx = grid.dx;
+    
     for iCompound = 1:nCompounds                % parfor?
         % stencil updates/declarations
-        alpha = constants.dT * diffusion_coef(iCompound) / (2*grid.dx^2);
+        alpha = dT * diffusion_coef(iCompound) / (2*dx^2);
         L_lhs = I - alpha*L;                    % lefthand-side stencil 
         L_0 = alpha*L;                          % basis stencil laplacian
         L_rhs = I + alpha*L;                    % righthand-side stencil
@@ -83,7 +86,7 @@ function rhs = calculate_rhs_dirichlet(phi, L_rhs, value)
     %
     % rhs: right-hand-side of the diffusion equation due to diffusion
     
-    phi = create_dirichlet_boundary(phi, value);
+    phi = create_dirichlet_boundary(phi, 2*value);
     rhs = convn(phi, L_rhs, 'valid');
 end
 
