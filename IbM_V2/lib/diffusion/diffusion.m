@@ -83,6 +83,9 @@ function rhs = calculate_rhs_dirichlet(phi, L_rhs, value)
     % phi: matrix with starting values (:, :)
     % L_rhs: kernel used for the rhs convolution
     % value: boundary value for this compound
+    % 
+    % '2*value' in create_dirichlet_boundary arguments is from
+    % Crank-Nicholson method (Dirichlet Boundary of times t and t+dt).
     %
     % rhs: right-hand-side of the diffusion equation due to diffusion
     
