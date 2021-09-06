@@ -20,7 +20,6 @@ function conc = diffusion(conc, reaction_matrix, bulk_concentrations, grid, cons
     accuracy = constants.diffusion_accuracy;
     absolute_tolerance = constants.Tol_a;
     nCompounds = length(diffusion_coef);
-    dT = constants.dT;
     
     % set parameters for V-cycle 
     % <TODO: optimize under realistic conditions/>

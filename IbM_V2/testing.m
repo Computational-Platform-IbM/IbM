@@ -58,6 +58,7 @@ constants.MatrixDecay = R.rm.MatrixDecay_mod;
 constants.influent_concentrations = R.Inf.St;
 constants.pOp.NH3sp = R.pOp.NH3sp; %%%% <C: what is the meaning of this variable??? /> -> <E: Setpoint of NH3 in reactor />
 constants.constantN = R.flagN;
+constants.constantpH = 7.0;
 % <E: Some constants that I'm missing in your code. />
 constants.kDist = 1;                                    % Extra distance between bacteria, when kDist > 1.
 constants.Grmax = 100*10^(-6);                          % [m] Maximum radius of granule. To compute the detachment of bacteria when bac_norm > r_max
