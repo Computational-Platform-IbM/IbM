@@ -20,7 +20,9 @@ function conc = diffusion(conc, reaction_matrix, bulk_concentrations, grid, cons
     accuracy = constants.diffusion_accuracy;
     absolute_tolerance = constants.Tol_a;
     nCompounds = length(diffusion_coef);
-    
+    dT = constants.dT;
+    dx = grid.dx;
+
     % set parameters for V-cycle 
     % <TODO: optimize under realistic conditions/>
     iter_pre = 3;
@@ -38,9 +40,6 @@ function conc = diffusion(conc, reaction_matrix, bulk_concentrations, grid, cons
     base = [1 2 1; 2 4 2; 1 2 1];
     L_restriction = base/16;
     L_prolongation = base/4;
-    
-    dT = constants.dT;
-    dx = grid.dx;
     
     for iCompound = 1:nCompounds                % parfor?
         % stencil updates/declarations
@@ -88,7 +87,7 @@ function rhs = calculate_rhs_dirichlet(phi, L_rhs, value)
     %
     % rhs: right-hand-side of the diffusion equation due to diffusion
     
-    phi = create_dirichlet_boundary(phi, 2*value);
+    phi = create_dirichlet_boundary(phi, 2*value); % 2x because of Crank Nicolson correction for time=t & time=t+dt
     rhs = convn(phi, L_rhs, 'valid');
 end
 
