@@ -1,4 +1,4 @@
-function conc = diffusion(conc, reaction_matrix, bulk_concentrations, grid, constants)
+function conc = diffusion(conc, reaction_matrix, bulk_concentrations, diffRegion, grid, constants)
     % Solve diffusion for all molecules in the liquid phase using the 
     % multigrid method. IMPORTANT: only runs for all dirichlet conditions 
     % as of now. Future versions should include variable conditions per 
@@ -9,6 +9,8 @@ function conc = diffusion(conc, reaction_matrix, bulk_concentrations, grid, cons
     % reaction_matrix: matrix with per grid cell and per compound the
     %   change [h-1] due to bacterial activity
     % bulk_concentrations: vector with the bulk concentration per compound
+    % diffRegion: matrix with per gridcell whether the cell is in the
+    %   diffusion region
     % grid: struct containing all information regarding the grid
     % constants: struct containing all simulation constants
     % dT: time over which to solve the diffusion equations
@@ -58,7 +60,7 @@ function conc = diffusion(conc, reaction_matrix, bulk_concentrations, grid, cons
         rhs = rhs_bc + rhs_react;
 
         % solve using multigrid
-        while sum(residual(conc(:,:,iCompound), rhs, L_lhs).^2, 'all') > accuracy^2 % absolute norm of residual > accuracy
+        while sum(residual(conc(:,:,iCompound), rhs, L_lhs, diffRegion).^2, 'all') > accuracy^2 % absolute norm of residual > accuracy
             conc(:,:,iCompound) = V_Cycle(conc(:,:,iCompound), rhs, L_0, L_restriction, L_prolongation, 9, 0, iter_pre, iter_post, iter_final);
         end
     end
@@ -74,21 +76,30 @@ function conc = diffusion(conc, reaction_matrix, bulk_concentrations, grid, cons
 end
 
 
-function rhs = calculate_rhs_dirichlet(phi, L_rhs, value)
+function rhs = calculate_rhs_dirichlet(phi, L_rhs, value, diffRegion)
     % Calculate (part of) the RHS of the diffusion equation using
-    % convolution for 1 compound only.
+    % convolution for 1 compound only, and only in the diffusion region.
+    % Assumes that there is at least one layer of bulk liquid around the
+    % diffusion region.
     %
     % phi: matrix with starting values (:, :)
     % L_rhs: kernel used for the rhs convolution
     % value: boundary value for this compound
+    % diffRegion: matrix with per gridcell whether it is in the diffusion
+    %   region
     % 
     % '2*value' in create_dirichlet_boundary arguments is from
-    % Crank-Nicholson method (Dirichlet Boundary of times t and t+dt).
+    % Crank-Nicholson method (Dirichlet Boundary of both t=t and t=t+dt).
     %
-    % rhs: right-hand-side of the diffusion equation due to diffusion
+    % -> rhs: right-hand-side of the diffusion equation due to diffusion,
+    %   valid only in the diffusion region. Outside an artificial value of
+    %   <bulk_concentration> is set.
     
-    phi = create_dirichlet_boundary(phi, 2*value); % 2x because of Crank Nicolson correction for time=t & time=t+dt
-    rhs = convn(phi, L_rhs, 'valid');
+    rhs_diffRegion = convn(diffRegion.*phi + ~diffRegion*value*2, L_rhs, 'same');
+    rhs = diffRegion .* rhs_diffRegion + ~diffRegion .* ones(size(phi)) * value;
+    
+%     phi = create_dirichlet_boundary(phi, 2*value);
+%     rhs = convn(phi, L_rhs, 'valid');
 end
 
 
