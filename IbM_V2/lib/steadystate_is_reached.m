@@ -1,4 +1,4 @@
-function [isReached, max_RES_value] = steadystate_is_reached(conc, reaction_matrix, dx, bulk_concentrations, constants)
+function [isReached, max_RES_value] = steadystate_is_reached(conc, reaction_matrix, dx, bulk_concentrations, diffRegion, constants)
     % Check whether a steady state is reached during the diffusion
     % 
     % conc0: last concentration values
@@ -28,6 +28,7 @@ function [isReached, max_RES_value] = steadystate_is_reached(conc, reaction_matr
         delta_conc = convn(padded_conc, L, 'valid');
         delta_conc = delta_conc + characteristic_time(iCompound) * reaction_matrix(:,:,iCompound);
         RES = delta_conc ./ (correction_concentration_steadystate + conc(:,:,iCompound)); % ==> RES [mol/L] ./ ([mol/L] + [mol/L])
+        RES = RES(diffRegion); % only look at RES values in diffusion region, edge in bulk-layer is by definition not zero in SS
         compound_steadystate(iCompound) = isReached_compound(RES, method, steadystate_tolerance);
         
         % DEBUG

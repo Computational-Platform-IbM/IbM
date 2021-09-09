@@ -73,7 +73,7 @@ function profiling = integTime(grid, bac, directory, constants, init_params)
             
             % perform check for steady state
             tic;
-            [ssReached, RESvalues(:,iRES)] = steadystate_is_reached(conc, reaction_matrix, grid.dx, bulk_concs, constants);
+            [ssReached, RESvalues(:,iRES)] = steadystate_is_reached(conc, reaction_matrix, grid.dx, bulk_concs, diffusion_region, constants);
             profiling(iProf, 4) = profiling(iProf, 4) + toc;
             
             % check if system is converging towards steady state
