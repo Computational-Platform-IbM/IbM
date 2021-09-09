@@ -52,7 +52,7 @@ function conc = diffusion(conc, reaction_matrix, bulk_concentrations, diffRegion
 
         % create right hand side
         % - boundary conditions
-        rhs_bc = calculate_rhs_dirichlet(conc(:,:,iCompound), L_rhs, bulk_concentrations(iCompound)*1000); % (nX, nY, nCompounds)
+        rhs_bc = calculate_rhs_dirichlet(conc(:,:,iCompound), L_rhs, bulk_concentrations(iCompound)*1000, diffRegion); % (nX, nY, nCompounds)
 
         % - reaction matrix
         rhs_react = dT*1000*reaction_matrix(:,:,iCompound);
