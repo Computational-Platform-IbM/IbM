@@ -60,8 +60,12 @@ function conc = diffusion(conc, reaction_matrix, bulk_concentrations, diffRegion
         rhs = rhs_bc + rhs_react;
 
         % solve using multigrid
-        while sum(residual(conc(:,:,iCompound), rhs, L_lhs, diffRegion).^2, 'all') > accuracy^2 % absolute norm of residual > accuracy
-            conc(:,:,iCompound) = V_Cycle(conc(:,:,iCompound), rhs, L_0, L_restriction, L_prolongation, 9, 0, iter_pre, iter_post, iter_final);
+        isSolution = false;             % without running, no solution yet
+        while ~isSolution
+            conc(:,:,iCompound) = V_Cycle(conc(:,:,iCompound), diffRegion, bulk_concentrations(iCompound)*1000, rhs, L_0, L_restriction, L_prolongation, 9, 0, iter_pre, iter_post, iter_final);
+            residual_diffRegion = residual(conc(:,:,iCompound), rhs, L_lhs);
+            residual_diffRegion = residual_diffRegion(diffRegion);
+            isSolution = sum(residual_diffRegion.^2, 'all') < accuracy^2;
         end
     end
     
