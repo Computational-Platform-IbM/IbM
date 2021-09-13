@@ -28,20 +28,40 @@ function [isReached, max_RES_value] = steadystate_is_reached(conc, reaction_matr
         delta_conc = convn(padded_conc, L, 'valid');
         delta_conc = delta_conc + characteristic_time(iCompound) * reaction_matrix(:,:,iCompound);
         RES = delta_conc ./ (correction_concentration_steadystate + conc(:,:,iCompound)); % ==> RES [mol/L] ./ ([mol/L] + [mol/L])
-        RES = RES(diffRegion); % only look at RES values in diffusion region, edge in bulk-layer is by definition not zero in SS
-        compound_steadystate(iCompound) = isReached_compound(RES, method, steadystate_tolerance);
         
+        % only look at RES values in diffusion region, edge in bulk-layer is by definition not zero in SS
+        compound_steadystate(iCompound) = isReached_compound(RES(diffRegion), method, steadystate_tolerance);
+        max_RES_value(iCompound) = max(abs(RES(diffRegion)), [], 'all');
+
         % DEBUG
-%         max_RES_value(iCompound) = max(abs(RES), [], 'all');
 %         if ~compound_steadystate(iCompound)
 %             % plot RES over total domain
-%             figure(iCompound + 3)
-%             heatmap(RES');
+%             figure(iCompound + 3); clf;
+%             ax1 = axes;
+%             imagesc(ax1, RES');
 %             max_val = max(abs(caxis()));
 %             caxis([-max_val, max_val])
-%             colormap(redblue());
 %             title(constants.StNames(iCompound))
 %             fprintf('%s not in steady state yet\n', constants.StNames{iCompound});
+%             axis square;
+%             % plot diffRegion on top
+%             hold on;
+%             
+%             ax2 = axes;
+%             h = imagesc(ax2, diffRegion');
+%             h.AlphaData = 0.5;
+%             axis square;
+%             
+%             colorbar(ax1);
+% 
+%             linkaxes([ax1, ax2]);
+%             set(ax2, 'Position', ax1.Position)
+%             ax2.Visible = 'off';
+%             ax2.XTick = [];
+%             ax2.YTick = [];
+%             colormap(ax1, redblue());
+%             colormap(ax2, [0 0 0; 1 1 1]);
+%             hold off;
 %         end
         % END DEBUG
         
