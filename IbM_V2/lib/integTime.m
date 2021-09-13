@@ -41,8 +41,11 @@ function profiling = integTime(grid, bac, directory, constants, init_params)
     iDiffusion = 1;   % keep track of index of diffusion (per 1 dT_bac: iDiffusion == cycles of diffusion)
     iRES = 1;
     RESvalues = zeros(sum(constants.isLiquid), 100); % reserve for n steady state checks beforehand (can be more)
-
+	norm_diff = zeros(100,1);
+    
     %% time advancements (dT / dT_steadystate)
+    prev_conc = conc;
+    
     
     while Time.current < constants.simulation_end
         % diffuse (MG)
@@ -74,7 +77,10 @@ function profiling = integTime(grid, bac, directory, constants, init_params)
             % perform check for steady state
             tic;
             [ssReached, RESvalues(:,iRES)] = steadystate_is_reached(conc, reaction_matrix, grid.dx, bulk_concs, diffusion_region, constants);
+            norm_diff(iRES) = sqrt(sum((prev_conc - conc).^2, 'all'));
             profiling(iProf, 4) = profiling(iProf, 4) + toc;
+            
+            prev_conc = conc;
             
             % check if system is converging towards steady state
             noLongerConverging = abs(max(RESvalues(:, iRES)) - max(RESvalues(:, iRES - 1))) < constants.convergence_accuracy;
@@ -86,7 +92,7 @@ function profiling = integTime(grid, bac, directory, constants, init_params)
                 else
                     fprintf('\twith at most %.4f %% off of steady state\n', max(RESvalues(:, iRES))*100)
                 end
-                
+                                
                 % set time to next bacterial activity time
                 previousTime = Time.current;
                 Time.current = Time.bac;
@@ -104,6 +110,9 @@ function profiling = integTime(grid, bac, directory, constants, init_params)
                     
                     if constants.debug.plotConvergence
                         plotConvergence(RESvalues, iRES, constants, Time)
+                        figure(21); clf;
+                        plot(norm_diff, 'LineWidth', 2);
+                        title('norm(conc_{prev} - conc)')
                     end
                     
                     maxErrors(iProf) = max(RESvalues(:,iRES));
