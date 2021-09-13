@@ -9,7 +9,7 @@ function profiling = integTime(grid, bac, directory, constants, init_params)
     [grid2bac, grid2nBacs] = determine_where_bacteria_in_grid(grid, bac);
     
     % determine diffusion layer
-    diffusion_region = determine_diffusion_region(grid2bac, grid2nBacs, bac, grid); 
+    [diffusion_region, focus_region] = determine_diffusion_region(grid2bac, grid2nBacs, bac, grid); 
 
     if constants.debug.plotDiffRegion
         plotDiffRegion(grid, bac, diffusion_region, true)
@@ -196,7 +196,7 @@ function profiling = integTime(grid, bac, directory, constants, init_params)
                             
                             % update diffusion region
                             tic;
-                            diffusion_region = determine_diffusion_region(grid2bac, grid2nBacs, bac, grid);
+                            [diffusion_region, focus_region] = determine_diffusion_region(grid2bac, grid2nBacs, bac, grid);
                             profiling(iProf, 9) = profiling(iProf, 9) + toc;
                             
                             if constants.debug.plotDiffRegion
