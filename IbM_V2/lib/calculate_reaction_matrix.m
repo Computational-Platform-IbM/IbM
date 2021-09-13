@@ -44,7 +44,7 @@ function [reaction_matrix, mu, pH] = calculate_reaction_matrix(grid2bac, grid2nB
     % pre-compute for bulk-liquid (at 1,1 there should never be diffusion
     % layer)
     Sh_bulk = 10^-pH(1, 1);
-    [spcM, Sh_bulk] = solve_pH(Sh_bulk, [squeeze(conc(1, 1, :)); 1; 0], Keq, chrM, constants.constantpH); % <C: why [...; 1; 0]? />
+    [spcM, Sh_bulk] = solve_pH(Sh_bulk, [reshape(conc(1,1,:), [], 1, 1); 1; 0], Keq, chrM, constants.constantpH, constants.pHtolerance); % <C: why [...; 1; 0]? />
     pH_bulk = -log10(Sh_bulk);
     
     % check if pH is solved correctly
@@ -62,7 +62,7 @@ function [reaction_matrix, mu, pH] = calculate_reaction_matrix(grid2bac, grid2nB
             else % in diffusion layer, thus pH calculation needs to be performed
                 % calculate pH & speciation
                 Sh_old = 10^-pH(ix, iy);
-                [spcM, Sh] = solve_pH(Sh_old, [squeeze(conc(ix, iy, :)); 1; 0], Keq, chrM, constants.constantpH); % <C: why [...; 1; 0]? />
+                [spcM, Sh] = solve_pH(Sh_old, [reshape(conc(1,1,:), [], 1, 1); 1; 0], Keq, chrM, constants.constantpH, constants.pHtolerance); % <C: why [...; 1; 0]? />
                 pH(ix, iy) = -log10(Sh);
                 
                 % check if pH is solved correctly
@@ -72,7 +72,7 @@ function [reaction_matrix, mu, pH] = calculate_reaction_matrix(grid2bac, grid2nB
                 
                 
                 % get bacteria in this grid cell
-                iBacs = squeeze(grid2bac(ix, iy, 1:grid2nBacs(ix, iy))); % n-by-1 vector of bacterial indices
+                iBacs = reshape(grid2bac(ix, iy, 1:grid2nBacs(ix, iy)), [], 1); % n-by-1 vector of bacterial indices
                 
                 speciesGrid = bac.species(iBacs);
                 unique_species = unique(speciesGrid); % which species
@@ -110,7 +110,7 @@ function [reaction_matrix, mu, pH] = calculate_reaction_matrix(grid2bac, grid2nB
 
 end
 
-function [spcM, Sh] = solve_pH(Sh_ini, StV, Keq, chrM, keepConstantpH)
+function [spcM, Sh] = solve_pH(Sh_ini, StV, Keq, chrM, keepConstantpH, Tol)
     % Solve the pH and speciation per grid cell
     %
     % <>
@@ -135,131 +135,54 @@ function [spcM, Sh] = solve_pH(Sh_ini, StV, Keq, chrM, keepConstantpH)
         spcM(:, 5) = (StV .* Keq(:, 2) .* Keq(:, 3) .* Keq(:, 4)) ./ Denm;
 
     else
-        % Checking the existence of a zero pool in the function between pH 1 and 14
-        a = 1e-14;
-        b = 1;
-        Sh_v = [a; b]; F = zeros(2, 1);
-
-        for nn = 1:2
-            Sh = Sh_v(nn);
-            spcM = zeros(size(chrM));
-            Denm = (1 + Keq(:, 1) / w) * Sh^3 + Keq(:, 2) * Sh^2 + Keq(:, 3) .* Keq(:, 2) * Sh + Keq(:, 4) .* Keq(:, 3) .* Keq(:, 2);
-
-            spcM(:, 1) = ((Keq(:, 1) / w) .* StV * Sh^3) ./ Denm;
-            spcM(:, 2) = (StV * Sh^3) ./ Denm;
-            spcM(:, 3) = (StV * Sh^2 .* Keq(:, 2)) ./ Denm;
-            spcM(:, 4) = (StV * Sh .* Keq(:, 2) .* Keq(:, 3)) ./ Denm;
-            spcM(:, 5) = (StV .* Keq(:, 2) .* Keq(:, 3) .* Keq(:, 4)) ./ Denm;
-
-            % Evaluation of the charge balance for the current Sh value, F(Sh)
-            F(nn) = Sh + sum(sum(spcM .* chrM));
-        end
-
-        FF = prod(F);
-
-        if FF > 0 || isnan(FF)
-            error('ERROR.- The sum of charges returns a wrong value')
-        end
-
-        fa = F(1);
-        fb = F(2);
-
-        % Newton-Raphson method.-
+        % Newton-Raphson method
         Sh = Sh_ini;
         % Counter of convergences
-        ipH = 1; Tol = 5.e-15; maxIter = 20;
+        ipH = 1; 
+        maxIter = 20;
+        err = 1; % initial error
+        F = 1; % initial electroneutrality error
+
         % Inicialization of matrix of species
         spcM = zeros(size(chrM)); dspcM = spcM;
 
-        while ipH <= maxIter
-            Denm = (1 + Keq(:, 1) / w) * Sh^3 + Keq(:, 2) * Sh^2 + Keq(:, 3) .* Keq(:, 2) * Sh + Keq(:, 4) .* Keq(:, 3) .* Keq(:, 2);
-            spcM(:, 1) = ((Keq(:, 1) / w) .* StV * Sh^3) ./ Denm;
+        while (abs(err) > Tol) && (abs(F) > Tol) && ipH <= maxIter
+            Denm = (1 + Keq(:, 1)) * Sh^3 + Keq(:, 2) * Sh^2 + Keq(:, 3) .* Keq(:, 2) * Sh + Keq(:, 4) .* Keq(:, 3) .* Keq(:, 2);
+            spcM(:, 1) = ((Keq(:, 1)) .* StV * Sh^3) ./ Denm;
             spcM(:, 2) = (StV .* Sh^3) ./ Denm;
             spcM(:, 3) = (StV * Sh^2 .* Keq(:, 2)) ./ Denm;
             spcM(:, 4) = (StV * Sh .* Keq(:, 2) .* Keq(:, 3)) ./ Denm;
             spcM(:, 5) = (StV .* Keq(:, 2) .* Keq(:, 3) .* Keq(:, 4)) ./ Denm;
 
             % Evaluation of the charge balance for the current Sh value, F(Sh)
-            F = Sh + sum(sum(spcM .* chrM));
+            F = Sh + sum(spcM .* chrM, 'all');
 
             % Calculation of all derivated functions
             dDenm = Denm.^2;
-            aux = 3 * Sh^2 * (Keq(:, 1) / w + 1) + 2 * Sh * Keq(:, 2) + Keq(:, 2) .* Keq(:, 3);
+            aux = 3 * Sh^2 * (Keq(:, 1) + 1) + 2 * Sh * Keq(:, 2) + Keq(:, 2) .* Keq(:, 3);
 
-            dspcM(:, 1) = (3 * Sh^2 * Keq(:, 1) .* StV) ./ (w * Denm) - ((Keq(:, 1) .* StV * Sh^3) .* aux) ./ (w * dDenm);
+            dspcM(:, 1) = (3 * Sh^2 * Keq(:, 1) .* StV) ./ (Denm) - ((Keq(:, 1) .* StV * Sh^3) .* aux) ./ (dDenm);
             dspcM(:, 2) = (3 * Sh^2 * StV) ./ Denm - (StV * Sh^3 .* aux) ./ dDenm;
             dspcM(:, 3) = (2 * Sh * Keq(:, 2) .* StV) ./ Denm - ((Keq(:, 2) .* StV * Sh^2) .* aux) ./ dDenm;
             dspcM(:, 4) = (Keq(:, 2) .* Keq(:, 3) .* StV) ./ Denm - ((Keq(:, 2) .* Keq(:, 3) .* StV * Sh) .* aux) ./ dDenm;
             dspcM(:, 5) = -(Keq(:, 2) .* Keq(:, 3) .* Keq(:, 4) .* StV .* aux) ./ dDenm;
 
             % Evaluation of the charge balance for the current Sh value, dF(Sh)
-            dF = 1 + sum(sum(dspcM .* chrM));
+            dF = 1 + sum(dspcM .* chrM, 'all');
             %Error
             err = F / dF;
             % Newton-Raphson algorithm
             Sh = Sh - err;
 
-            if (abs(err) < 1e-14) && (abs(F) < Tol)
-                % Checking if a valid pH was obtained
-                if (Sh > 1e-14) && (Sh < 1)
-                    ipH = maxIter;
-                else
-                    % Counter of convergence
-                    ipH = 1; maxIter = 50;
-                    n1 = 0; n2 = 0;
-
-                    while (ipH < maxIter)
-                        Sh = (fb * a - fa * b) / (fb - fa);
-                        spcM = zeros(size(chrM));
-                        Denm = (1 + Keq(:, 1) / w) * Sh^3 + Keq(:, 2) * Sh^2 + Keq(:, 3) .* Keq(:, 2) * Sh + Keq(:, 4) .* Keq(:, 3) .* Keq(:, 2);
-
-                        spcM(:, 1) = ((Keq(:, 1) / w) .* StV * Sh^3) ./ Denm;
-                        spcM(:, 2) = (StV .* Sh^3) ./ Denm;
-                        spcM(:, 3) = (StV * Sh^2 .* Keq(:, 2)) ./ Denm;
-                        spcM(:, 4) = (StV * Sh .* Keq(:, 2) .* Keq(:, 3)) ./ Denm;
-                        spcM(:, 5) = (StV .* Keq(:, 2) .* Keq(:, 3) .* Keq(:, 4)) ./ Denm;
-
-                        fc = Sh + sum(sum(spcM .* chrM));
-
-                        if fa * fc > 0
-                            n1 = n1 + 1;
-
-                            if n1 == 2
-                                fb = (fc / (fc + fa)) * fb;
-                                n1 = 0;
-                            end
-
-                            a = Sh; fa = fc;
-                        elseif fb * fc > 0 % To avoid problems when fc == 0
-                            n2 = n2 + 1;
-
-                            if n2 == 2
-                                fa = (fc / (fc + fb)) * fa;
-                                n2 = 0;
-                            end
-
-                            b = Sh; fb = fc;
-                        end
-
-                        err1 = abs(fc);
-                        err2 = abs(Sh - (fb * a - fa * b) / (fb - fa));
-
-                        if (err1 < Tol) && (err2 < 1e-14)
-                            ipH = maxIter;
-                        end
-
-                        ipH = ipH + 1;
-                    end
-
-                end
-
-            end
-
             ipH = ipH + 1;
         end
-
+        if any(spcM < 0)
+            warning('DEBUG:actionRequired', 'debug: negative concentration encountered after pH calculation...');
+        end
+        if (Sh < 1e-14) || (Sh > 1)
+            warning('DEBUG:actionRequired', 'debug: pH found outside of 1-14 range...');
+        end
     end
-
 end
 
 function [mu_max, maint] = determine_max_growth_rate_and_maint(species, T, Sh)
@@ -307,7 +230,7 @@ function M = calculate_monod(Ks, Ki, conc)
     % -> M: Monod block
     
     % apply Ks
-    M = prod(conc ./ (conc + Ks));
+    M = prod((conc + 1e-25) ./ (conc + Ks + 1e-25)); % + 1e-25 to prevent NaN when conc == 0 and Ks == 0
     
     % apply Ki
     for i = 1:length(Ki)
