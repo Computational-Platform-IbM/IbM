@@ -99,7 +99,7 @@ function rhs = calculate_rhs_dirichlet(phi, L_rhs, value, diffRegion)
     %   valid only in the diffusion region. Outside an artificial value of
     %   <bulk_concentration> is set.
     
-    rhs_diffRegion = convn(diffRegion.*phi + ~diffRegion*value*2, L_rhs, 'same');
+    rhs_diffRegion = convn(diffRegion.*phi + ~diffRegion*value, L_rhs, 'same'); % The factor 2 is not required, because we already have the correct conc at t=t, and t=t+dt?
     rhs = diffRegion .* rhs_diffRegion + ~diffRegion .* ones(size(phi)) * value;
     
 %     phi = create_dirichlet_boundary(phi, 2*value);
