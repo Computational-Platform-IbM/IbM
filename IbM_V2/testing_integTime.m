@@ -79,9 +79,10 @@ constants.simulation_end = R.Sxy.maxT;
 constants.diffusion_rates = R.kTr.Diffn;
 constants.diffusion_accuracy = 1e-8; % to be tweaked still
 constants.Tol_a = R.kTr.Tolabs; % in [mol/m3], not [mol/L]!
+constants.pHtolerance = 1e-15;
 constants.correction_concentration_steady_state = 1e-4; % [mol/L]
-constants.steadystate_tolerance = 0.01; % [0, 1] -> relative/absolute tolerance of steady state
-constants.RESmethod = 'max'; % {'mean', 'max', 'norm'}
+constants.steadystate_tolerance = 0.015; % [0, 1] -> relative/absolute tolerance of steady state
+constants.RESmethod = 'mean'; % {'mean', 'max', 'norm'}
 constants.bac_MW = R.bac.bac_MW;
 constants.bac_rho = R.bac.bac_rho;
 constants.inactivationEnabled = true;
@@ -92,11 +93,11 @@ constants.convergence_accuracy = 1e-6; % the maximum difference between absolute
 constants.nDiffusion_per_SScheck = 2;
 
 constants.debug.plotBacteria = false;
-constants.debug.plotConvergence = true;
-constants.debug.plotMaxErrors = true;
+constants.debug.plotConvergence = false; %
+constants.debug.plotMaxErrors = false; %
 constants.debug.plotDiffRegion = false;
-constants.debug.plotBulkConcsOverTime = true;
-constants.debug.plotProfiling = true;
+constants.debug.plotBulkConcsOverTime = false; %
+constants.debug.plotProfiling = false; %
 
 init_params = struct;
 init_params.init_bulk_conc = R.Sxy.Sbc_Dir;
@@ -105,7 +106,7 @@ init_params.invHRT = R.pOp.invHRT;
 
 %% actual call to integTime
 directory = 'Testing';
-constants.simulation_end = 10;
+constants.simulation_end = 30;
 
 bac = bacteria_shove(bac, grid, constants); % otherwise bacteria might overlap at start...
 bac = bacteria_shove(bac, grid, constants); % otherwise bacteria might overlap at start...
