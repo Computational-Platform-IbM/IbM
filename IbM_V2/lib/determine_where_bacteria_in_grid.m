@@ -16,8 +16,6 @@ function [grid2bac, grid2nBacs] = determine_where_bacteria_in_grid(grid, bac)
     % we should check this value at least one time. />
    
     %% determine grid cell per bacteria
-    bac.x;
-    bac.y;
     ix = floor(bac.x / grid.dx) + 1; % +1 because of MATLAB indexing
     iy = floor(bac.y / grid.dy) + 1;
     bac_grid = [ix, iy]; 
