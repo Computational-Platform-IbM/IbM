@@ -16,7 +16,6 @@ end
 
 warning('off', 'DEBUG:noActionRequired');
 
-% test
 %% Manually creating the structs required for integTime (i.e. loadExcel mimic)
 rng(2021);
 
