@@ -67,14 +67,15 @@ function conc = diffusion(conc, reaction_matrix, bulk_concentrations, diffRegion
             residual_diffRegion = residual_diffRegion(diffRegion);
             isSolution = sum(residual_diffRegion.^2, 'all') < accuracy^2;
         end
+        
+        % apply correction for negative values
+        negative_concentration = conc(:,:,iCompound) < 0;
+        if any(negative_concentration, 'all')
+            warning('DEBUG:noActionRequired', 'debug: negative concentration encountered in diffusion solution of compound %s... correction applied', constants.StNames{iCompound})
+            conc(:,:,iCompound) = ~negative_concentration.*conc(:,:,iCompound) + negative_concentration*absolute_tolerance; % set negative concentrations to very small number, not to 0 because of divide-by-0 in other parts of the code
+        end    
     end
     
-    % apply correction for negative values
-    negative_concentration = conc < 0;
-    if any(negative_concentration)
-        warning('DEBUG:noActionRequired', 'debug: negative concentration encountered in diffusion solution... correction applied')
-        conc = ~negative_concentration.*conc + negative_concentration*absolute_tolerance; % set negative concentrations to very small number, not to 0 because of divide-by-0 in other parts of the code
-    end    
     % convert concentrations back to mol/L
     conc = conc / 1000;
 end
