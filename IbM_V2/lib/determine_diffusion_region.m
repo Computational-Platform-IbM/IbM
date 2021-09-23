@@ -1,4 +1,4 @@
-function [diffusion_region, extraction_region] = determine_diffusion_region(grid2bac, grid2nBacs, bac, grid)
+function [diffusion_region, focus_region] = determine_diffusion_region(grid2bac, grid2nBacs, bac, grid)
     % Determine which grid cells lay in the diffusion layer, i.e. the
     % region composed of all grid cells within the boundary distance from a
     % bacterium.
@@ -66,22 +66,21 @@ function [diffusion_region, extraction_region] = determine_diffusion_region(grid
     % put restricted matrix back in original
     diffusion_region(diffNodesX, diffNodesY) = isDiffRegion;
     
-    
-    % determine extraction region, which:
-    % - includes all diffusion nodes
-    % - has an odd number of nodes in x & y direction
-    % - has at least one bulk layer node at each side
-    
-    extraction_region = determine_extraction_region(diffusion_region);
+    % determine focus region
+    focus_region = determine_focus_region(diffusion_region);
 end
 
 
 
-function extraction_region = determine_extraction_region(diffRegion)
+function extraction_region = determine_focus_region(diffRegion)
+    % determine extraction region, which:
+    % - includes all diffusion nodes
+    % - has an odd number of nodes in x & y direction (for efficient
+    % diffusion)
+    % - has at least one bulk layer node at each side
     extraction_region = struct;
-    extraction_region.mask = zeros(size(diffRegion), 'logical');
     
-    x_diffRegion = sum(diffRegion, 1);
+    x_diffRegion = sum(diffRegion, 2);
     first_x = find(x_diffRegion, 1, 'first') - 1;
     last_x = find(x_diffRegion, 1, 'last') + 1;
     
@@ -90,7 +89,7 @@ function extraction_region = determine_extraction_region(diffRegion)
         first_x = first_x - 1;
     end
     
-    y_diffRegion = sum(diffRegion, 2);
+    y_diffRegion = sum(diffRegion, 1);
     first_y = find(y_diffRegion, 1, 'first') - 1;
     last_y = find(y_diffRegion, 1, 'last') + 1;
     
@@ -106,7 +105,14 @@ function extraction_region = determine_extraction_region(diffRegion)
     extraction_region.x1 = last_x;
     extraction_region.y0 = first_y;
     extraction_region.y1 = last_y;
-    extraction_region.mask(first_x:last_x, first_y:last_y) = true;
+    
+    % DEBUG
+    if any(diffRegion([1, end], 1)) || any(diffRegion(1, [1, end])) || any(diffRegion(end, [1, end])) || any(diffRegion([1, end], end))
+        xRange = first_x:last_x;
+        yRange = first_y:last_y;
+        disp(diffRegion(xRange, yRange));
+    end
+    % END DEBUG
 end
 
 function [diffusionNodesX, diffusionNodesY] = getDiffusionNodes(bac, grid)
