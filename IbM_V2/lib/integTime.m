@@ -8,8 +8,10 @@ function profiling = integTime(grid, bac, directory, constants, init_params)
     % make bacterial-grid matrix
     [grid2bac, grid2nBacs] = determine_where_bacteria_in_grid(grid, bac);
     
-    % determine diffusion layer
-    [diffusion_region, ~] = determine_diffusion_region(grid2bac, grid2nBacs, bac, grid); 
+    % determine diffusion layer and calculate ranges for focus mask
+    [diffusion_region, focus_region] = determine_diffusion_region(grid2bac, grid2nBacs, bac, grid);
+    xRange = focus_region.x0:focus_region.x1;
+    yRange = focus_region.y0:focus_region.y1;
 
     if constants.debug.plotDiffRegion
         plotDiffRegion(grid, bac, diffusion_region, true)
@@ -35,6 +37,7 @@ function profiling = integTime(grid, bac, directory, constants, init_params)
    
     profiling = zeros(ceil(constants.simulation_end / constants.dT_bac)+1, 10);
     maxErrors = zeros(ceil(constants.simulation_end / constants.dT_bac), 1); % store max error per dT_bac
+    normOverTime = zeros(ceil(constants.simulation_end / constants.dT_bac), 1); % store norm of concentration differance per dT_bac
     bulk_history = zeros(size(bulk_concs, 1), ceil(constants.simulation_end / constants.dT_bac)+1);
     bulk_history(:,1) = bulk_concs;
     iProf = 1;        % keep track of index of profiling (every simulated hour == +1 index)
@@ -50,7 +53,7 @@ function profiling = integTime(grid, bac, directory, constants, init_params)
     while Time.current < constants.simulation_end
         % diffuse (MG)
         tic;
-        conc = diffusion(conc, reaction_matrix, bulk_concs, diffusion_region, grid, constants);
+        conc(xRange, yRange, :) = diffusion(conc(xRange, yRange, :), reaction_matrix(xRange, yRange, :), bulk_concs, diffusion_region(xRange, yRange), grid, constants);
         profiling(iProf, 1) = profiling(iProf, 1) + toc;
         
         % set bulk layer concentrations (in theory, not needed anymore with
@@ -64,7 +67,7 @@ function profiling = integTime(grid, bac, directory, constants, init_params)
         
         % calculate reaction matrix
         tic;
-        [reaction_matrix, bac.mu, pH] = calculate_reaction_matrix(grid2bac, grid2nBacs, bac, diffusion_region, conc, constants, pH);
+        [reaction_matrix(xRange, yRange, :), bac.mu, pH(xRange, yRange)] = calculate_reaction_matrix(grid2bac(xRange, yRange, :), grid2nBacs(xRange, yRange), bac, diffusion_region(xRange, yRange, :), conc(xRange, yRange, :), constants, pH(xRange, yRange));
         profiling(iProf, 3) = profiling(iProf, 3) + toc;
 
 
@@ -76,7 +79,7 @@ function profiling = integTime(grid, bac, directory, constants, init_params)
             
             % perform check for steady state
             tic;
-            [ssReached, RESvalues(:,iRES)] = steadystate_is_reached(conc, reaction_matrix, grid.dx, bulk_concs, diffusion_region, constants);
+            [ssReached, RESvalues(:,iRES)] = steadystate_is_reached(conc(xRange, yRange, :), reaction_matrix(xRange, yRange, :), grid.dx, bulk_concs, diffusion_region(xRange, yRange), constants);
             norm_diff(iRES) = sqrt(sum((prev_conc - conc).^2, 'all'));
             profiling(iProf, 4) = profiling(iProf, 4) + toc;
             
@@ -111,12 +114,14 @@ function profiling = integTime(grid, bac, directory, constants, init_params)
                     if constants.debug.plotConvergence
                         plotConvergence(RESvalues, iRES, constants, Time)
                         figure(21); clf;
-                        plot((1:iRES)*constants.nDiffusion_per_SScheck,norm_diff(1:iRES), 'LineWidth', 2);
-                        title('norm(conc_{prev} - conc)')
+                        plot((1:iRES-1)*constants.nDiffusion_per_SScheck,norm_diff(2:iRES), 'LineWidth', 2);
+                        set(gca, 'YScale', 'log')
+                        title(sprintf('norm(conc_{prev} - conc) at t=%.1f', Time.current))
                         drawnow()
                     end
                     
                     maxErrors(iProf) = max(RESvalues(:,iRES));
+                    normOverTime(iProf) = norm_diff(iRES);
                     iDiffusion = 1;
                     iRES = 1;
                     RESvalues = zeros(sum(constants.isLiquid), 100); % reset RES value array
@@ -197,7 +202,9 @@ function profiling = integTime(grid, bac, directory, constants, init_params)
                             
                             % update diffusion region
                             tic;
-                            [diffusion_region, ~] = determine_diffusion_region(grid2bac, grid2nBacs, bac, grid);
+                            [diffusion_region, focus_region] = determine_diffusion_region(grid2bac, grid2nBacs, bac, grid);
+                            xRange = focus_region.x0:focus_region.x1;
+                            yRange = focus_region.y0:focus_region.y1;
                             profiling(iProf, 9) = profiling(iProf, 9) + toc;
                             
                             if constants.debug.plotDiffRegion
@@ -214,7 +221,7 @@ function profiling = integTime(grid, bac, directory, constants, init_params)
                     
                     % recompute reaction matrix for next cycle
                     tic;
-                    [reaction_matrix, bac.mu, pH] = calculate_reaction_matrix(grid2bac, grid2nBacs, bac, diffusion_region, conc, constants, pH);
+                    [reaction_matrix(xRange, yRange, :), bac.mu, pH(xRange, yRange)] = calculate_reaction_matrix(grid2bac(xRange, yRange, :), grid2nBacs(xRange, yRange), bac, diffusion_region(xRange, yRange), conc(xRange, yRange, :), constants, pH(xRange, yRange));
                     profiling(iProf, 3) = profiling(iProf, 3) + toc;
                     
                     iProf = iProf + 1;
@@ -251,7 +258,8 @@ function profiling = integTime(grid, bac, directory, constants, init_params)
     end
     
     if constants.debug.plotMaxErrors
-        plotMaxErrorOverTime(maxErrors)
+        plotMaxErrorOverTime(maxErrors, constants.dT_bac)
+        plotNorm(normOverTime, constants.dT_bac)
     end
     
     if constants.debug.plotBulkConcsOverTime
@@ -259,7 +267,7 @@ function profiling = integTime(grid, bac, directory, constants, init_params)
     end
     
     plotConcs(conc, constants, Time.current);
-%     plotBacs(grid, bac, constants);
+    plotBacs(grid, bac, constants);
 %     plotDiffRegion(grid, bac, diffusion_region, false);
 end
 
@@ -274,6 +282,7 @@ Figure reservations:
 5) Max error over time
 6) Bulk concentrations over time
 7) concentration profiles (2D)
+8) Norm(conc1 - conc0) over time
 %}
 
 
