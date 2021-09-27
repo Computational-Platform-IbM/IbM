@@ -74,7 +74,7 @@ constants.max_granule_radius = 1000*10^(-6);  % C: see excel          % [m] Maxi
 constants.dT = R.Sxy.dT; % AOB/NOB/AMX -> 1e-6
 constants.dT_bac = R.Sxy.dT_bac;
 constants.dT_divide = R.Sxy.dT_Div;
-constants.dT_save = 3000;%R.Sxy.dT_Print;
+constants.dT_save = 9000;%R.Sxy.dT_Print;
 constants.constantpH = false;
 constants.simulation_end = R.Sxy.maxT;
 constants.diffusion_rates = R.kTr.Diffn;
@@ -82,7 +82,7 @@ constants.diffusion_accuracy = 1e-8; % to be tweaked still
 constants.Tol_a = R.kTr.Tolabs; % in [mol/m3], not [mol/L]!
 constants.pHtolerance = 1e-15;
 constants.correction_concentration_steady_state = 1e-4; % [mol/L]
-constants.steadystate_tolerance = 0.01; % [0, 1] -> relative/absolute tolerance of steady state
+constants.steadystate_tolerance = 0.015; % [0, 1] -> relative/absolute tolerance of steady state
 constants.RESmethod = 'max'; % {'mean', 'max', 'norm'}
 constants.bac_MW = R.bac.bac_MW;
 constants.bac_rho = R.bac.bac_rho;
@@ -90,7 +90,7 @@ constants.inactivationEnabled = true;
 constants.min_bac_mass_grams = R.bac.bac_mmin;
 constants.max_bac_mass_grams = R.bac.bac_mmax;
 constants.bac_max_radius = R.bac.bac_rmax;
-constants.convergence_accuracy = 1e-6; % the maximum difference between absolute maximum RES values of two diffusion cycles before it is said to no longer converge [RES% / 100]
+constants.convergence_accuracy = 1e-4; % should be around 1e-6... the maximum difference between absolute maximum RES values of two diffusion cycles before it is said to no longer converge [RES% / 100]
 constants.nDiffusion_per_SScheck = 2;
 
 Neumann = 0.2;
@@ -98,10 +98,13 @@ constants.dT = min(grid.dx^2./constants.diffusion_rates * Neumann);
 
 constants.debug.plotBacteria = false;
 constants.debug.plotConvergence = false; %
-constants.debug.plotMaxErrors = true; %
+constants.debug.plotMaxErrors = false; %
 constants.debug.plotDiffRegion = false;
-constants.debug.plotBulkConcsOverTime = true; %
-constants.debug.plotProfiling = true; %
+constants.debug.plotBulkConcsOverTime = false; %
+constants.debug.plotProfiling = false; %
+
+settings = struct;
+settings.parallelized = false;
 
 init_params = struct;
 init_params.init_bulk_conc = R.Sxy.Sbc_Dir;
@@ -110,7 +113,7 @@ init_params.invHRT = R.pOp.invHRT;
 
 %% actual call to integTime
 directory = 'Testing';
-constants.simulation_end = 2500;
+constants.simulation_end = 10;
 
 bac = bacteria_shove(bac, grid, constants); % otherwise bacteria might overlap at start...
 bac = bacteria_shove(bac, grid, constants); % otherwise bacteria might overlap at start...
@@ -123,7 +126,7 @@ end
 
 
 totalTimer = tic;
-profiling = integTime(grid, bac, directory, constants, init_params);
+profiling = integTime(grid, bac, directory, constants, init_params, settings);
 totalTime = toc(totalTimer);
 
 if constants.debug.plotProfiling

@@ -1,10 +1,13 @@
 % %%%% loadModelXls.m -Load all the parameters from Excel sheet and
 % generates the initial structure
 
-function R = loadModelXlsx
+function R = loadModelXlsx(route)
+
+%% TODO: remove rng
+rng(082021);
+
 R = []; % R initialization
 
-route = char('AOBNOBAMX.xlsx');% Reading the Excel file
 
 % GENERAL MODEL PARAMETERS from the Excel file
  fprintf('> LOADING AND CREATING MODEL STRUCTURE AND PARAMETERS...\n')

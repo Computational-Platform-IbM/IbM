@@ -5,14 +5,16 @@ Main Takeaway: overhead of parfor is too large for efficient
 parallelisation... (for a 32x32 system with 500 bacteria), at a certain
 point this does become better with more bacteria (and more chunks);
 %}
-
+% load('testingRMatrix.mat') 
+load('testingRMatrix_large.mat')
+diffRegion = diffusion_region;
 
 grid.dx = 4e-6;
 grid.dy = grid.dx;
-grid.nX = 32;
-grid.nY = 32;
+grid.nX = size(diffRegion, 1); %32;
+grid.nY = size(diffRegion, 2); %32;
 grid.blayer_thickness = 5e-6;
-load('testingRMatrix.mat')
+
 
 %% determine diffRegion and focus region
 [diffRegion, focus_region] = determine_diffusion_region(grid2bac, grid2nBacs, bac, grid); 
@@ -24,8 +26,10 @@ load('testingRMatrix.mat')
 nChunks_dir = 2;
 nChunks = nChunks_dir^2;
 dx = focus_region.x1 - focus_region.x0 + 1;
+% dx = size(diffRegion, 1);
 dx_chunk = ceil(dx/nChunks_dir);
 dy = focus_region.y1 - focus_region.y0 + 1;
+% dy = size(diffRegion, 2);
 dy_chunk = ceil(dy/nChunks_dir);
 
 chunk_ind_x = zeros(nChunks_dir, 2);
@@ -36,6 +40,7 @@ for ixChunk = 1:nChunks_dir
     temp_x = temp_x + dx_chunk;
 end
 chunk_ind_x(end) = focus_region.x1;
+% chunk_ind_x(end) = size(diffRegion, 1);
 
 chunk_ind_y = zeros(nChunks_dir, 2);
 
@@ -45,6 +50,7 @@ for iyChunk = 1:nChunks_dir
     temp_y = temp_y + dy_chunk;
 end
 chunk_ind_y(end) = focus_region.y1;
+% chunk_ind_y(end) = size(diffRegion, 2);
 
 
 %% reorganize indices in bacterial struct based on respective chunk
@@ -83,7 +89,7 @@ bac.active = bac.active(sortChunkIndex);
 %% redo grid2bac with new indices
 [grid2bac, ~] = determine_where_bacteria_in_grid(grid, bac);
 
-tStart = cputime; %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+tStart = tic; %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %% calculate_reaction_matrix_chunky
     Keq = constants.Keq;
@@ -126,23 +132,30 @@ tStart = cputime; %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     chunk_rMatrix = arrayfun(@(xlen, ylen) zeros(xlen, ylen, nCompounds), xlens, ylens, 'UniformOutput', false);
     chunk_pH = arrayfun(@(xlen, ylen) zeros(xlen, ylen), xlens, ylens, 'UniformOutput', false);
     chunk_mu = arrayfun(@(x) zeros(x, 1), chunk2nBacs, 'UniformOutput', false);
+    ix = @(iChunk) floor((iChunk - 1) / nChunks_dir) + 1;
+    iy = @(iChunk) mod(iChunk - 1, nChunks_dir) + 1;
+    chunk_xRange = arrayfun(@(iChunk) chunk_ind_x(ix(iChunk), 1):chunk_ind_x(ix(iChunk), 2), 1:nChunks, 'UniformOutput', false);
+    chunk_yRange = arrayfun(@(iChunk) chunk_ind_y(iy(iChunk), 1):chunk_ind_y(iy(iChunk), 2), 1:nChunks, 'UniformOutput', false);
+    chunk_pH_OG = cellfun(@(xR, yR) pH(xR, yR), chunk_xRange, chunk_yRange, 'UniformOutput', false);
+    chunk_conc = cellfun(@(xR, yR) conc(xR, yR, :), chunk_xRange, chunk_yRange, 'UniformOutput', false);
+    chunk_grid2bac = cellfun(@(xR, yR) grid2bac(xR, yR, :), chunk_xRange, chunk_yRange, 'UniformOutput', false);
+    chunk_grid2nBacs = cellfun(@(xR, yR) grid2nBacs(xR, yR), chunk_xRange, chunk_yRange, 'UniformOutput', false);
+    chunk_diffRegion = cellfun(@(xR, yR) diffRegion(xR, yR), chunk_xRange, chunk_yRange, 'UniformOutput', false);
+    chunk_bacRange = arrayfun(@(iChunk) bacOffset(iChunk)+1:bacOffset(iChunk+1), 1:nChunks, 'UniformOutput', false);
+    chunk_grouped_bac = cellfun(@(bacRange) grouped_bac(bacRange, :), chunk_bacRange, 'UniformOutput', false);
     
     % do all stuff in chunks
-    for loop=1:100
+    for i = 1:10
     parfor iChunk = 1:nChunks
-        ix = floor((iChunk - 1) / nChunks_dir) + 1;
-        iy = mod(iChunk - 1, nChunks_dir) + 1;
-        xRange = chunk_ind_x(ix,1):chunk_ind_x(ix,2);
-        yRange = chunk_ind_y(iy,1):chunk_ind_y(iy,2);
-        bacRange = bacOffset(iChunk)+1:bacOffset(iChunk+1);
         [chunk_rMatrix{iChunk}, chunk_mu{iChunk}, chunk_pH{iChunk}] = ...
-            rMatrix_chunk(pH(xRange, yRange), conc(xRange, yRange, :), grid2bac(xRange, yRange, :), grid2nBacs(xRange, yRange), diffRegion(xRange, yRange), ...
-            grouped_bac(bacRange,:), chunk2nBacs(iChunk), bacOffset(iChunk), ...
+            rMatrix_chunk(chunk_pH_OG{iChunk}, chunk_conc{iChunk}, chunk_grid2bac{iChunk}, chunk_grid2nBacs{iChunk}, chunk_diffRegion{iChunk}, ...
+            chunk_grouped_bac{iChunk}, chunk2nBacs(iChunk), bacOffset(iChunk), ...
             reactive_form, Ks, Ki, Keq, chrM, mMetabolism, mDecay, constantValues);
     end
     end
     
     % put everything back into correct matrix/vector
+    pH = ones(size(diffRegion))*pH_bulk; % just to shut up Matlab...
     for iChunk = 1:nChunks
         ix = floor((iChunk - 1) / nChunks_dir) + 1;
         iy = mod(iChunk - 1, nChunks_dir) + 1;
@@ -159,8 +172,10 @@ tStart = cputime; %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     % do final unit correction/calculation
     reaction_matrix = reaction_matrix / Vg;                                                                             % [molS/L/h]
 
-tTaken = cputime - tStart;  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-disp(tTaken);
+tTaken = toc(tStart);  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+fprintf('Parallelized code (with focus) for %d-by-%d system with %d bacs: %.4f\n', grid.nX, grid.nY, length(bac.x), tTaken);
+
+
 function [reaction_matrix, mu, pH_new] = rMatrix_chunk(pH, conc, grid2bac, grid2nBacs, diffRegion, ...
     grouped_bac, nBacs, bacOffset, ...
     reactive_form, Ks, Ki, Keq, chrM, mMetabolism, mDecay, constants)
@@ -303,7 +318,7 @@ function [spcM, Sh] = solve_pH(Sh_ini, StV, Keq, chrM, keepConstantpH, Tol)
             %Error
             err = F / dF;
             % Newton-Raphson algorithm
-            Sh = Sh - err;
+            Sh = max(Sh - err, 1e-10);
 
             ipH = ipH + 1;
         end
