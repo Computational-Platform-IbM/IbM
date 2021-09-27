@@ -45,7 +45,7 @@ function phi = V_Cycle(phi, diffRegion, bulk_value, f, L_0, L_restriction, L_pro
         L_lhs_deeper = [0 0 0; 0 1 0; 0 0 0] - (1/2^(2*(depth+1)))*L_0;
         for i = 1:iter_final
             eps = smoothing(eps,rhs,L_lhs_deeper);
-            phi(~diffRegion) = next_bulk_value;
+            eps(~diffRegion) = next_bulk_value;
         end
     else
         eps = V_Cycle(eps, next_diffRegion, next_bulk_value, rhs, L_0, L_restriction, L_prolongation, maxDepth, depth+1, iter_pre, iter_post, iter_final);        
