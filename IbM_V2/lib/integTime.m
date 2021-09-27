@@ -1,4 +1,10 @@
-function profiling = integTime(grid, bac, directory, constants, init_params)
+function profiling = integTime(grid, bac, directory, constants, init_params, settings)
+    %% Overall settings
+    if settings.parallelized
+        nChunks_dir = ceil(sqrt(feature('numcores')));
+        fprintf('Parallelisation enabled for %d cores\n', feature('numcores'));
+    end
+    
     %% initialisation
     % calculate boundary conditions
     [bulk_concs, invHRT] = calculate_bulk_concentrations(constants, init_params.init_bulk_conc, init_params.invHRT, 0, constants.dT_bac);
@@ -12,6 +18,18 @@ function profiling = integTime(grid, bac, directory, constants, init_params)
     [diffusion_region, focus_region] = determine_diffusion_region(grid2bac, grid2nBacs, bac, grid);
     xRange = focus_region.x0:focus_region.x1;
     yRange = focus_region.y0:focus_region.y1;
+    
+    if settings.parallelized
+        % create chunks
+        chunks = create_chunks(nChunks_dir, focus_region);
+        
+        % sort bacteria
+        bac = sort_bacteria_into_chunks(bac, grid, chunks, focus_region, nChunks_dir);
+        
+        % recalculate the grid2bac matrix
+        [grid2bac, ~] = determine_where_bacteria_in_grid(grid, bac);
+    end
+    
 
     if constants.debug.plotDiffRegion
         plotDiffRegion(grid, bac, diffusion_region, true)
@@ -25,7 +43,13 @@ function profiling = integTime(grid, bac, directory, constants, init_params)
     conc = set_concentrations(conc, bulk_concs, ~diffusion_region);
 
     % calculate reaction matrix
-    [reaction_matrix, bac.mu, pH] = calculate_reaction_matrix(grid2bac, grid2nBacs, bac, diffusion_region, conc, constants, constants.pHsetpoint);
+    if settings.parallelized
+        [reaction_matrix(xRange, yRange, :), bac.mu, pH(xRange, yRange)] = par_calculate_reaction_matrix(grid2bac(xRange, yRange, :), ...
+            grid2nBacs(xRange, yRange), bac, diffusion_region(xRange, yRange, :), conc(xRange, yRange, :), constants, constants.pHsetpoint, chunks, nChunks_dir);
+    else
+        [reaction_matrix(xRange, yRange, :), bac.mu, pH(xRange, yRange)] = calculate_reaction_matrix(grid2bac(xRange, yRange, :), ...
+            grid2nBacs(xRange, yRange), bac, diffusion_region(xRange, yRange, :), conc(xRange, yRange, :), constants, constants.pHsetpoint);
+    end    
     
     % initiate times
     Time = struct;
@@ -35,7 +59,7 @@ function profiling = integTime(grid, bac, directory, constants, init_params)
     Time.divide = constants.dT_divide;
     Time.save = constants.dT_save;
    
-    profiling = zeros(ceil(constants.simulation_end / constants.dT_bac)+1, 10);
+    profiling = zeros(ceil(constants.simulation_end / constants.dT_bac)+1, 11);
     maxErrors = zeros(ceil(constants.simulation_end / constants.dT_bac), 1); % store max error per dT_bac
     normOverTime = zeros(ceil(constants.simulation_end / constants.dT_bac), 1); % store norm of concentration differance per dT_bac
     bulk_history = zeros(size(bulk_concs, 1), ceil(constants.simulation_end / constants.dT_bac)+1);
@@ -67,7 +91,13 @@ function profiling = integTime(grid, bac, directory, constants, init_params)
         
         % calculate reaction matrix
         tic;
-        [reaction_matrix(xRange, yRange, :), bac.mu, pH(xRange, yRange)] = calculate_reaction_matrix(grid2bac(xRange, yRange, :), grid2nBacs(xRange, yRange), bac, diffusion_region(xRange, yRange, :), conc(xRange, yRange, :), constants, pH(xRange, yRange));
+        if settings.parallelized
+            [reaction_matrix(xRange, yRange, :), bac.mu, pH(xRange, yRange)] = par_calculate_reaction_matrix(grid2bac(xRange, yRange, :), ...
+                grid2nBacs(xRange, yRange), bac, diffusion_region(xRange, yRange, :), conc(xRange, yRange, :), constants, pH(xRange, yRange), chunks, nChunks_dir);
+        else
+            [reaction_matrix(xRange, yRange, :), bac.mu, pH(xRange, yRange)] = calculate_reaction_matrix(grid2bac(xRange, yRange, :), ...
+                grid2nBacs(xRange, yRange), bac, diffusion_region(xRange, yRange, :), conc(xRange, yRange, :), constants, pH(xRange, yRange));
+        end
         profiling(iProf, 3) = profiling(iProf, 3) + toc;
 
 
@@ -207,6 +237,19 @@ function profiling = integTime(grid, bac, directory, constants, init_params)
                             yRange = focus_region.y0:focus_region.y1;
                             profiling(iProf, 9) = profiling(iProf, 9) + toc;
                             
+                            if settings.parallelized
+                                tic;
+                                % create chunks
+                                chunks = create_chunks(nChunks_dir, focus_region);
+
+                                % sort bacteria
+                                bac = sort_bacteria_into_chunks(bac, grid, chunks, focus_region, nChunks_dir);
+                                profiling(iProf, 11) = profiling(iProf, 11) + toc;
+                                
+                                % recalculate the grid2bac matrix
+                                [grid2bac, ~] = determine_where_bacteria_in_grid(grid, bac);
+                            end
+                            
                             if constants.debug.plotDiffRegion
                                 plotDiffRegion(grid, bac, diffusion_region, true)
                             end
@@ -221,7 +264,13 @@ function profiling = integTime(grid, bac, directory, constants, init_params)
                     
                     % recompute reaction matrix for next cycle
                     tic;
-                    [reaction_matrix(xRange, yRange, :), bac.mu, pH(xRange, yRange)] = calculate_reaction_matrix(grid2bac(xRange, yRange, :), grid2nBacs(xRange, yRange), bac, diffusion_region(xRange, yRange), conc(xRange, yRange, :), constants, pH(xRange, yRange));
+                    if settings.parallelized
+                        [reaction_matrix(xRange, yRange, :), bac.mu, pH(xRange, yRange)] = par_calculate_reaction_matrix(grid2bac(xRange, yRange, :), ...
+                            grid2nBacs(xRange, yRange), bac, diffusion_region(xRange, yRange, :), conc(xRange, yRange, :), constants, pH(xRange, yRange), chunks, nChunks_dir);
+                    else
+                        [reaction_matrix(xRange, yRange, :), bac.mu, pH(xRange, yRange)] = calculate_reaction_matrix(grid2bac(xRange, yRange, :), ...
+                            grid2nBacs(xRange, yRange), bac, diffusion_region(xRange, yRange, :), conc(xRange, yRange, :), constants, pH(xRange, yRange));
+                    end
                     profiling(iProf, 3) = profiling(iProf, 3) + toc;
                     
                     iProf = iProf + 1;
@@ -266,8 +315,8 @@ function profiling = integTime(grid, bac, directory, constants, init_params)
         plotBulkConcOverTime(bulk_history, constants)
     end
     
-    plotConcs(conc, constants, Time.current);
-    plotBacs(grid, bac, constants);
+%     plotConcs(conc, constants, Time.current);
+%     plotBacs(grid, bac, constants);
 %     plotDiffRegion(grid, bac, diffusion_region, false);
 end
 

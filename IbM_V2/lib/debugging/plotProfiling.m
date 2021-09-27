@@ -7,7 +7,7 @@ function plotProfiling(profiling, simulation_end)
     % f.Position = [-1600 100 1400 800]; % desktop with 2 screens
     f.Position = [50, 50, 1000, 700];
 
-    names = {'Diffusion', 'update bacterial properties', 'reaction matrix', 'check if steady state', 'bacs: divide/die/inactivate', 'shoving', 'detachment', 'create bacterial position matrices', 'determine diffusion region', 'calculate bulk concentration'};
+    names = {'Diffusion', 'update bacterial properties', 'reaction matrix', 'check if steady state', 'bacs: divide/die/inactivate', 'shoving', 'detachment', 'create bacterial position matrices', 'determine diffusion region', 'calculate bulk concentration', 'Creating chunks & reorganising bacs'};
 
     [~, sortIndex] = sort(profiling(min(10, ceil(size(profiling, 1)/6)), :), 'ascend');
     names_cat = categorical(names(sortIndex));
