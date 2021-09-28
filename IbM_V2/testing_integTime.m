@@ -82,7 +82,7 @@ constants.diffusion_accuracy = 1e-8; % to be tweaked still
 constants.Tol_a = R.kTr.Tolabs; % in [mol/m3], not [mol/L]!
 constants.pHtolerance = 1e-15;
 constants.correction_concentration_steady_state = 1e-4; % [mol/L]
-constants.steadystate_tolerance = 0.015; % [0, 1] -> relative/absolute tolerance of steady state
+constants.steadystate_tolerance = 0.005; % [0, 1] -> relative/absolute tolerance of steady state
 constants.RESmethod = 'max'; % {'mean', 'max', 'norm'}
 constants.bac_MW = R.bac.bac_MW;
 constants.bac_rho = R.bac.bac_rho;
@@ -90,7 +90,7 @@ constants.inactivationEnabled = true;
 constants.min_bac_mass_grams = R.bac.bac_mmin;
 constants.max_bac_mass_grams = R.bac.bac_mmax;
 constants.bac_max_radius = R.bac.bac_rmax;
-constants.convergence_accuracy = 1e-4; % should be around 1e-6... the maximum difference between absolute maximum RES values of two diffusion cycles before it is said to no longer converge [RES% / 100]
+constants.convergence_accuracy = 1e-6; % should be around 1e-6... the maximum difference between absolute maximum RES values of two diffusion cycles before it is said to no longer converge [RES% / 100]
 constants.nDiffusion_per_SScheck = 2;
 
 Neumann = 0.2;
