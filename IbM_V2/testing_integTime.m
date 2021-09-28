@@ -113,7 +113,7 @@ init_params.invHRT = R.pOp.invHRT;
 
 %% actual call to integTime
 directory = 'Testing';
-constants.simulation_end = 200;
+constants.simulation_end = 2000;
 
 bac = bacteria_shove(bac, grid, constants); % otherwise bacteria might overlap at start...
 bac = bacteria_shove(bac, grid, constants); % otherwise bacteria might overlap at start...
