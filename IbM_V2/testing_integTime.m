@@ -32,7 +32,7 @@ bac = struct;
 % bac.x = R.bac.atrib(:,1);
 % bac.y = R.bac.atrib(:,2);
 % n = length(bac.x);
-n = 500; radius = R.Sxy.dx * 4; % arbitrary
+n = 5000; radius = R.Sxy.dx * 19; % arbitrary %500 bacs => 4, 5000 bacs => 19
 [bac.x, bac.y] = rand_circle(n, grid.nX/2*grid.dx, grid.nY/2*grid.dy, radius);
 bac.species = randi(4, size(bac.x)); % random for now
 % bac.species = R.bac.atrib(:,5);
@@ -98,13 +98,13 @@ constants.dT = min(grid.dx^2./constants.diffusion_rates * Neumann);
 
 constants.debug.plotBacteria = false;
 constants.debug.plotConvergence = false; %
-constants.debug.plotMaxErrors = false; %
+constants.debug.plotMaxErrors = true; %
 constants.debug.plotDiffRegion = false;
-constants.debug.plotBulkConcsOverTime = false; %
-constants.debug.plotProfiling = false; %
+constants.debug.plotBulkConcsOverTime = true; %
+constants.debug.plotProfiling = true; %
 
 settings = struct;
-settings.parallelized = false;
+settings.parallelized = true;
 
 init_params = struct;
 init_params.init_bulk_conc = R.Sxy.Sbc_Dir;
@@ -113,7 +113,7 @@ init_params.invHRT = R.pOp.invHRT;
 
 %% actual call to integTime
 directory = 'Testing';
-constants.simulation_end = 10;
+constants.simulation_end = 200;
 
 bac = bacteria_shove(bac, grid, constants); % otherwise bacteria might overlap at start...
 bac = bacteria_shove(bac, grid, constants); % otherwise bacteria might overlap at start...
