@@ -35,9 +35,10 @@ function profiling = integTime(grid, bac, directory, constants, init_params, set
         plotDiffRegion(grid, bac, diffusion_region, true)
     end
     
-    % initialise concentrations
+    % initialise concentrations and pH
     conc = zeros(grid.nX, grid.nY, size(constants.isLiquid, 1));
     conc = set_concentrations(conc, init_params.init_concs, diffusion_region);
+    pH = ones(grid.nX, grid.nY) * constants.pHsetpoint;
     
     % set bulk layer concentrations
     conc = set_concentrations(conc, bulk_concs, ~diffusion_region);
@@ -45,10 +46,10 @@ function profiling = integTime(grid, bac, directory, constants, init_params, set
     % calculate reaction matrix
     if settings.parallelized
         [reaction_matrix(xRange, yRange, :), bac.mu, pH(xRange, yRange)] = par_calculate_reaction_matrix(grid2bac(xRange, yRange, :), ...
-            grid2nBacs(xRange, yRange), bac, diffusion_region(xRange, yRange, :), conc(xRange, yRange, :), constants, constants.pHsetpoint, chunks, nChunks_dir);
+            grid2nBacs(xRange, yRange), bac, diffusion_region(xRange, yRange, :), conc(xRange, yRange, :), constants, pH(xRange, yRange), chunks, nChunks_dir);
     else
         [reaction_matrix(xRange, yRange, :), bac.mu, pH(xRange, yRange)] = calculate_reaction_matrix(grid2bac(xRange, yRange, :), ...
-            grid2nBacs(xRange, yRange), bac, diffusion_region(xRange, yRange, :), conc(xRange, yRange, :), constants, constants.pHsetpoint);
+            grid2nBacs(xRange, yRange), bac, diffusion_region(xRange, yRange, :), conc(xRange, yRange, :), constants, pH(xRange, yRange));
     end    
     
     % initiate times
