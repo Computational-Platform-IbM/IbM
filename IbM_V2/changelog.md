@@ -67,4 +67,4 @@ List all changes and/or improvements from the original model of R. Gonzalez-Caba
 - Diffusion was previously performed over entire (focus) domain, disregarding the bulk layer that was directly around the granule
 
 *Steady-state check*
-- Check only the RES in the `diffusion_region`. By definition, the RES value in the edge of the bulk layer will be nonzero, thus never converge.
+- Check only the RES in the `diffusion_region`. By definition, the RES value in the edge of the bulk layer will be nonzero, thus the model never converged.
