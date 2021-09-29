@@ -29,13 +29,13 @@ List all changes and/or improvements from the original model of R. Gonzalez-Caba
 *pH and speciation algorithm*
 - Removed check to see whether root is found in 1 < pH < 14 (Should always hold)
 - Removed bracketing whenever Sh < 1e-14
-- Introduced bounded correction, so that always Sh > 'setValue'
+- Introduced bounded correction, so that always Sh > `setValue`
 
 *Diffusion*
-- Change from 'mldivide' to Multigrid solver using V-cycles
+- Change from `mldivide` to Multigrid solver using V-cycles
 - Use of convolutions for potential further speedup (gpu or FFT method)
 - Due to use of convolutions, only Jacobi smoothing is possible, even though Gauss-Seidell would be faster (in theory)
-- Integrated diffusion-region-only diffusion solver using the 'diffusion_region'
+- Integrated diffusion-region-only diffusion solver using the `diffusion_region`
 
 *Bacterial activity*
 - Complete vectorisation of bacterial activity using boolean masks
@@ -67,4 +67,4 @@ List all changes and/or improvements from the original model of R. Gonzalez-Caba
 - Diffusion was previously performed over entire (focus) domain, disregarding the bulk layer that was directly around the granule
 
 *Steady-state check*
-- Check only the RES in the 'diffusion_region'. By definition, the RES value in the edge of the bulk layer will be nonzero, thus never converge.
+- Check only the RES in the `diffusion_region`. By definition, the RES value in the edge of the bulk layer will be nonzero, thus never converge.
