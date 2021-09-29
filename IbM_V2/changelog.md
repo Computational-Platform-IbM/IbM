@@ -17,6 +17,17 @@ List all changes and/or improvements from the original model of R. Gonzalez-Caba
 *Profiling*
 - Add build-in profiling capability based on major functionality of the model
 
+*Debugging/plotting*
+- Build-in functions to plot:
+    - Profiling data
+    - Bacteria (species)
+    - Diffusion region (with/without radius of boundary layer)
+    - Convergence to steady state during diffusion iterations
+    - Maximum error over simulation time
+    - Norm between new and previous concentrations over time
+    - Bulk concentrations over time
+    - 2D Concentration profiles
+
 
 ## Computational improvements
 *General*
