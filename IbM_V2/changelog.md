@@ -11,11 +11,8 @@ List all changes and/or improvements from the original model of R. Gonzalez-Caba
 - Separation of constants and variables
 - Vectorisation of bacterial activity using masks
 
-*Algorithmic flow*
-- Introduction DEBUG warnings (togglable)
-
 *Profiling*
-- Add build-in profiling capability based on major functionality of the model
+- Add build-in profiling capability grouped per major functionality of the model
 
 *Debugging/plotting*
 - Build-in functions to plot:
@@ -27,6 +24,8 @@ List all changes and/or improvements from the original model of R. Gonzalez-Caba
     - Norm between new and previous concentrations over time
     - Bulk concentrations over time
     - 2D Concentration profiles
+- Introduction DEBUG warnings (togglable)
+
 
 
 ## Computational improvements
