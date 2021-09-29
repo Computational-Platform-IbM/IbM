@@ -44,14 +44,9 @@ function [reaction_matrix, mu, pH] = calculate_reaction_matrix(grid2bac, grid2nB
     % pre-compute for bulk-liquid (at 1,1 there should never be diffusion
     % layer)
     Sh_bulk = 10^-pH(1, 1);
-    [spcM, Sh_bulk] = solve_pH(Sh_bulk, [reshape(conc(1,1,:), [], 1, 1); 1; 0], Keq, chrM, constants.constantpH, constants.pHtolerance); % <C: why [...; 1; 0]? /> => H2O & H+
+    [~, Sh_bulk] = solve_pH(Sh_bulk, [reshape(conc(1,1,:), [], 1, 1); 1; 0], Keq, chrM, constants.constantpH, constants.pHtolerance); % <C: why [...; 1; 0]? /> => H2O & H+
     pH_bulk = -log10(Sh_bulk);
     
-    % check if pH is solved correctly
-    if any(spcM < 0)
-        warning('DEBUG:actionRequired', 'debug: negative concentration encountered after pH calculation...');
-    end
-
     
     % for each gridcell
     for ix = 1:size(conc, 1) % parfor?
@@ -64,11 +59,6 @@ function [reaction_matrix, mu, pH] = calculate_reaction_matrix(grid2bac, grid2nB
                 Sh_old = 10^-pH(ix, iy);
                 [spcM, Sh] = solve_pH(Sh_old, [reshape(conc(ix,iy,:), [], 1, 1); 1; 0], Keq, chrM, constants.constantpH, constants.pHtolerance); % <C: why [...; 1; 0]? />
                 pH(ix, iy) = -log10(Sh);
-                
-                % check if pH is solved correctly
-                if any(spcM < 0)
-                    warning('DEBUG:actionRequired', 'debug: negative concentration encountered after pH calculation...');
-                end
                 
                 if grid2nBacs(ix, iy)
                     % get bacteria in this grid cell

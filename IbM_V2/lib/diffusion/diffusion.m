@@ -95,6 +95,8 @@ function rhs = calculate_rhs_dirichlet(phi, L_rhs, value, diffRegion)
     % 
     % '2*value' in create_dirichlet_boundary arguments is from
     % Crank-Nicholson method (Dirichlet Boundary of both t=t and t=t+dt).
+    % Only required if else the concentration would be 0 (outside of
+    % domain)
     %
     % -> rhs: right-hand-side of the diffusion equation due to diffusion,
     %   valid only in the diffusion region. Outside an artificial value of

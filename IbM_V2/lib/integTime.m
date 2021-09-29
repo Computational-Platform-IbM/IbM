@@ -312,7 +312,7 @@ function profiling = integTime(grid, bac, directory, constants, init_params, set
         plotNorm(normOverTime, constants.dT_bac)
     end
     
-    if constants.debug.plotBulkConcsOverTime
+    if constants.debug.plotBulkConcsOverTime % hallo
         plotBulkConcOverTime(bulk_history, constants)
     end
     
