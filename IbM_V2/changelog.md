@@ -58,8 +58,12 @@ List all changes and/or improvements from the original model of R. Gonzalez-Caba
 
 ## Algorithmic changes
 *Calculation of reaction matrix*
-- Check for negative concentrations after speciation
 - Calculate kinetics only once per species per gridcell. Reaction matrix uses cumulative mass per species to calculate concentration change.
+
+*pH and speciation*
+- Add check for pH outside of [1, 14]-range
+- Add check for non-convergence
+- Add check for negative concentrations in speciation 
 
 *Steady-state check*
 - Change number of diffusion iterations per steady-state check
