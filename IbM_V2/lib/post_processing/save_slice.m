@@ -1,4 +1,4 @@
-function save_slice(bac, conc, bulk_concentrations, pH, Time, grid, constants, directory)
+function save_slice(bac, conc, bulk_concentrations, pH, invHRT, Time, grid, constants, directory)
     % Save important variables along the central axis of the bio-aggregate
     %
     % bac: struct containing all information regarding the bacteria
@@ -18,7 +18,7 @@ function save_slice(bac, conc, bulk_concentrations, pH, Time, grid, constants, d
     if Time == 0
         [bac_saved, conc_saved, pH_saved, reactor_saved] = init_save(constants, grid);
     else
-        [bac_saved, conc_saved, pH_saved, reactor_saved] = load(results_file);
+        load(results_file, 'bac_saved', 'conc_saved', 'pH_saved', 'reactor_saved');
     end
     
     %% set values
@@ -26,6 +26,7 @@ function save_slice(bac, conc, bulk_concentrations, pH, Time, grid, constants, d
     
     % bacterial variables
     nBacs = length(bac.x);
+    bac_saved.nBacs(iSave) = nBacs;
     bac_saved.x(iSave, 1:nBacs) = bac.x;
     bac_saved.y(iSave, 1:nBacs) = bac.y;
     bac_saved.radius(iSave, 1:nBacs) = bac.radius;
@@ -33,10 +34,10 @@ function save_slice(bac, conc, bulk_concentrations, pH, Time, grid, constants, d
     bac_saved.active(iSave, 1:nBacs) = bac.active;
     
     % concentration variable
-    conc_saved(iSave, :) = conc;
+    conc_saved(iSave, :, :) = conc(:, ceil(grid.nY / 2), :); % save horizontal slice through center of granule
     
     % pH variable
-    pH_saved(iSave, :) = pH;
+    pH_saved(iSave, :) = pH(:, ceil(grid.nY / 2));
     
     % reactor properties
     reactor_saved.bulk_concs(iSave, :) = bulk_concentrations;
@@ -64,6 +65,7 @@ function [bac_saved, conc_saved, pH_saved, reactor_saved] = init_save(constants,
 
     % bacterial variables
     bac_saved = struct;
+    bac_saved.nBacs = zeros(nSaves, 1, 'uint32');
     bac_saved.x = zeros(nSaves, constants.max_nBac, 'single');
     bac_saved.y = zeros(nSaves, constants.max_nBac, 'single');
     bac_saved.radius = zeros(nSaves, constants.max_nBac, 'single');
@@ -71,13 +73,14 @@ function [bac_saved, conc_saved, pH_saved, reactor_saved] = init_save(constants,
     bac_saved.active = zeros(nSaves, constants.max_nBac, 'logical');
     
     % concentration variable
-    conc_saved = zeros(nSaves, grid.nX, 'single');
+    nCompounds = length(constants.StNames);
+    conc_saved = zeros(nSaves, grid.nX, nCompounds, 'single');
     
     % pH variable
     pH_saved = zeros(nSaves, grid.nX, 'single');
     
     % reactor properties
-    reactor_saved.bulk_concs = zeros(nSaves, sum(constants.isLiquid), 'single');
+    reactor_saved.bulk_concs = zeros(nSaves, nCompounds, 'single');
     reactor_saved.HRT = zeros(nSaves, 1, 'single');
     reactor_saved.granule_density = zeros(nSaves, 1, 'single');
 end

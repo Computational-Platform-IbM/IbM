@@ -71,6 +71,9 @@ function profiling = integTime(grid, bac, directory, constants, init_params, set
     RESvalues = zeros(sum(constants.isLiquid), 100); % reserve for n steady state checks beforehand (can be more)
 	norm_diff = zeros(100,1);
     
+    % initialise saving file
+    save_slice(bac, conc, bulk_concs, pH, invHRT, Time.current, grid, constants, directory);
+    
     %% time advancements (dT / dT_steadystate)
     prev_conc = conc;
     
@@ -290,7 +293,7 @@ function profiling = integTime(grid, bac, directory, constants, init_params, set
                     Time.save = Time.save + constants.dT_save;
                     
                     % save all important variables
-                    save_slice(bac, conc(:, ceil(grid.nX/2)), bulk_concs, pH(:, ceil(grid.nX/2)), Time, grid, constants, directory); % along central horizontal axis
+                    save_slice(bac, conc, bulk_concs, pH, invHRT, Time.current, grid, constants, directory);
 %                     save_plane(bac, conc, pH, Time, grid, constants, directory); % entire plane of simulation
                 end
                 
