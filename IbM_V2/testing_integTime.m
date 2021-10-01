@@ -74,7 +74,7 @@ constants.max_granule_radius = 1000*10^(-6);  % C: see excel          % [m] Maxi
 constants.dT = R.Sxy.dT; % AOB/NOB/AMX -> 1e-6
 constants.dT_bac = R.Sxy.dT_bac;
 constants.dT_divide = R.Sxy.dT_Div;
-constants.dT_save = 9000;%R.Sxy.dT_Print;
+constants.dT_save = 24;%R.Sxy.dT_Print;
 constants.constantpH = false;
 constants.simulation_end = R.Sxy.maxT;
 constants.diffusion_rates = R.kTr.Diffn;
@@ -86,6 +86,7 @@ constants.steadystate_tolerance = 0.005; % [0, 1] -> relative/absolute tolerance
 constants.RESmethod = 'max'; % {'mean', 'max', 'norm'}
 constants.bac_MW = R.bac.bac_MW;
 constants.bac_rho = R.bac.bac_rho;
+constants.max_nBac = R.bac.bac_nmax; % <TODO: calculate with better method?>
 constants.inactivationEnabled = true;
 constants.min_bac_mass_grams = R.bac.bac_mmin;
 constants.max_bac_mass_grams = R.bac.bac_mmax;
@@ -113,7 +114,7 @@ init_params.invHRT = R.pOp.invHRT;
 
 %% actual call to integTime
 directory = 'Testing';
-constants.simulation_end = 2000;
+constants.simulation_end = 24*7*3; % 3 weeks
 
 bac = bacteria_shove(bac, grid, constants); % otherwise bacteria might overlap at start...
 bac = bacteria_shove(bac, grid, constants); % otherwise bacteria might overlap at start...
