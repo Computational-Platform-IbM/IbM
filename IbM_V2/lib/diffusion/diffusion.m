@@ -93,8 +93,6 @@ function rhs = calculate_rhs_dirichlet(phi, L_rhs, value, diffRegion)
     % diffRegion: matrix with per gridcell whether it is in the diffusion
     %   region
     % 
-    % '2*value' in create_dirichlet_boundary arguments is from
-    % Crank-Nicholson method (Dirichlet Boundary of both t=t and t=t+dt).
     % Only required if else the concentration would be 0 (outside of
     % domain)
     %
@@ -102,7 +100,7 @@ function rhs = calculate_rhs_dirichlet(phi, L_rhs, value, diffRegion)
     %   valid only in the diffusion region. Outside an artificial value of
     %   <bulk_concentration> is set.
     
-    rhs_diffRegion = convn(diffRegion.*phi + ~diffRegion*value, L_rhs, 'same'); % The factor 2 is not required, because we already have the correct conc at t=t, and t=t+dt?
+    rhs_diffRegion = convn(diffRegion.*phi + ~diffRegion*value, L_rhs, 'same');
     rhs = diffRegion .* rhs_diffRegion + ~diffRegion .* ones(size(phi)) * value;
     
 %     phi = create_dirichlet_boundary(phi, 2*value);
