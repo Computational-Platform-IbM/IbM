@@ -128,7 +128,7 @@ end
 
 
 totalTimer = tic;
-[profiling, maxErrors, nDiffIters, bulk_history] = integTime(grid, bac, directory, constants, init_params);
+[profiling, maxErrors, nDiffIters, bulk_history] = integTime(grid, bac, directory, constants, init_params, settings);
 totalTime = toc(totalTimer);
 
 
