@@ -60,7 +60,7 @@ constants.Dir_k = logical(R.Inf.Dir_k);
 constants.Vr = R.pOp.Vr;                    % still don't know what this variable means, or more: why it is max_nBacs volume? seems arbitrary
 constants.Vg = (grid.dx ^ 3) * 1000; % L
 constants.StNames = R.St.StNames(1:8);
-constants.speciesNames = {'AOB', 'NOB (Nitrob.)', 'NOB (Nitrosp.)', 'CMX'};
+constants.speciesNames = {'AOB', 'NOB (Nitrob.)', 'NOB (Nitrosp.)', 'AMX'};
 constants.react_v = R.pTh.react_v;
 constants.Ks = R.pTh.Ks(:, 1:3);
 constants.Ki = R.pTh.Ks(:, 4:6);
@@ -82,6 +82,7 @@ constants.diffusion_accuracy = 1e-8; % to be tweaked still
 constants.Tol_a = R.kTr.Tolabs; % in [mol/m3], not [mol/L]!
 constants.pHtolerance = 1e-15;
 constants.correction_concentration_steady_state = 1e-4; % [mol/L]
+constants.correction_concentration_steady_state = 1e-6; % [mol/L]
 constants.steadystate_tolerance = 0.005; % [0, 1] -> relative/absolute tolerance of steady state
 constants.RESmethod = 'max'; % {'mean', 'max', 'norm'}
 constants.bac_MW = R.bac.bac_MW;
@@ -127,8 +128,9 @@ end
 
 
 totalTimer = tic;
-profiling = integTime(grid, bac, directory, constants, init_params, settings);
+[profiling, maxErrors, nDiffIters, bulk_history] = integTime(grid, bac, directory, constants, init_params);
 totalTime = toc(totalTimer);
+
 
 if constants.debug.plotProfiling
     plotProfiling(profiling, constants.simulation_end)

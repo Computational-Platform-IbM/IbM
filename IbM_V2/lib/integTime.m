@@ -1,10 +1,11 @@
-function profiling = integTime(grid, bac, directory, constants, init_params, settings)
+<<<<<<< Updated upstream
+function [profiling, maxErrors, nDiffIters, bulk_history] = integTime(grid, bac, directory, constants, init_params, settings)
     %% Overall settings
     if settings.parallelized
         nChunks_dir = ceil(sqrt(feature('numcores')));
         fprintf('Parallelisation enabled for %d cores\n', feature('numcores'));
     end
-    
+
     %% initialisation
     % calculate boundary conditions
     [bulk_concs, invHRT] = calculate_bulk_concentrations(constants, init_params.init_bulk_conc, init_params.invHRT, 0, constants.dT_bac);
@@ -63,6 +64,7 @@ function profiling = integTime(grid, bac, directory, constants, init_params, set
     profiling = zeros(ceil(constants.simulation_end / constants.dT_bac)+1, 11);
     maxErrors = zeros(ceil(constants.simulation_end / constants.dT_bac), 1); % store max error per dT_bac
     normOverTime = zeros(ceil(constants.simulation_end / constants.dT_bac), 1); % store norm of concentration differance per dT_bac
+    nDiffIters = zeros(ceil(constants.simulation_end / constants.dT_bac), 1); % store number of diffusion iterations per steady state
     bulk_history = zeros(size(bulk_concs, 1), ceil(constants.simulation_end / constants.dT_bac)+1);
     bulk_history(:,1) = bulk_concs;
     iProf = 1;        % keep track of index of profiling (every simulated hour == +1 index)
@@ -156,6 +158,7 @@ function profiling = integTime(grid, bac, directory, constants, init_params, set
                     
                     maxErrors(iProf) = max(RESvalues(:,iRES));
                     normOverTime(iProf) = norm_diff(iRES);
+                    nDiffIters(iProf) = iDiffusion;
                     iDiffusion = 1;
                     iRES = 1;
                     RESvalues = zeros(sum(constants.isLiquid), 100); % reset RES value array
