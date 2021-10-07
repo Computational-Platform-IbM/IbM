@@ -97,7 +97,7 @@ function [reaction_matrix, mu, pH] = calculate_reaction_matrix(grid2bac, grid2nB
         end
     end
     
-    reaction_matrix = reaction_matrix / Vg;                                                                             % [molS/L/h]
+    reaction_matrix = reaction_matrix / Vg;                                                                                 % [molS/L/h]
 
 end
 
