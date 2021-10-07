@@ -1,4 +1,3 @@
-<<<<<<< Updated upstream
 function [profiling, maxErrors, nDiffIters, bulk_history] = integTime(grid, bac, directory, constants, init_params, settings)
     %% Overall settings
     if settings.parallelized
