@@ -121,14 +121,17 @@ function [profiling, maxErrors, nDiffIters, bulk_history] = integTime(grid, bac,
             prev_conc = conc;
             
             % check if system is converging towards steady state
-            noLongerConverging = abs(max(RESvalues(:, iRES)) - max(RESvalues(:, iRES - 1))) < constants.convergence_accuracy;
+%             noLongerConverging = abs(max(RESvalues(:, iRES)) - max(RESvalues(:, iRES - 1))) < constants.convergence_accuracy;
+            noLongerConverging = false;
             
-            if ssReached || noLongerConverging
+            if ssReached || noLongerConverging || iDiffusion > 1500
                 fprintf('Steady state reached after %d diffusion iterations\n', iDiffusion)
                 if noLongerConverging
-                    fprintf('\nNo longer converging, steady state accepted with at most %.4f %% off of steady state\n\n', max(RESvalues(:, iRES))*100)
+                    fprintf('\nNo longer converging (delta-RES = %g), steady state accepted with at most %.4f %% off of steady state\n\n', abs(max(RESvalues(:, iRES)) - max(RESvalues(:, iRES - 1))), max(RESvalues(:, iRES))*100)
+                elseif iDiffusion > 1500
+                    fprintf('\nNo longer converging (>1500 diffusion iterations), steady state accepted with at most %.4f %% off of steady state (norm = %e)\n\n', max(RESvalues(:, iRES))*100, norm_diff(iRES))
                 else
-                    fprintf('\twith at most %.4f %% off of steady state\n', max(RESvalues(:, iRES))*100)
+                    fprintf('\twith at most %.4f %% off of steady state (norm = %e)\n', max(RESvalues(:, iRES))*100, norm_diff(iRES))
                 end
                                 
                 % set time to next bacterial activity time
@@ -212,6 +215,7 @@ function [profiling, maxErrors, nDiffIters, bulk_history] = integTime(grid, bac,
                             % shove bacteria
                             tic;
                             bac = bacteria_shove(bac, grid, constants);
+                            bac = bacteria_shove(bac, grid, constants); % add second shove to make ensure no overlap
                             profiling(iProf, 6) = profiling(iProf, 6) + toc;
                             
                             %{
