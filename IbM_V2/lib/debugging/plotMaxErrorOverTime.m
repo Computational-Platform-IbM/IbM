@@ -4,7 +4,7 @@ function plotMaxErrorOverTime(maxErrors, dT)
     %
     % maxErrors: maximum error per dT_bac over the entire simulation domain
     
-    figure(5);
+    figure('Name', 'Max RES value over time');
     plot((1:length(maxErrors))*dT, maxErrors*100, "LineWidth", 2);
     xlabel('Simulation time [h]')
     ylabel('Maximum error [%]')

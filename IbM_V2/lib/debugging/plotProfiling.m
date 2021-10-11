@@ -3,7 +3,7 @@ function plotProfiling(profiling, simulation_end)
     %
     % profiling: time [seconds] taken per 1 dT_bac of simulation time
     
-    f = figure(1); clf;
+    f = figure('Name', 'Profiling of simulation'); clf;
     % f.Position = [-1600 100 1400 800]; % desktop with 2 screens
     f.Position = [50, 50, 1000, 700];
 

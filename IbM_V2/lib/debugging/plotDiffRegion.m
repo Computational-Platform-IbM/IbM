@@ -8,7 +8,7 @@ function plotDiffRegion(g, bac, diffRegion, plotBoundaryThickness) %, checked_ce
 %     diffRegion(active_cell(1), active_cell(2)) = 0.6;
     diffRegion = diffRegion';
     
-    figure(3); clf;
+    figure('Name', 'Diffusion region'); clf;
     
     % plot diff region
     im = imagesc([g.dx/2, g.nX*g.dx - g.dx/2], [g.dy/2, g.nY*g.dy - g.dy/2], diffRegion); hold on;

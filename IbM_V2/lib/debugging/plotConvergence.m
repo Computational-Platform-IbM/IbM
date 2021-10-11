@@ -10,7 +10,7 @@ function plotConvergence(RESvalues, iRES, constants, Time)
     % -> plot with maximum RES value per compound over the different
     % diffusion cycles until it is declared steady state
     
-    figure(4); 
+    figure('Name', 'Convergence of RES values'); 
     plot((1:iRES-1)*constants.nDiffusion_per_SScheck, RESvalues(:,2:iRES)'*100, 'LineWidth', 2); 
 %     ylim([0, 3]); 
     legend(constants.StNames{1:7}); 

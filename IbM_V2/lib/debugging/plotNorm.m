@@ -4,7 +4,7 @@ function plotNorm(Norm, dT)
     %
     % Norm: norm of diff(conc - conc_prev) per dT_bac over the entire simulation domain
     
-    figure(8);
+    figure('Name', 'Difference (norm) between consecutive concentration profiles');
     plot((1:length(Norm))*dT, Norm, "LineWidth", 2);
     set(gca, 'YScale', 'log')
     xlabel('Simulation time [h]')
