@@ -3,7 +3,7 @@ function plotBulkConcOverTime(bulk_history, constants)
     %
     % bulk_history: matrix (nCompounds-by-n) with bulk concentration per
     %   compound at each dT_bac timepoint
-    f = figure('Name', 'History of bulk concentrations');
+    f = figure(6);
     f.Position = [50,50, 1000, 700];
     
     nPlots = [4,2]; % 3 plots in x direction, 2 in y direction (6 total)

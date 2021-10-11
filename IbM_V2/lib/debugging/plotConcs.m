@@ -1,5 +1,5 @@
 function plotConcs(conc, constants, T)
-    f = figure('Name', 'Concentration profile');
+    f = figure(7);
     f.Position = [50, 80, 1450 680];
     clf;
     

@@ -7,7 +7,7 @@ function plotBacs(g, bac, constants)
     
     coloring = {'#D81B60', '#1E88E5', '#FFC107', '#004D40'}; % colorblind-friendly colours
     
-    f = figure('Name', 'Bacteria'); clf;
+    f = figure(2); clf;
 %     f.Position = [-1800, 65, 1200, 900]; % desktop with two screens
     f.Position = [60 60 1000 700];
     

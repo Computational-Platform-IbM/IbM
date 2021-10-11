@@ -328,6 +328,19 @@ end
 
 
 
+%{
+Figure reservations:
+1) profiling
+2) Bacteria
+3) Diffusion region
+4) Convergence to steady state
+5) Max error over time
+6) Bulk concentrations over time
+7) concentration profiles (2D)
+8) Norm(conc1 - conc0) over time
+%}
+
+
 % IMPORTANT FOR PLOTTING!!!
 % watch out with indexing in matrices: matrix(i, j) is at grid cell with:
 %   xi = i & yi = j. THIS DOES NOT CORRELATE WITH VISUAL OF MATRIX:
