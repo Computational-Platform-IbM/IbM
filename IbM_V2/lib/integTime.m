@@ -338,6 +338,7 @@ Figure reservations:
 6) Bulk concentrations over time
 7) concentration profiles (2D)
 8) Norm(conc1 - conc0) over time
+9) Norm(conc1 - conc0) to steady state
 %}
 
 
