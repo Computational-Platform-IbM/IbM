@@ -16,5 +16,5 @@ function plotConvergence(RESvalues, iRES, constants, Time)
     legend(constants.StNames{1:7}); 
     ylabel('Maximum error [%]'); 
     xlabel('Diffusion iteration')
-    title(sprintf('Convergence plot at t=%.1f', Time.current))
+    title(sprintf('Convergence plot at t=%.1f', Time))
 end

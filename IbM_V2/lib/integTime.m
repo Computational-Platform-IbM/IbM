@@ -150,12 +150,8 @@ function [profiling, maxErrors, nDiffIters, bulk_history] = integTime(grid, bac,
                     Time.bac = Time.bac + constants.dT_bac;
                     
                     if constants.debug.plotConvergence
-                        plotConvergence(RESvalues, iRES, constants, Time)
-                        figure(21); clf;
-                        plot((1:iRES-1)*constants.nDiffusion_per_SScheck,norm_diff(2:iRES), 'LineWidth', 2);
-                        set(gca, 'YScale', 'log')
-                        title(sprintf('norm(conc_{prev} - conc) at t=%.1f', Time.current))
-                        drawnow()
+                        plotConvergence(RESvalues, iRES, constants, Time.current)
+                        plotNormDiff(norm_diff, iRES, constants, Time.current)
                     end
                     
                     maxErrors(iProf) = max(RESvalues(:,iRES));
