@@ -209,6 +209,8 @@ function [profiling, maxErrors, nDiffIters, bulk_history] = integTime(grid, bac,
                             profiling(iProf, 5) = profiling(iProf, 5) + toc;
                             
                             % shove bacteria
+                            % <E: we could only call bacteria_shove if
+                            % division is done. />
                             tic;
                             bac = bacteria_shove(bac, grid, constants);
                             bac = bacteria_shove(bac, grid, constants); % add second shove to make ensure no overlap
