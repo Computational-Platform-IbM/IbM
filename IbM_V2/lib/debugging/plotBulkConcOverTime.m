@@ -1,4 +1,4 @@
-function plotBulkConcOverTime(bulk_history, constants)
+function f = plotBulkConcOverTime(bulk_history, constants)
     % plot the concentration of all compounds in the bulk liquid over time
     %
     % bulk_history: matrix (nCompounds-by-n) with bulk concentration per
