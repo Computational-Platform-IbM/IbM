@@ -7,7 +7,7 @@ function plotConcs(conc, constants, T)
 
     for iPlot = 1:5
         nexttile
-        imagesc(conc(:,:,iPlot)); 
+        imagesc(conc(:,:,iPlot)'); 
         colormap(viridis()); 
         colorbar(); 
         title(sprintf('Concentration profile of %s', constants.StNames{iPlot}));
@@ -17,6 +17,7 @@ function plotConcs(conc, constants, T)
         end
         caxis([0, cval(2)]);
         axis square;
+        set(gca,'YDir','normal')
     end
     
     sgtitle(sprintf('Concentration profiles at t = %.2f', T));
