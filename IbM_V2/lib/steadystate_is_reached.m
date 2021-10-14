@@ -82,37 +82,3 @@ function SSreached = isReached_compound(RES, method, steadystate_tolerance)
     
     SSreached = SSdif <= steadystate_tolerance;
 end
-
-
-function plotRES(RES, compoundName, diffRegion)
-    
-    % plot RES over entire domain
-    figure(22); clf;
-    ax1 = axes;
-    imagesc(ax1, RES');
-    max_val = max(abs(caxis()));
-    caxis([-max_val, max_val])
-    title(compoundName)
-    axis square;
-    
-    % plot diffRegion on top (with opacity)
-    hold on;
-
-    ax2 = axes;
-    h = imagesc(ax2, diffRegion');
-    h.AlphaData = 0.5;
-    axis square;
-
-    colorbar(ax1);
-
-    linkaxes([ax1, ax2]);
-    set(ax2, 'Position', ax1.Position)
-    ax2.Visible = 'off';
-    ax2.XTick = [];
-    ax2.YTick = [];
-    colormap(ax1, redblue());
-    colormap(ax2, [0 0 0; 1 1 1]);
-    hold off;
-end
-
-
