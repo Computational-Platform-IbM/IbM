@@ -1,85 +1,69 @@
-function IbM(options)
-%%%%% main function to run the IbM model with given (optional) options 
-% output_directory: folder in which to store the results and temporary
-%   variables. Creates it if not present already.
-% preset: if given a preset file, create the model
-%   from that, otherwise checks in the output_directory for an R.mat file to
-%   load from.
-% path_shoving: path to the java (.jar) file used for shoving
+function IbM(simulation_number)
+%%%%% Main function to run the IbM model for a given preset file (naming
+% convention: 'sim_xxxx.mat', where xxxx is the simulation number)
+%
+% -> Creates a folder in the Results directory for the output of the
+%   simulation.
+% -> Run the simulation based on the simulation file (save results in the
+%   corresponding results folder)
+% -> Save profiling results in the corresponding results folder
+% -> Move the preset file in the corresponding results folder (signifying
+%   that the simulation has been run) after running the model
 
     %% argument validation
     arguments
-        options.output_directory {checkFolder} = 'Results';
-        options.preset {mustBeFile, mustBeFormat(options.preset, {'xls', 'xlsx', 'mat'})}
-        options.path_shoving {mustBeFile, mustBeFormat(options.path_shoving, {'jar'})} = [pwd '\lib\shovingQuadTree.jar']; 
+        simulation_number (1,1) {mustBeInteger, mustBeInRange(simulation_number, 1, 9999)}
+    end
+        
+    % check if simulation file exists
+    simulation_file = sprintf('sim_%04d.mat', simulation_number);
+    if ~isfile(simulation_file)
+        error('The simulation file %s does not exist', simulation_file)
     end
     
-
+    % create output directory for results
+    output_dir = sprintf('./Results/%04d', simulation_number);
+    if ~isfolder(output_dir)
+        mkdir(output_dir)
+    end
+    
+    
     %% java import for shoving
-    javaaddpath(options.path_shoving);
+    javaaddpath([pwd '\lib\shovingQuadTree.jar']);
     addpath(genpath('lib')); % make every subfolder with functions accessible to the code
 
-
     
-    %% preset loading
-    R = loadPreset(options);
+    %% load preset file
+    load(simulation_file, 'grid', 'bac', 'constants', 'init_params', 'settings')
     
     
     %% enable/disable debug disp/warning
-    warning('on', 'DEBUG:noActionRequired');
+    warning('off', 'DEBUG:noActionRequired');
     warning('on', 'DEBUG:actionRequired');
     
     
     %% ========== Time advancements ==========
     fprintf('> SIMULATION RUNNING >>>>>\n');
     
-    R = integTime(R, options.output_directory); %#ok<NASGU>
-    % <TODO: modify inputs of integTime() function />
+%     settings.dynamicDT = true; % in the simulation file already
+%     constants.simulation_end = 2500;
+        
+    tTime = tic;
+    [profiling, maxErrors, nDiffIters, bulk_history] = integTime(grid, bac, output_dir, constants, init_params, settings);
+    totalTime = toc(tTime);
     
     fprintf('> SIMULATION FINISHED >>>>>\n');
     
 
+    %% save profiling information in output directory
+    save(sprintf('%s/profilingResults.mat', output_dir), 'profiling', 'maxErrors', 'nDiffIters', 'bulk_history')
+    fprintf('\n\nTotal time for simulation of %.2f hours:\n\t%.2f seconds\n', constants.simulation_end, totalTime)
+
+    
+    %% cleanup of root directory
+    movefile(simulation_file, output_dir);
+    
+
 end
 
-function R = loadPreset(options)
-    % if preset is given, then load from preset (either process from excel
-    % or load R.mat)
-    if isfield(options, 'preset')
-        if isFormat(options.preset, {'mat'})
-            R = load(options.preset);
-        else
-            R = loadModelXlsx(options.preset);
-        end
-
-    % if no preset is given, then check in the output directory for a R.mat
-    % file and load from that else throw error
-    else
-        if exist([options.output_directory, '\R.mat'], 'file')
-            R = load([options.output_directory, '\R.mat']);
-        else
-            eid = 'Preset:notFound';
-            msg = 'No preset file was found. Either supply one in the function call, or add one in the output directory.';
-            throwAsCaller(MException(eid, msg))
-        end
-    end
-end
-
-function checkFolder(dir)
-    if ~isfolder(dir)
-        mkdir(dir);
-    end
-end
-
-function mustBeFormat(filename, formats)
-    if ~isFormat(filename, formats)
-        eid = 'File:formatIncorrect';
-        msg = ['File <', strrep(filename, '\', '\\'), '> must be of the format: .', char(join(formats, ', .'))];
-        throwAsCaller(MException(eid, msg))
-    end
-end
-
-function bool = isFormat(filename, formats)
-    filename_split = split(filename, '.');
-    bool = any(strcmp(formats, filename_split(end)));
-end
 
