@@ -40,7 +40,7 @@ function [bulk_concentrations, invHRT] = calculate_bulk_concentrations(constants
         [~, Y] = ode45(@(t, y) massbal(t, y, cumulative_reacted(isLiquid), influent, NH3sp, keepNH3fixed), [0 dT], prev_conc(isLiquid), options);
         bulk_conc_temp = Y(end, :)';
         bulk_concentrations = correct_negative_concentrations(bulk_conc_temp); %<E: Negative concentration from mass balance of reactor. />
-        temp = prev_conc(1:length(Dir_k)); % <C: todo => fix that sometimes N2 is taken into account, and most of the times it is not... />
+        temp = prev_conc(1:length(Dir_k)); % <C: todo => fix that sometimes N2 is taken into account in the model, and most of the times it is not... />
         bulk_concentrations(Dir_k) = temp(Dir_k);
         bulk_concentrations = [bulk_concentrations; prev_conc(length(Dir_k)+1:end)];
     end

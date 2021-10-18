@@ -5,7 +5,8 @@ addpath(genpath('lib'));
 
 
 if ~exist('R', 'var')
-    R = loadModelXlsx('../Granule/AOBNOBAMX.xlsx');
+%     R = loadModelXlsx('../Granule/AOBNOBAMX.xlsx');
+    R = loadModelXlsx('Testing.xlsx');
     clc;
 end
 

@@ -1,4 +1,4 @@
-function conc = diffusion(conc, reaction_matrix, bulk_concentrations, diffRegion, grid, constants)
+function conc = diffusion(conc, reaction_matrix, bulk_concentrations, diffRegion, grid, constants, dT)
     % Solve diffusion for all molecules in the liquid phase using the 
     % multigrid method. IMPORTANT: only runs for all dirichlet conditions 
     % as of now. Future versions should include variable conditions per 
@@ -22,7 +22,6 @@ function conc = diffusion(conc, reaction_matrix, bulk_concentrations, diffRegion
     accuracy = constants.diffusion_accuracy;
     absolute_tolerance = constants.Tol_a;
     nCompounds = length(diffusion_coef);
-    dT = constants.dT;
     dx = grid.dx;
 
     % set parameters for V-cycle 
@@ -67,14 +66,15 @@ function conc = diffusion(conc, reaction_matrix, bulk_concentrations, diffRegion
             residual_diffRegion = residual_diffRegion(diffRegion);
             isSolution = sum(residual_diffRegion.^2, 'all') < accuracy^2;
         end
+        
+        % apply correction for negative values
+        negative_concentration = conc(:,:,iCompound) < 0;
+        if any(negative_concentration, 'all')
+            warning('DEBUG:noActionRequired', 'debug: negative concentration encountered in diffusion solution of compound %s... correction applied', constants.StNames{iCompound})
+            conc(:,:,iCompound) = ~negative_concentration.*conc(:,:,iCompound) + negative_concentration*absolute_tolerance; % set negative concentrations to very small number, not to 0 because of divide-by-0 in other parts of the code
+        end    
     end
     
-    % apply correction for negative values
-    negative_concentration = conc < 0;
-    if any(negative_concentration)
-        warning('DEBUG:noActionRequired', 'debug: negative concentration encountered in diffusion solution... correction applied')
-        conc = ~negative_concentration.*conc + negative_concentration*absolute_tolerance; % set negative concentrations to very small number, not to 0 because of divide-by-0 in other parts of the code
-    end    
     % convert concentrations back to mol/L
     conc = conc / 1000;
 end
@@ -92,14 +92,14 @@ function rhs = calculate_rhs_dirichlet(phi, L_rhs, value, diffRegion)
     % diffRegion: matrix with per gridcell whether it is in the diffusion
     %   region
     % 
-    % '2*value' in create_dirichlet_boundary arguments is from
-    % Crank-Nicholson method (Dirichlet Boundary of both t=t and t=t+dt).
+    % Only required if else the concentration would be 0 (outside of
+    % domain)
     %
     % -> rhs: right-hand-side of the diffusion equation due to diffusion,
     %   valid only in the diffusion region. Outside an artificial value of
     %   <bulk_concentration> is set.
     
-    rhs_diffRegion = convn(diffRegion.*phi + ~diffRegion*value, L_rhs, 'same'); % The factor 2 is not required, because we already have the correct conc at t=t, and t=t+dt?
+    rhs_diffRegion = convn(diffRegion.*phi + ~diffRegion*value, L_rhs, 'same');
     rhs = diffRegion .* rhs_diffRegion + ~diffRegion .* ones(size(phi)) * value;
     
 %     phi = create_dirichlet_boundary(phi, 2*value);
