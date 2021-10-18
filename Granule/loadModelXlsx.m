@@ -3,11 +3,7 @@
 
 function R = loadModelXlsx(route)
 
-%% TODO: remove rng
-rng(082021);
-
 R = []; % R initialization
-
 
 % GENERAL MODEL PARAMETERS from the Excel file
  fprintf('> LOADING AND CREATING MODEL STRUCTURE AND PARAMETERS...\n')

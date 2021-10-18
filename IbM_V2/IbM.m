@@ -44,6 +44,9 @@ function IbM(simulation_number)
     
     %% ========== Time advancements ==========
     fprintf('> SIMULATION RUNNING >>>>>\n');
+    
+%     settings.dynamicDT = true; % in the simulation file already
+%     constants.simulation_end = 2500;
         
     tTime = tic;
     [profiling, maxErrors, nDiffIters, bulk_history] = integTime(grid, bac, output_dir, constants, init_params, settings);
@@ -51,14 +54,11 @@ function IbM(simulation_number)
     
     fprintf('> SIMULATION FINISHED >>>>>\n');
     
+
+    %% save profiling information in output directory
     save(sprintf('%s/profilingResults.mat', output_dir), 'profiling', 'maxErrors', 'nDiffIters', 'bulk_history')
     fprintf('\n\nTotal time for simulation of %.2f hours:\n\t%.2f seconds\n', constants.simulation_end, totalTime)
 
-    
-    
-    %% save profiling information in output directory
-    
-    
     
     %% cleanup of root directory
     movefile(simulation_file, output_dir);
