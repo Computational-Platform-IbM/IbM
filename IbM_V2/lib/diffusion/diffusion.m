@@ -1,4 +1,4 @@
-function conc = diffusion(conc, reaction_matrix, bulk_concentrations, diffRegion, grid, constants)
+function conc = diffusion(conc, reaction_matrix, bulk_concentrations, diffRegion, grid, constants, dT)
     % Solve diffusion for all molecules in the liquid phase using the 
     % multigrid method. IMPORTANT: only runs for all dirichlet conditions 
     % as of now. Future versions should include variable conditions per 
@@ -22,7 +22,6 @@ function conc = diffusion(conc, reaction_matrix, bulk_concentrations, diffRegion
     accuracy = constants.diffusion_accuracy;
     absolute_tolerance = constants.Tol_a;
     nCompounds = length(diffusion_coef);
-    dT = constants.dT;
     dx = grid.dx;
 
     % set parameters for V-cycle 

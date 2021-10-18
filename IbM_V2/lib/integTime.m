@@ -38,6 +38,7 @@ function [profiling, maxErrors, nDiffIters, bulk_history] = integTime(grid, bac,
     % initialise concentrations and pH
     conc = zeros(grid.nX, grid.nY, size(constants.isLiquid, 1));
     conc = set_concentrations(conc, init_params.init_concs, diffusion_region);
+    reaction_matrix = zeros(grid.nX, grid.nY, size(conc, 3));
     pH = ones(grid.nX, grid.nY) * constants.pHsetpoint;
     
     % set bulk layer concentrations
@@ -77,12 +78,13 @@ function [profiling, maxErrors, nDiffIters, bulk_history] = integTime(grid, bac,
     
     %% time advancements (dT / dT_steadystate)
     prev_conc = conc;
-    
+    dT = constants.dT;
     
     while Time.current < constants.simulation_end
         % diffuse (MG)
         tic;
-        conc(xRange, yRange, :) = diffusion(conc(xRange, yRange, :), reaction_matrix(xRange, yRange, :), bulk_concs, diffusion_region(xRange, yRange), grid, constants);
+        conc(xRange, yRange, :) = diffusion(conc(xRange, yRange, :), reaction_matrix(xRange, yRange, :), ...
+            bulk_concs, diffusion_region(xRange, yRange), grid, constants, dT);
         profiling(iProf, 1) = profiling(iProf, 1) + toc;
         
         % set bulk layer concentrations (in theory, not needed anymore with
@@ -91,7 +93,7 @@ function [profiling, maxErrors, nDiffIters, bulk_history] = integTime(grid, bac,
     
         % updata bacterial mass
         tic;
-        bac = update_bacterial_mass(bac, constants.dT);        
+        bac = update_bacterial_mass(bac, dT);        
         profiling(iProf, 2) = profiling(iProf, 2) + toc;
         
         % calculate reaction matrix
@@ -120,6 +122,13 @@ function [profiling, maxErrors, nDiffIters, bulk_history] = integTime(grid, bac,
             
             prev_conc = conc;
             
+            % increase dT if convergence is slow
+            if settings.dynamicDT && Time.current > 5 && mod(iRES, ceil(100 / constants.nDiffusion_per_SScheck)) == 0 && norm_diff(iRES)/norm_diff(iRES-1) > 0.99
+                dT = dT*1.2;
+                fprintf('dT increased to %g at t=%g after %d diffusion iterations\n', dT, Time.current, iDiffusion)
+            end
+            
+            
             % check if system is converging towards steady state
 %             noLongerConverging = abs(max(RESvalues(:, iRES)) - max(RESvalues(:, iRES - 1))) < constants.convergence_accuracy;
             noLongerConverging = false;
@@ -140,6 +149,9 @@ function [profiling, maxErrors, nDiffIters, bulk_history] = integTime(grid, bac,
                 if Time.current > constants.simulation_end
                     Time.current = constants.simulation_end - constants.dT;
                 end
+                
+                % (re)set dT to constant value each dT_bac
+                dT = constants.dT;
                 
                 % calculate actual dT for integration of bacterial mass
                 dT_actual = Time.current - previousTime;
@@ -287,10 +299,6 @@ function [profiling, maxErrors, nDiffIters, bulk_history] = integTime(grid, bac,
                     fprintf('Current simulation time: %.1f h\n', Time.current)
                 end
                 
-                % set next steadystate time
-                Time.steadystate = Time.current + constants.nDiffusion_per_SScheck*constants.dT;
-                
-                
                 %% time advancements (dT_save)
                 if Time.current >= Time.save
                     % set next save time
@@ -301,16 +309,15 @@ function [profiling, maxErrors, nDiffIters, bulk_history] = integTime(grid, bac,
 %                     save_plane(bac, conc, pH, Time, grid, constants, directory); % entire plane of simulation
                 end
                 
-            else % no steady state:
-                % post-pone next checking of steady-state (diffusion
-                % iterations are cheap)
-                Time.steadystate = Time.current + constants.nDiffusion_per_SScheck*constants.dT;
             end
+            
+            % set next steadystate time
+            Time.steadystate = Time.current + constants.nDiffusion_per_SScheck*dT;
         end
         
         %% post-dT updates
         % advance current simulation time
-        Time.current = Time.current + constants.dT;
+        Time.current = Time.current + dT;
         iDiffusion = iDiffusion + 1;
     end
     
@@ -322,6 +329,11 @@ function [profiling, maxErrors, nDiffIters, bulk_history] = integTime(grid, bac,
     if constants.debug.plotBulkConcsOverTime
         plotBulkConcOverTime(bulk_history, constants)
     end
+    
+    % save all important variables one last time?
+    save_slice(bac, conc, bulk_concs, pH, invHRT, Time.current, grid, constants, directory);
+    % save_plane(bac, conc, pH, Time, grid, constants, directory); % entire plane of simulation
+    
     
 %     plotConcs(conc, constants, Time.current);
 %     plotBacs(grid, bac, constants);
@@ -341,6 +353,8 @@ Figure reservations:
 7) concentration profiles (2D)
 8) Norm(conc1 - conc0) over time
 9) Norm(conc1 - conc0) to steady state
+10) Reaction profiles (2D)
+11) RES value (or residual of diffusion) profile (2D)
 %}
 
 
