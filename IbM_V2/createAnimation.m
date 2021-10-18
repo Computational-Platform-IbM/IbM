@@ -34,6 +34,7 @@ function createAnimation(simulation_number)
     
     %% add results to path
     addpath(genpath('Results')); % add Results folder and all subfolders to path
+    addpath(genpath('lib'));
     
     
     %% load results
