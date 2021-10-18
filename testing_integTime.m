@@ -9,7 +9,7 @@ addpath(genpath('lib'));
 javaaddpath([pwd '\lib\shovingQuadTree.jar']);
 
 if ~exist('R', 'var')
-    R = loadModelXlsx('../Granule/AOBNOBAMX.xlsx');
+    R = loadModelXlsx('AOBNOBAMX.xlsx');
 %     R = loadModelXlsx('Testing.xlsx');
     clc;
 end
@@ -113,8 +113,11 @@ init_params.init_concs = R.St.StVLiq;
 init_params.invHRT = R.pOp.invHRT;
 
 %% actual call to integTime
-directory = 'Testing';
-constants.simulation_end = 24*7*3; % 3 weeks
+% directory = 'Testing';
+% constants.simulation_end = 24*7*3; % 3 weeks
+
+constants.dT_backup = 7*24;
+
 
 bac = bacteria_shove(bac, grid, constants); % otherwise bacteria might overlap at start...
 bac = bacteria_shove(bac, grid, constants); % otherwise bacteria might overlap at start...
