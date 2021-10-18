@@ -1,4 +1,4 @@
-function save_slice(bac, conc, bulk_concentrations, pH, invHRT, Time, grid, constants, directory)
+function save_profile(bac, conc, bulk_concentrations, pH, invHRT, Time, grid, constants, directory)
     % Save important variables along the central axis of the bio-aggregate
     %
     % bac: struct containing all information regarding the bacteria
@@ -14,7 +14,7 @@ function save_slice(bac, conc, bulk_concentrations, pH, invHRT, Time, grid, cons
     
     %% initialise or load previous values
     
-    results_file = [directory, '/results1D.mat'];
+    results_file = [directory, '/results2D.mat'];
     if Time == 0
         [bac_saved, conc_saved, pH_saved, reactor_saved] = init_save(constants, grid);
     else
@@ -34,10 +34,10 @@ function save_slice(bac, conc, bulk_concentrations, pH, invHRT, Time, grid, cons
     bac_saved.active(iSave, 1:nBacs) = bac.active;
     
     % concentration variable
-    conc_saved(iSave, :, :) = conc(:, ceil(grid.nY / 2), :); % save horizontal slice through center of granule
+    conc_saved(iSave, :, :, :) = conc; % save horizontal slice through center of granule
     
     % pH variable
-    pH_saved(iSave, :) = pH(:, ceil(grid.nY / 2));
+    pH_saved(iSave, :, :) = pH;
     
     % reactor properties
     reactor_saved.bulk_concs(iSave, :) = bulk_concentrations;
@@ -74,10 +74,10 @@ function [bac_saved, conc_saved, pH_saved, reactor_saved] = init_save(constants,
     
     % concentration variable
     nCompounds = length(constants.StNames);
-    conc_saved = zeros(nSaves, grid.nX, nCompounds, 'single');
+    conc_saved = zeros(nSaves, grid.nX, grid.nY, nCompounds, 'single');
     
     % pH variable
-    pH_saved = zeros(nSaves, grid.nX, 'single');
+    pH_saved = zeros(nSaves, grid.nX, grid.nY, 'single');
     
     % reactor properties
     reactor_saved.bulk_concs = zeros(nSaves, nCompounds, 'single');
