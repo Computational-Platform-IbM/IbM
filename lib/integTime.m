@@ -14,6 +14,7 @@ function integTime(simulation_file, directory)
     %% Overall settings
     if settings.parallelized
         nChunks_dir = ceil(sqrt(feature('numcores')));
+        parpool('local', feature('numcores'));
         fprintf('Parallelisation enabled for %d cores\n', feature('numcores'));
     end
     
