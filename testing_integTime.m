@@ -117,7 +117,8 @@ init_params.invHRT = R.pOp.invHRT;
 % constants.simulation_end = 24*7*3; % 3 weeks
 
 constants.dT_backup = 7*24;
-
+settings.dynamicDT = false;
+constants.simulation_end = 300;
 
 bac = bacteria_shove(bac, grid, constants); % otherwise bacteria might overlap at start...
 bac = bacteria_shove(bac, grid, constants); % otherwise bacteria might overlap at start...
