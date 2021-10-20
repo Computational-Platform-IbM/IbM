@@ -49,6 +49,7 @@ function IbM(simulation_number)
     
 
     %% save profiling information in output directory
+    load(simulation_file, 'constants');
     fprintf('\n\nTotal time for simulation of %.2f hours:\n\t%.2f seconds\n', constants.simulation_end, totalTime)
 
     
