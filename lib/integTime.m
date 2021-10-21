@@ -27,6 +27,12 @@ function integTime(simulation_file, directory)
         % load from files
         load(backup_file, 'bac', 'bulk_concs', 'invHRT', 'conc', 'reaction_matrix', 'pH');
         load(profiling_file, 'profiling', 'maxErrors', 'normOverTime', 'nDiffIters', 'bulk_history', 'Time');
+        
+        
+        constants.simulation_end = 600;
+        settings.parallelized = false;
+        
+        
     else
         % initiate from preset values
         [conc, bulk_concs, invHRT, reaction_matrix, pH, bac] = ...
