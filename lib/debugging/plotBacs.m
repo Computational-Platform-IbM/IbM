@@ -12,7 +12,7 @@ function f = plotBacs(g, bac, constants, Time)
     f.Position = [60 60 1000 700];
     
     for i = 1:length(x)
-        rectangle('Curvature', [1 1], 'Position', [x(i) - r(i), y(i) - r(i), 2 * r(i), 2 * r(i)], 'LineWidth', 1, 'EdgeColor', [0, 0, 0], 'FaceColor', coloring{s(i)});
+        rectangle('Curvature', [1 1], 'Position', [x(i) - r(i), y(i) - r(i), 2 * r(i), 2 * r(i)], 'LineWidth', 0.1, 'EdgeColor', [0, 0, 0], 'FaceColor', coloring{s(i)});
     end
     
     axis equal;
