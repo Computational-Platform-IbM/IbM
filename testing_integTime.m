@@ -31,7 +31,7 @@ bac = struct;
 % bac.x = R.bac.atrib(:,1);
 % bac.y = R.bac.atrib(:,2);
 % n = length(bac.x);
-n = 5000; radius = R.Sxy.dx * 19; % arbitrary %500 bacs => 4, 5000 bacs => 19
+n = 500; radius = R.Sxy.dx * 4; % arbitrary %500 bacs => 4, 5000 bacs => 19
 [bac.x, bac.y] = rand_circle(n, grid.nX/2*grid.dx, grid.nY/2*grid.dy, radius);
 bac.species = randi(4, size(bac.x)); % random for now
 % bac.species = R.bac.atrib(:,5);
@@ -99,13 +99,13 @@ constants.dT = min(grid.dx^2./constants.diffusion_rates * Neumann);
 
 constants.debug.plotBacteria = false;
 constants.debug.plotConvergence = false; %
-constants.debug.plotMaxErrors = true; %
+constants.debug.plotMaxErrors = false; %
 constants.debug.plotDiffRegion = false;
-constants.debug.plotBulkConcsOverTime = true; %
-constants.debug.plotProfiling = true; %
+constants.debug.plotBulkConcsOverTime = false; %
+constants.debug.plotProfiling = false; %
 
 settings = struct;
-settings.parallelized = true;
+settings.parallelized = false;
 
 init_params = struct;
 init_params.init_bulk_conc = R.Sxy.Sbc_Dir;
@@ -117,8 +117,6 @@ init_params.invHRT = R.pOp.invHRT;
 % constants.simulation_end = 24*7*3; % 3 weeks
 
 constants.dT_backup = 7*24;
-settings.dynamicDT = false;
-constants.simulation_end = 300;
 
 bac = bacteria_shove(bac, grid, constants); % otherwise bacteria might overlap at start...
 bac = bacteria_shove(bac, grid, constants); % otherwise bacteria might overlap at start...
@@ -130,6 +128,18 @@ if constants.debug.plotBacteria
 end
 
 
+% temp settings of variables: pls remove
+constants.dynamicDT.iterThreshholdDecrease = 500;
+constants.dynamicDT.iterThreshholdIncrease = 50;
+constants.dynamicDT.nIterThreshholdIncrease = 3;
+settings.dynamicDT = true;
+
+
+
+
+
+
+%% running the simulation
 totalTimer = tic;
 [profiling, maxErrors, nDiffIters, bulk_history] = integTime(grid, bac, directory, constants, init_params, settings);
 totalTime = toc(totalTimer);
