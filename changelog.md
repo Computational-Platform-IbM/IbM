@@ -1,8 +1,35 @@
-# Changelog v0.1-alpha
-List all changes and/or improvements from the original model of R. Gonzalez-Cabaleiro as performed by C. van Amstel during the refactoring of the code.
+# Changelog
+List of all changes and/or improvements betweeen versions.
+
+# v2.3.0
+#### General
+- Automatic initialisation of parpool with correct number of workers
+- Introduction of dynamic dT for diffusion
+- 
+
+#### Bug fix
+-
+
+# v2.2.0
+#### General
+- Improved workflow using IbM script
+- Implement better saving of results
+- Add functions for analysing the result files
 
 
-## General
+# v2.1.0
+#### General
+- New Materials & Methods document
+- Parallelisation of `reaction_matrix` calculations
+
+
+#### Bug fixes
+- correct diffRegion in last V-Cycle
+- 
+
+
+# v2.0.0
+#### General
 *Improved readability*
 - Changed folder structure
 - Separation of functional components into files
@@ -28,7 +55,7 @@ List all changes and/or improvements from the original model of R. Gonzalez-Caba
 
 
 
-## Computational improvements
+#### Computational improvements
 *General*
 - Focus region based on diffusion region
 
@@ -56,7 +83,7 @@ List all changes and/or improvements from the original model of R. Gonzalez-Caba
 - Only check neighbours for overlap instead of each bacterium
 
 
-## Algorithmic changes
+#### Algorithmic changes
 *Calculation of reaction matrix*
 - Calculate kinetics only once per species per gridcell. Reaction matrix uses cumulative mass per species to calculate concentration change.
 
@@ -72,7 +99,7 @@ List all changes and/or improvements from the original model of R. Gonzalez-Caba
 - Use convolutions for checking of steady-state
 
 
-## Error corrections
+#### Error corrections
 *General*
 - Remove redundant function calls
 - Cleanup/correct function call order in model flow
