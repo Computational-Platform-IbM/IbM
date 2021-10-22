@@ -28,11 +28,11 @@ grid.nY = R.Sxy.ny;
 grid.blayer_thickness = R.Sxy.T_blayer;
 
 bac = struct;
-% bac.x = R.bac.atrib(:,1);
-% bac.y = R.bac.atrib(:,2);
-% n = length(bac.x);
-n = 5000; radius = R.Sxy.dx * 19; % arbitrary %500 bacs => 4, 5000 bacs => 19
-[bac.x, bac.y] = rand_circle(n, grid.nX/2*grid.dx, grid.nY/2*grid.dy, radius);
+bac.x = R.bac.atrib(:,1);
+bac.y = R.bac.atrib(:,2);
+n = length(bac.x);
+% n = 5000; radius = R.Sxy.dx * 19; % arbitrary %500 bacs => 4, 5000 bacs => 19
+% [bac.x, bac.y] = rand_circle(n, grid.nX/2*grid.dx, grid.nY/2*grid.dy, radius);
 bac.species = randi(4, size(bac.x)); % random for now
 % bac.species = R.bac.atrib(:,5);
 bac.molarMass = R.bac.atrib(1,3) * ones(n, 1);
