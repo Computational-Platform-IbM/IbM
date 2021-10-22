@@ -5,15 +5,6 @@ function integTime(simulation_file, directory)
     load(simulation_file, 'grid', 'bac', 'constants', 'init_params', 'settings')
     
     
-    % temp settings of variables: pls remove
-    constants.dynamicDT.iterThreshholdDecrease = 500;
-    constants.dynamicDT.iterThreshholdIncrease = 50;
-    constants.dynamicDT.nIterThreshholdIncrease = 3;
-    settings.dynamicDT = true;
-    
-    
-    
-    
     %% Overall settings
     if settings.parallelized
         nChunks_dir = ceil(sqrt(feature('numcores')));
@@ -273,6 +264,14 @@ function integTime(simulation_file, directory)
                             
                             if constants.debug.plotBacteria
                                 plotBacs(grid, bac, constants)
+                            end
+                            
+                            % auto detect when to switch to parallel
+                            % computation of rMatrix
+                            % TODO: determine exact cutoff value (will be
+                            % around 15000 approx)
+                            if settings.parallelized == false && length(bac.x) > 15000
+                                settings.parallelized = true;
                             end
                             
                             % update/re-determine where bacs
