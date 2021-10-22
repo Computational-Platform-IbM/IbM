@@ -1,5 +1,11 @@
-| Simulation number | Parameter description                         | Goal                                                     | Finished?         |
-|-------------------|-----------------------------------------------|----------------------------------------------------------|-------------------|
-| 0001              | Base case with 5000 starting bacteria         | Testing                                                  | [x] (until 300h)  |
-| 0002              | copy of 0001, but with dT_bac & dT_div = 0.5h | Getting rid of non-convergence at later simulation hours | [x] (until 1415h) |
-| 0003              | copy of 0002                                  |                                                          |                   |
+Please edit using https://www.tablesgenerator.com/markdown_tables.
+
+For the finished column, please use :white_check_mark: (`:white_check_mark:`) when finished and :clock1: (`:clock1:`) when running. When not started yet, leave empty.
+
+
+
+| Simulation number | Parameter description                  | Goal                                            | Finished? | Version             |
+|-------------------|----------------------------------------|-------------------------------------------------|-----------|---------------------|
+| 0001              | Base case with 500 starting bacteria   | Comparing number of starting bacteria on result | :clock1:  | v2.2.0 + dynamic dT |
+| 0002              | Base case with 5000 starting bacteria  | Comparing number of starting bacteria on result | :clock1:  | v2.2.0 + dynamic dT |
+| 0003              | Base case with 50000 starting bacteria | Comparing number of starting bacteria on result | :clock1:  | v2.2.0 + dynamic dT |
