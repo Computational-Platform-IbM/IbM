@@ -3,6 +3,7 @@ function integTime(simulation_file, directory)
 
     %% load preset file
     load(simulation_file, 'grid', 'bac', 'constants', 'init_params', 'settings')
+    constants.debug.plotConvergence = true;
     
     
     %% Overall settings
@@ -272,6 +273,11 @@ function integTime(simulation_file, directory)
                             % around 15000 approx)
                             if settings.parallelized == false && length(bac.x) > 15000
                                 settings.parallelized = true;
+                                nChunks_dir = ceil(sqrt(feature('numcores')));
+                                if isempty(gcp('nocreate')) % check if parpool is already started (development ease-of-work)
+                                    parpool('local', feature('numcores'));
+                                end
+                                fprintf('Parallelisation enabled for %d cores\n', feature('numcores'));
                             end
                             
                             % update/re-determine where bacs
