@@ -137,7 +137,7 @@ settings.dynamicDT = true;
 
 
 
-
+% save('sim_xxxx.mat', 'grid', 'bac', 'constants', 'init_params', 'settings')
 
 %% running the simulation
 totalTimer = tic;
