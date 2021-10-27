@@ -20,7 +20,7 @@ function createAnimation(simulation_number)
     end
     
     % check if simulation result file exists
-    simulation_result = sprintf('%s/results.mat', output_dir);
+    simulation_result = sprintf('%s/results1D.mat', output_dir);
     if ~isfile(simulation_result)
         error('The results file %s does not exist', simulation_result)
     end
@@ -43,61 +43,8 @@ function createAnimation(simulation_number)
     load(simulation_file, 'constants', 'grid');
     
     
-    %% generate animation BACTERIA
-    fprintf('\n===== BACTERIAL MOVIE =====\n')
-    bacterial_movie = sprintf('%s/bacteria.avi', output_dir);
-    if ~isfile(bacterial_movie)
-        timer = tic;
-
-        % determine size of figure frame for plotting
-        last_nonzero = find(bac_saved.nBacs ~= 0, 1, 'last');
-        xlim_bac = [min(bac_saved.x(last_nonzero, 1:bac_saved.nBacs(last_nonzero))) - 5*grid.dx, ...
-            max(bac_saved.x(last_nonzero, 1:bac_saved.nBacs(last_nonzero))) + 5*grid.dx];
-        ylim_bac = [min(bac_saved.y(last_nonzero, 1:bac_saved.nBacs(last_nonzero))) - 5*grid.dy, ...
-            max(bac_saved.y(last_nonzero, 1:bac_saved.nBacs(last_nonzero))) + 5*grid.dy];
-
-        % start animator object
-        writerObjB = VideoWriter(bacterial_movie);
-        writerObjB.FrameRate = 1;
-        open(writerObjB);
-
-        for i = 1:last_nonzero
-            T = constants.dT_save * (i - 1);
-            bac = struct;
-            nBacs = bac_saved.nBacs(i);
-            if nBacs == 0
-                break
-            end
-            bac.x = bac_saved.x(i, 1:nBacs);
-            bac.y = bac_saved.y(i, 1:nBacs);
-            bac.radius = bac_saved.radius(i, 1:nBacs);
-            bac.species = bac_saved.species(i, 1:nBacs);
-
-            f = plotBacs(grid, bac, constants, T);
-            xlim(xlim_bac);
-            ylim(ylim_bac);
-            axis equal
-            drawnow();
-            frame = getframe(f);
-            writeVideo(writerObjB,frame);
-
-        end
-        
-        % close animation object
-        close(writerObjB);
-        
-        timeTaken = toc(timer);
-        
-        % report back to console
-        fprintf('Started with %d bacteria \nFinished with %d bacteria\n', bac_saved.nBacs(1), bac_saved.nBacs(last_nonzero));
-        fprintf('Final diameter of the granule: ~%.1f μm\n', ...
-            (max(bac_saved.x(last_nonzero, 1:bac_saved.nBacs(last_nonzero))) - ...
-            min(bac_saved.x(last_nonzero, 1:bac_saved.nBacs(last_nonzero)))) * 1e6);
-        fprintf('Animation from t = 0 h to t = %.1f h with steps of %d hours\n', T, constants.dT_save);
-        fprintf('Composed in %.2f seconds\n', timeTaken);
-    else
-        fprintf('Skipped: already made\n')
-    end
+    %% bacterial simulation
+    % done in Python, because much faster that way
 
     
     %% bulk concentrations over time
