@@ -76,6 +76,7 @@ function [reaction_matrix, mu, pH] = calculate_reaction_matrix(grid2bac, grid2nB
                     pH(ix, iy) = -log10(Sh);
                 else
                     pH(ix, iy) = pH_bulk;
+                    Sh = 10^-pH(ix, iy);
                     spcM = reshape(conc(ix,iy,:), [], 1, 1);
                 end
                 
