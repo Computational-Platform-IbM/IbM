@@ -5,6 +5,7 @@ List of all changes and/or improvements betweeen versions.
 #### General
 - Automatic initialisation of parpool with correct number of workers
 - Introduction of dynamic dT for diffusion
+- Introduction of dynamic dT_bac
 - Auto switch to parallelisation when nBacs > Threshold
 - 
 
