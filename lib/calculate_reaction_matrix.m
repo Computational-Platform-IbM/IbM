@@ -1,4 +1,4 @@
-function [reaction_matrix, mu, pH] = calculate_reaction_matrix(grid2bac, grid2nBacs, bac, diffRegion, conc, constants, pH, settings)
+function [reaction_matrix, mu, pH] = calculate_reaction_matrix(grid2bac, grid2nBacs, bac, diffRegion, conc, constants, pH)
     % Calculate how much compounds are consumed/produced per grid cell due
     % to bacterial activity. Also updates the growth rate of the respective
     % bacteria.
@@ -17,8 +17,6 @@ function [reaction_matrix, mu, pH] = calculate_reaction_matrix(grid2bac, grid2nB
     % -> mu: vector with updated growth rates per bacterium
     % -> pH: matrix with per grid cell the pH
 
-    structure_model = settings.structure_model;
-    
     % convert init pH to pH matrix
     if isscalar(pH)
         pH = ones(size(grid2nBacs))*pH;
@@ -36,16 +34,9 @@ function [reaction_matrix, mu, pH] = calculate_reaction_matrix(grid2bac, grid2nB
     mMetabolism = constants.MatrixMet;
     mDecay = constants.MatrixDecay;
     
-    if structure_model
-        iA = find(strcmp(compounds, 'A'));
-        iB = find(strcmp(compounds, 'B'));
-        iC = find(strcmp(compounds, 'C'));
-        iO2 = find(strcmp(compounds, 'O2'));
-    else
-        iNH3 = find(strcmp(compounds, 'NH3'));
-        iNO2 = find(strcmp(compounds, 'NO2'));
-        iO2 = find(strcmp(compounds, 'O2'));
-    end
+    iNH3 = find(strcmp(compounds, 'NH3'));
+    iNO2 = find(strcmp(compounds, 'NO2'));
+    iO2 = find(strcmp(compounds, 'O2'));
     
     reaction_matrix = zeros(size(conc));
     mu = zeros(size(bac.x));
@@ -79,19 +70,12 @@ function [reaction_matrix, mu, pH] = calculate_reaction_matrix(grid2bac, grid2nB
                         curr_species = unique_species(i);
 
                         % update mu_max per species based on pH
-                        [mu_max, maint] = determine_max_growth_rate_and_maint(curr_species, T, Sh, structure_model);
+                        [mu_max, maint] = determine_max_growth_rate_and_maint(curr_species, T, Sh, settings.structure_model);
 
                         % get reactive concentrations for soluble components
-                        if structure_model
-                            reactive_conc = [spcM(iA, reactive_form(iA)), ...
-                                spcM(iB, reactive_form(iB)), ...
-                                spcM(iC, reactive_form(iC)), ...
-                                spcM(iO2, reactive_form(iO2))];
-                        else
-                            reactive_conc = [spcM(iNH3, reactive_form(iNH3)), ...
-                                spcM(iNO2, reactive_form(iNO2)), ...
-                                spcM(iO2, reactive_form(iO2))];
-                        end
+                        reactive_conc = [spcM(iNH3, reactive_form(iNH3)), ...
+                            spcM(iNO2, reactive_form(iNO2)), ...
+                            spcM(iO2, reactive_form(iO2))];
 
                         % set mu for all bacteria of same species in that gridcell
                         M = calculate_monod(Ks(curr_species,:), Ki(curr_species, :), reactive_conc);                        % [DN]

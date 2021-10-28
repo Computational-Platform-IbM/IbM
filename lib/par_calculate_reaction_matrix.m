@@ -1,4 +1,4 @@
-function [reaction_matrix, mu, pH] = par_calculate_reaction_matrix(grid2bac, grid2nBacs, bac, diffRegion, conc, constants, pH, chunks, nChunks_dir, settings)
+function [reaction_matrix, mu, pH] = par_calculate_reaction_matrix(grid2bac, grid2nBacs, bac, diffRegion, conc, constants, pH, chunks, nChunks_dir)
     % Calculate how much compounds are consumed/produced per grid cell due
     % to bacterial activity. Also updates the growth rate of the respective
     % bacteria.
@@ -18,8 +18,6 @@ function [reaction_matrix, mu, pH] = par_calculate_reaction_matrix(grid2bac, gri
     %   change [h-1] due to bacterial activity
     % -> mu: vector with updated growth rates per bacterium
     % -> pH: matrix with per grid cell the pH
-    
-    structure_model = settings.structure_model;
 
     nChunks = nChunks_dir^2;
     
@@ -38,16 +36,9 @@ function [reaction_matrix, mu, pH] = par_calculate_reaction_matrix(grid2bac, gri
     mMetabolism = constants.MatrixMet;
     mDecay = constants.MatrixDecay;
     
-    if structure_model
-        iA = find(strcmp(compounds, 'A'));
-        iB = find(strcmp(compounds, 'B'));
-        iC = find(strcmp(compounds, 'C'));
-        iO2 = find(strcmp(compounds, 'O2'));
-    else
-        iNH3 = find(strcmp(compounds, 'NH3'));
-        iNO2 = find(strcmp(compounds, 'NO2'));
-        iO2 = find(strcmp(compounds, 'O2'));
-    end
+    iNH3 = find(strcmp(compounds, 'NH3'));
+    iNO2 = find(strcmp(compounds, 'NO2'));
+    iO2 = find(strcmp(compounds, 'O2'));
     
     reaction_matrix = zeros(size(conc));
     mu = zeros(size(bac.x));
@@ -59,11 +50,7 @@ function [reaction_matrix, mu, pH] = par_calculate_reaction_matrix(grid2bac, gri
     pH_bulk = -log10(Sh_bulk);
 
     % group constants for easy passing to multiple cores
-    if structure_model
-        constantValues = [pH_bulk, constants.constantpH, constants.pHtolerance, constants.T, iA, iB, iC, iO2];
-    else
-        constantValues = [pH_bulk, constants.constantpH, constants.pHtolerance, constants.T, iNH3, iNO2, iO2];
-    end
+    constantValues = [pH_bulk, constants.constantpH, constants.pHtolerance, constants.T, iNH3, iNO2, iO2];
     grouped_bac = [bac.species, bac.molarMass];
 
     
@@ -108,7 +95,7 @@ function [reaction_matrix, mu, pH] = par_calculate_reaction_matrix(grid2bac, gri
         [chunk_rMatrix{iChunk}, chunk_mu{iChunk}, chunk_pH{iChunk}] = ...
             rMatrix_chunk(chunk_pH_OG{iChunk}, chunk_conc{iChunk}, chunk_grid2bac{iChunk}, chunk_grid2nBacs{iChunk}, chunk_diffRegion{iChunk}, ...
             chunk_grouped_bac{iChunk}, chunk2nBacs(iChunk), bacOffset(iChunk), ...
-            reactive_form, Ks, Ki, Keq, chrM, mMetabolism, mDecay, constantValues, structure_model);
+            reactive_form, Ks, Ki, Keq, chrM, mMetabolism, mDecay, constantValues);
     end
     
     % put everything back into correct matrix/vector
@@ -130,23 +117,16 @@ end
 
 function [reaction_matrix, mu, pH_new] = rMatrix_chunk(pH, conc, grid2bac, grid2nBacs, diffRegion, ...
     grouped_bac, nBacs, bacOffset, ...
-    reactive_form, Ks, Ki, Keq, chrM, mMetabolism, mDecay, constants, structure_model)
+    reactive_form, Ks, Ki, Keq, chrM, mMetabolism, mDecay, constants)
     % Calculate reaction matrix, mu and pH in one chunk
 
     pH_bulk = constants(1);
     constantpH = constants(2);
     pHtolerance = constants(3);
     T = constants(4);
-    if structure_model
-        iA = constants(5);
-        iB = constants(6);
-        iC = constants(7);
-        iO2 = constants(8);
-    else
-        iNH3 = constants(5);
-        iNO2 = constants(6);
-        iO2 = constants(7);
-    end
+    iNH3 = constants(5);
+    iNO2 = constants(6);
+    iO2 = constants(7);
 
     bac_species = grouped_bac(:,1);
     bac_molarMass = grouped_bac(:,2);
@@ -180,19 +160,12 @@ function [reaction_matrix, mu, pH_new] = rMatrix_chunk(pH, conc, grid2bac, grid2
                         curr_species = unique_species(i);
 
                         % update mu_max per species based on pH
-                        [mu_max, maint] = determine_max_growth_rate_and_maint(curr_species, T, Sh, structure_model);
+                        [mu_max, maint] = determine_max_growth_rate_and_maint(curr_species, T, Sh);
 
                         % get reactive concentrations for soluble components
-                        if structure_model
-                            reactive_conc = [spcM(iA, reactive_form(iA)), ...
-                                spcM(iB, reactive_form(iB)), ...
-                                spcM(iC, reactive_form(iC)), ...
-                                spcM(iO2, reactive_form(iO2))];
-                        else
-                            reactive_conc = [spcM(iNH3, reactive_form(iNH3)), ...
-                                spcM(iNO2, reactive_form(iNO2)), ...
-                                spcM(iO2, reactive_form(iO2))];
-                        end
+                        reactive_conc = [spcM(iNH3, reactive_form(iNH3)), ...
+                            spcM(iNO2, reactive_form(iNO2)), ...
+                            spcM(iO2, reactive_form(iO2))];
 
                         % set mu for all bacteria of same species in that gridcell
                         M = calculate_monod(Ks(curr_species,:), Ki(curr_species, :), reactive_conc);                        % [DN]
@@ -211,6 +184,61 @@ function [reaction_matrix, mu, pH_new] = rMatrix_chunk(pH, conc, grid2bac, grid2
                     end
                 end
             end
+        end
+    end
+end
+    
+function [mu_max, maint] = determine_max_growth_rate_and_maint(species, T, Sh)
+    % Determine the maximum growth rate and maintenance [h-1] for a
+    % specific species under certain conditions
+    %
+    % species: species of bacterium
+    % T: temperature (in Kelvin)
+    % Sh: concentration of protons
+    %
+    % -> mu_max: max growth rate
+    % -> maint: maintenance requirement
+
+    switch species
+        case 1 % AOB
+            mu_max = ((1.28*10^(12)*exp(-8183/T))/(1+((2.05*10^(-9))/Sh)+ (Sh/(1.66*10^(-7)))))/24;
+            maint = (1.651*10^(11)*exp(-8183/T))/24;
+
+        case 2 % NOB; Nitrobacter
+            mu_max = ((6.69*10^(7)*exp(-5295/T))/(1+((2.05*10^(-9))/Sh)+ (Sh/(1.66*10^(-7)))))/24;
+            maint = (8.626*10^(6)*exp(-5295/T))/24;
+
+        case 3 % NOB; Nitrospira
+            mu_max = 0.63 * ((6.69*10^(7)*exp(-5295/T))/(1+((2.05*10^(-9))/Sh)+ (Sh/(1.66*10^(-7)))))/24;
+            maint = 0.63 * (8.626*10^(6)*exp(-5295/T))/24;
+
+        case 4 % AMX; Brocadia spp [Puyol 2014]
+            mu_max = 1.89*10^(8)*exp(-7330/T);
+            maint = 0.05 * mu_max;
+            
+        otherwise
+            error('Bacterial species not implemented: %d', species);
+    end
+end
+
+function M = calculate_monod(Ks, Ki, conc)
+    % Calculate the Monod coefficient given the Ks's, Ki's and the
+    % corresponding concentrations
+    %
+    % Ks: vector with all Ks values (1-by-n)
+    % Ki: vector with all Ki values (1-by-n)
+    % conc: vector with all concentrations corresponding to the Ks and Ki
+    %   values (1-by-n)
+    %
+    % -> M: Monod block
+    
+    % apply Ks
+    M = prod((conc + 1e-25) ./ (conc + Ks + 1e-25)); % + 1e-25 to prevent NaN when conc == 0 and Ks == 0
+    
+    % apply Ki
+    for i = 1:length(Ki)
+        if Ki(i) ~= 0
+            M = M * Ki(i) / (Ki(i) + conc(i));
         end
     end
 end
