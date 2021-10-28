@@ -10,7 +10,6 @@ function [mu_max, maint] = determine_max_growth_rate_and_maint(species, T, Sh, s
     % -> maint: maintenance requirement
     
     if structure_model
-        % Same growth kinetic parameters for bacteria
         mu_max = 1/24;
         maint = 0.25*mu_max;
     else
