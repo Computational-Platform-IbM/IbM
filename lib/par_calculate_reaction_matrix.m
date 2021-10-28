@@ -20,6 +20,7 @@ function [reaction_matrix, mu, pH] = par_calculate_reaction_matrix(grid2bac, gri
     % -> pH: matrix with per grid cell the pH
     
     structure_model = settings.structure_model;
+    pHincluded = settings.pHincluded;
 
     nChunks = nChunks_dir^2;
     
@@ -55,8 +56,13 @@ function [reaction_matrix, mu, pH] = par_calculate_reaction_matrix(grid2bac, gri
     % pre-compute for bulk-liquid 
     % -> at 1,1 there should never be diffusion layer
     Sh_bulk = 10^-pH(1, 1);
-    [~, Sh_bulk] = solve_pH(Sh_bulk, [reshape(conc(1,1,:), [], 1, 1); 1; 0], Keq, chrM, constants.constantpH, constants.pHtolerance); % <C: why [...; 1; 0]? />
-    pH_bulk = -log10(Sh_bulk);
+    
+    if pHincluded
+        [~, Sh_bulk] = solve_pH(Sh_bulk, [reshape(conc(1,1,:), [], 1, 1); 1; 0], Keq, chrM, constants.constantpH, constants.pHtolerance); % <C: why [...; 1; 0]? />
+        pH_bulk = -log10(Sh_bulk);
+    else
+        pH_bulk = pH(1, 1);
+    end
 
     % group constants for easy passing to multiple cores
     if structure_model
@@ -108,7 +114,7 @@ function [reaction_matrix, mu, pH] = par_calculate_reaction_matrix(grid2bac, gri
         [chunk_rMatrix{iChunk}, chunk_mu{iChunk}, chunk_pH{iChunk}] = ...
             rMatrix_chunk(chunk_pH_OG{iChunk}, chunk_conc{iChunk}, chunk_grid2bac{iChunk}, chunk_grid2nBacs{iChunk}, chunk_diffRegion{iChunk}, ...
             chunk_grouped_bac{iChunk}, chunk2nBacs(iChunk), bacOffset(iChunk), ...
-            reactive_form, Ks, Ki, Keq, chrM, mMetabolism, mDecay, constantValues, structure_model);
+            reactive_form, Ks, Ki, Keq, chrM, mMetabolism, mDecay, constantValues, structure_model, pHincluded);
     end
     
     % put everything back into correct matrix/vector
@@ -130,7 +136,7 @@ end
 
 function [reaction_matrix, mu, pH_new] = rMatrix_chunk(pH, conc, grid2bac, grid2nBacs, diffRegion, ...
     grouped_bac, nBacs, bacOffset, ...
-    reactive_form, Ks, Ki, Keq, chrM, mMetabolism, mDecay, constants, structure_model)
+    reactive_form, Ks, Ki, Keq, chrM, mMetabolism, mDecay, constants, structure_model, pHincluded)
     % Calculate reaction matrix, mu and pH in one chunk
 
     pH_bulk = constants(1);
@@ -163,9 +169,14 @@ function [reaction_matrix, mu, pH_new] = rMatrix_chunk(pH, conc, grid2bac, grid2
             
             else % in diffusion layer, thus pH calculation needs to be performed
                 % calculate pH & speciation
-                Sh_old = 10^-pH(ix, iy);
-                [spcM, Sh] = solve_pH(Sh_old, [reshape(conc(ix,iy,:), [], 1, 1); 1; 0], Keq, chrM, constantpH, pHtolerance); % <C: why [...; 1; 0]? />
-                pH_new(ix, iy) = -log10(Sh);
+                if pHincluded
+                    Sh_old = 10^-pH(ix, iy);
+                    [spcM, Sh] = solve_pH(Sh_old, [reshape(conc(ix,iy,:), [], 1, 1); 1; 0], Keq, chrM, constantpH, pHtolerance); % <C: why [...; 1; 0]? />
+                    pH_new(ix, iy) = -log10(Sh);
+                else
+                    pH(ix, iy) = pH_bulk;
+                    spcM = reshape(conc(ix,iy,:), [], 1, 1);
+                end
 
                 if grid2nBacs(ix, iy) % if also cells are found here, then update reaction matrix
                     % get bacteria in this grid cell
@@ -180,14 +191,21 @@ function [reaction_matrix, mu, pH_new] = rMatrix_chunk(pH, conc, grid2bac, grid2
                         curr_species = unique_species(i);
 
                         % update mu_max per species based on pH
-                        [mu_max, maint] = determine_max_growth_rate_and_maint(curr_species, T, Sh);
+                        [mu_max, maint] = determine_max_growth_rate_and_maint(curr_species, T, Sh, structure_model);
 
                         % get reactive concentrations for soluble components
                         if structure_model
-                            reactive_conc = [spcM(iA, reactive_form(iA)), ...
-                                spcM(iB, reactive_form(iB)), ...
-                                spcM(iC, reactive_form(iC)), ...
-                                spcM(iO2, reactive_form(iO2))];  
+                            if pHincluded
+                                reactive_conc = [spcM(iA, reactive_form(iA)), ...
+                                    spcM(iB, reactive_form(iB)), ...
+                                    spcM(iC, reactive_form(iC)), ...
+                                    spcM(iO2, reactive_form(iO2))];
+                            else
+                                reactive_conc = [spcM(iA), ...
+                                                spcM(iB), ...
+                                                spcM(iC), ...
+                                                spcM(iO2)];  
+                            end
                         else
                             reactive_conc = [spcM(iNH3, reactive_form(iNH3)), ...
                                 spcM(iNO2, reactive_form(iNO2)), ...

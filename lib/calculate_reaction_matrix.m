@@ -18,6 +18,7 @@ function [reaction_matrix, mu, pH] = calculate_reaction_matrix(grid2bac, grid2nB
     % -> pH: matrix with per grid cell the pH
 
     structure_model = settings.structure_model;
+    pHincluded = settings.pHincluded;
     
     % convert init pH to pH matrix
     if isscalar(pH)
@@ -53,9 +54,13 @@ function [reaction_matrix, mu, pH] = calculate_reaction_matrix(grid2bac, grid2nB
     % pre-compute for bulk-liquid (at 1,1 there should never be diffusion
     % layer)
     Sh_bulk = 10^-pH(1, 1);
-    [~, Sh_bulk] = solve_pH(Sh_bulk, [reshape(conc(1,1,:), [], 1, 1); 1; 0], Keq, chrM, constants.constantpH, constants.pHtolerance); % <C: why [...; 1; 0]? /> => H2O & H+
-    pH_bulk = -log10(Sh_bulk);
     
+    if pHincluded
+        [~, Sh_bulk] = solve_pH(Sh_bulk, [reshape(conc(1,1,:), [], 1, 1); 1; 0], Keq, chrM, constants.constantpH, constants.pHtolerance); % <C: why [...; 1; 0]? /> => H2O & H+
+        pH_bulk = -log10(Sh_bulk);
+    else
+        pH_bulk = pH(1, 1);
+    end
     
     % for each gridcell
     for ix = 1:size(conc, 1) % parfor?
@@ -65,9 +70,14 @@ function [reaction_matrix, mu, pH] = calculate_reaction_matrix(grid2bac, grid2nB
                 
             else % in diffusion layer, thus pH calculation needs to be performed
                 % calculate pH & speciation
-                Sh_old = 10^-pH(ix, iy);
-                [spcM, Sh] = solve_pH(Sh_old, [reshape(conc(ix,iy,:), [], 1, 1); 1; 0], Keq, chrM, constants.constantpH, constants.pHtolerance); % <C: why [...; 1; 0]? />
-                pH(ix, iy) = -log10(Sh);
+                if pHincluded
+                    Sh_old = 10^-pH(ix, iy);
+                    [spcM, Sh] = solve_pH(Sh_old, [reshape(conc(ix,iy,:), [], 1, 1); 1; 0], Keq, chrM, constants.constantpH, constants.pHtolerance); % <C: why [...; 1; 0]? />
+                    pH(ix, iy) = -log10(Sh);
+                else
+                    pH(ix, iy) = pH_bulk;
+                    spcM = reshape(conc(ix,iy,:), [], 1, 1);
+                end
                 
                 if grid2nBacs(ix, iy)
                     % get bacteria in this grid cell
@@ -83,10 +93,17 @@ function [reaction_matrix, mu, pH] = calculate_reaction_matrix(grid2bac, grid2nB
 
                         % get reactive concentrations for soluble components
                         if structure_model
-                            reactive_conc = [spcM(iA, reactive_form(iA)), ...
-                                spcM(iB, reactive_form(iB)), ...
-                                spcM(iC, reactive_form(iC)), ...
-                                spcM(iO2, reactive_form(iO2))];                            
+                            if pHincluded
+                                reactive_conc = [spcM(iA, reactive_form(iA)), ...
+                                    spcM(iB, reactive_form(iB)), ...
+                                    spcM(iC, reactive_form(iC)), ...
+                                    spcM(iO2, reactive_form(iO2))];
+                            else
+                                reactive_conc = [spcM(iA), ...
+                                                spcM(iB), ...
+                                                spcM(iC), ...
+                                                spcM(iO2)];  
+                            end
                         else
                             reactive_conc = [spcM(iNH3, reactive_form(iNH3)), ...
                                 spcM(iNO2, reactive_form(iNO2)), ...

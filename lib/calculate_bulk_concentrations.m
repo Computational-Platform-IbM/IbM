@@ -1,4 +1,4 @@
-function [bulk_concentrations, invHRT] = calculate_bulk_concentrations(constants, prev_conc, invHRT, reactionMatrix, dT)
+function [bulk_concentrations, invHRT] = calculate_bulk_concentrations(constants, prev_conc, invHRT, reactionMatrix, dT, settings)
     % Function to calculate the bulk layer concentrations. Assumes that the
     % simulated bio-aggregate is representative of the entire reactor. 
     %
@@ -17,6 +17,8 @@ function [bulk_concentrations, invHRT] = calculate_bulk_concentrations(constants
     % -> bulk_concentrations: vector with the bulk concentration per
     %   compound
     % -> invHRT: new 1 / (hydrolic retention time) [h-1]
+    
+    pHincluded = settings.pHincluded;
 
     %% unpack constants for easy use
     Keq = constants.Keq;
@@ -46,11 +48,13 @@ function [bulk_concentrations, invHRT] = calculate_bulk_concentrations(constants
     end
     
     %% apply pH correction to bulk_concentrations
-    bulk_concentrations(strcmp(StNames, 'SO4')) = bulk_concentrations(strcmp(StNames, 'NH3')) / 2;        
-    bulk_concentrations(isLiquid) = controlpH(Keq, chrM, StNames, pH, bulk_concentrations(isLiquid));
+    if pHincluded
+        bulk_concentrations(strcmp(StNames, 'SO4')) = bulk_concentrations(strcmp(StNames, 'NH3')) / 2;        
+        bulk_concentrations(isLiquid) = controlpH(Keq, chrM, StNames, pH, bulk_concentrations(isLiquid));
     
-    if any(bulk_concentrations < 0) %<E: Negative concentration from control pH of reactor. />
-        warning('DEBUG:actionRequired', 'debug: negative bulk concentration encountered after pH control... correction required?')
+        if any(bulk_concentrations < 0) %<E: Negative concentration from control pH of reactor. />
+            warning('DEBUG:actionRequired', 'debug: negative bulk concentration encountered after pH control... correction required?')
+        end
     end
     
     %% helper function
