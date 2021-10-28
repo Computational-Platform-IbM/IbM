@@ -3,7 +3,7 @@ function integTime(simulation_file, directory)
 
     %% load preset file
     load(simulation_file, 'grid', 'bac', 'constants', 'init_params', 'settings')
-    constants.debug.plotConvergence = true;
+    constants.debug.plotConvergence = false;
     
     
     %% Overall settings

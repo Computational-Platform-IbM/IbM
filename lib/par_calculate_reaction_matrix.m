@@ -175,6 +175,7 @@ function [reaction_matrix, mu, pH_new] = rMatrix_chunk(pH, conc, grid2bac, grid2
                     pH_new(ix, iy) = -log10(Sh);
                 else
                     pH(ix, iy) = pH_bulk;
+                    Sh = 10^-pH(ix, iy);
                     spcM = reshape(conc(ix,iy,:), [], 1, 1);
                 end
 
