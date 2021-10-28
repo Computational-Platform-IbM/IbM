@@ -127,7 +127,6 @@ if constants.debug.plotBacteria
     plotBacs(grid, bac, constants)
 end
 
-
 % temp settings of variables: pls remove
 constants.dynamicDT.iterThreshholdDecrease = 500;
 constants.dynamicDT.iterThreshholdIncrease = 50;

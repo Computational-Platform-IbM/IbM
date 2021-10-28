@@ -70,7 +70,7 @@ function [reaction_matrix, mu, pH] = calculate_reaction_matrix(grid2bac, grid2nB
                         curr_species = unique_species(i);
 
                         % update mu_max per species based on pH
-                        [mu_max, maint] = determine_max_growth_rate_and_maint(curr_species, T, Sh);
+                        [mu_max, maint] = determine_max_growth_rate_and_maint(curr_species, T, Sh, settings.structure_model);
 
                         % get reactive concentrations for soluble components
                         reactive_conc = [spcM(iNH3, reactive_form(iNH3)), ...
@@ -99,59 +99,4 @@ function [reaction_matrix, mu, pH] = calculate_reaction_matrix(grid2bac, grid2nB
     
     reaction_matrix = reaction_matrix / Vg;                                                                                 % [molS/L/h]
 
-end
-
-function [mu_max, maint] = determine_max_growth_rate_and_maint(species, T, Sh)
-    % Determine the maximum growth rate and maintenance [h-1] for a
-    % specific species under certain conditions
-    %
-    % species: species of bacterium
-    % T: temperature (in Kelvin)
-    % Sh: concentration of protons
-    %
-    % -> mu_max: max growth rate
-    % -> maint: maintenance requirement
-
-    switch species
-        case 1 % AOB
-            mu_max = ((1.28*10^(12)*exp(-8183/T))/(1+((2.05*10^(-9))/Sh)+ (Sh/(1.66*10^(-7)))))/24;
-            maint = (1.651*10^(11)*exp(-8183/T))/24;
-
-        case 2 % NOB; Nitrobacter
-            mu_max = ((6.69*10^(7)*exp(-5295/T))/(1+((2.05*10^(-9))/Sh)+ (Sh/(1.66*10^(-7)))))/24;
-            maint = (8.626*10^(6)*exp(-5295/T))/24;
-
-        case 3 % NOB; Nitrospira
-            mu_max = 0.63 * ((6.69*10^(7)*exp(-5295/T))/(1+((2.05*10^(-9))/Sh)+ (Sh/(1.66*10^(-7)))))/24;
-            maint = 0.63 * (8.626*10^(6)*exp(-5295/T))/24;
-
-        case 4 % AMX; Brocadia spp [Puyol 2014]
-            mu_max = 1.89*10^(8)*exp(-7330/T);
-            maint = 0.05 * mu_max;
-            
-        otherwise
-            error('Bacterial species not implemented: %d', species);
-    end
-end
-
-function M = calculate_monod(Ks, Ki, conc)
-    % Calculate the Monod coefficient given the Ks's, Ki's and the
-    % corresponding concentrations
-    %
-    % Ks: vector with all Ks values (1-by-n)
-    % Ki: vector with all Ki values (1-by-n)
-    % conc: vector with all concentrations corresponding to the Ks and Ki
-    %   values (1-by-n)
-    %
-    % -> M: Monod block
-    
-    % apply Ks
-    M = prod((conc + 1e-25) ./ (conc + Ks + 1e-25)); % + 1e-25 to prevent NaN when conc == 0 and Ks == 0
-    
-    % apply Ki
-    for i = 1:length(Ki)
-        if Ki(i) ~= 0
-            M = M * Ki(i) / (Ki(i) + conc(i));
-        end
-    end
 end
