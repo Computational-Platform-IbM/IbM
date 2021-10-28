@@ -263,10 +263,6 @@ function integTime(simulation_file, directory)
                             % display number of bacteria in system
                             fprintf('current number of bacteria: %d \n', length(bac.x))
                             
-                            if constants.debug.plotBacteria
-                                plotBacs(grid, bac, constants)
-                            end
-                            
                             % auto detect when to switch to parallel
                             % computation of rMatrix
                             % TODO: determine exact cutoff value (will be
@@ -342,6 +338,10 @@ function integTime(simulation_file, directory)
                     % save all important variables
                     save_slice(bac, conc, bulk_concs, pH, invHRT, Time.current, grid, constants, directory);
 %                     save_plane(bac, conc, pH, Time, grid, constants, directory); % entire plane of simulation
+
+                    if constants.debug.plotBacteria
+                        plotBacs(grid, bac, constants, Time.current)
+                    end
 
                     if Time.current >= Time.backup
                         % set next backup time
