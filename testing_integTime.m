@@ -106,7 +106,6 @@ constants.debug.plotProfiling = false; %
 
 settings = struct;
 settings.parallelized = false;
-settings.structure_model = true;
 
 init_params = struct;
 init_params.init_bulk_conc = R.Sxy.Sbc_Dir;
