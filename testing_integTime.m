@@ -106,6 +106,8 @@ constants.debug.plotProfiling = false; %
 
 settings = struct;
 settings.parallelized = false;
+settings.structure_model = true;
+settings.pHincluded = false; % true -> pH resolution included; false -> pH resolution not included
 
 init_params = struct;
 init_params.init_bulk_conc = R.Sxy.Sbc_Dir;
