@@ -70,7 +70,7 @@ function [reaction_matrix, mu, pH] = calculate_reaction_matrix(grid2bac, grid2nB
                         curr_species = unique_species(i);
 
                         % update mu_max per species based on pH
-                        [mu_max, maint] = determine_max_growth_rate_and_maint(curr_species, T, Sh);
+                        [mu_max, maint] = determine_max_growth_rate_and_maint(curr_species, T, Sh, settings.structure_model);
 
                         % get reactive concentrations for soluble components
                         reactive_conc = [spcM(iNH3, reactive_form(iNH3)), ...
