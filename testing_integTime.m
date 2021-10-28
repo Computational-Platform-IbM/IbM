@@ -129,10 +129,14 @@ end
 
 
 % temp settings of variables: pls remove
-constants.dynamicDT.iterThreshholdDecrease = 500;
-constants.dynamicDT.iterThreshholdIncrease = 50;
-constants.dynamicDT.nIterThreshholdIncrease = 3;
+constants.dynamicDT.iterThresholdDecrease = 500;
+constants.dynamicDT.iterThresholdIncrease = 50;
+constants.dynamicDT.nIterThresholdIncrease = 3;
 settings.dynamicDT = true;
+
+constants.dynamicDT.initRESThresholdDecrease = 50;
+constants.dynamicDT.initRESThresholdIncrease = 10;
+constants.dynamicDT.nIterThresholdIncrease = 3;
 
 
 
