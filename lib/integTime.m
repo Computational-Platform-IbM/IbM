@@ -301,10 +301,6 @@ function integTime(simulation_file, directory)
                                 [grid2bac, ~] = determine_where_bacteria_in_grid(grid, bac);
                             end
                             
-                            if constants.debug.plotDiffRegion
-                                plotDiffRegion(grid, bac, diffusion_region, true)
-                            end
-                            
                         end
                         
                     % calculate and set bulk concentrations
@@ -339,10 +335,15 @@ function integTime(simulation_file, directory)
                     save_slice(bac, conc, bulk_concs, pH, invHRT, Time.current, grid, constants, directory);
 %                     save_plane(bac, conc, pH, Time, grid, constants, directory); % entire plane of simulation
 
+                    %- DEBUGGING -%
                     if constants.debug.plotBacteria
                         plotBacs(grid, bac, constants, Time.current)
                     end
-
+                    if constants.debug.plotDiffRegion
+                        plotDiffRegion(grid, bac, diffusion_region, true)
+                    end
+                    %-------------%
+                    
                     if Time.current >= Time.backup
                         % set next backup time
                         Time.backup = Time.backup + constants.dT_backup;
@@ -370,7 +371,6 @@ function integTime(simulation_file, directory)
         plotMaxErrorOverTime(maxErrors, constants.dT_bac)
         plotNorm(normOverTime, constants.dT_bac)
     end
-    
     if constants.debug.plotBulkConcsOverTime
         plotBulkConcOverTime(bulk_history, constants)
     end

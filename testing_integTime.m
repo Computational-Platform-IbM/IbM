@@ -107,6 +107,9 @@ constants.debug.plotProfiling = false; %
 settings = struct;
 settings.parallelized = false;
 settings.structure_model = true;
+if settings.structure_model
+    settings.type = 'Neut'; % {'Neut': Neutralism, 'Comp': Competition, 'Comm': Commensalism, 'Copr': Co-protection}
+end
 settings.pHincluded = false; % true -> pH resolution included; false -> pH resolution not included
 
 init_params = struct;
