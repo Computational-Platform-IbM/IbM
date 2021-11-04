@@ -81,7 +81,7 @@ function [bulk_concentrations, invHRT] = calculate_bulk_concentrations(constants
         if structure_model
             switch type
                 case 'Neut'
-                    if keepNH3fixed == 1 && bulk_conc(1) > NH3sp
+                    if keepNH3fixed == 1 && (bulk_conc(1) > NH3sp || bulk_conc(1) < NH3sp)
                         if cumulative_reacted(1) < 0
                             invHRT = -cumulative_reacted(1) / (reactor_influx(1) - NH3sp);
                         end
@@ -89,7 +89,7 @@ function [bulk_concentrations, invHRT] = calculate_bulk_concentrations(constants
                         dy(1) = invHRT * (reactor_influx(1) - bulk_conc(1)) + cumulative_reacted(1);
                     end
                     
-                    if keepNH3fixed == 1 && bulk_conc(2) > NH3sp
+                    if keepNH3fixed == 1 && (bulk_conc(2) > NH3sp || bulk_conc(2) < NH3sp)
                         if cumulative_reacted(2) < 0
                             invHRT = -cumulative_reacted(2) / (reactor_influx(2) - NH3sp);
                         end
@@ -97,7 +97,7 @@ function [bulk_concentrations, invHRT] = calculate_bulk_concentrations(constants
                         dy(2) = invHRT * (reactor_influx(2) - bulk_conc(2)) + cumulative_reacted(2);
                     end
                     
-                    if keepNH3fixed == 1 && bulk_conc(3) > NH3sp
+                    if keepNH3fixed == 1 && (bulk_conc(3) > NH3sp || bulk_conc(3) < NH3sp)
                         if cumulative_reacted(3) < 0
                             invHRT = -cumulative_reacted(3) / (reactor_influx(3) - NH3sp);
                         end
