@@ -134,9 +134,8 @@ constants.dynamicDT.iterThresholdIncrease = 50;
 constants.dynamicDT.nIterThresholdIncrease = 3;
 settings.dynamicDT = true;
 
-constants.dynamicDT.initRESThresholdDecrease = 50;
-constants.dynamicDT.initRESThresholdIncrease = 10;
-constants.dynamicDT.nIterThresholdIncrease = 3;
+constants.dynamicDT.initRESThresholdDecrease = 20/100;
+constants.dynamicDT.initRESThresholdIncrease = 20/100;
 
 
 
