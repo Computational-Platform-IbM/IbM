@@ -3,6 +3,6 @@
 Granule/ResultsSim.mat
 Granule/R.mat
 IbM_V2/testingRMatrix.mat
-*.mat
+Results/*.mat
 *.avi
 *.png
