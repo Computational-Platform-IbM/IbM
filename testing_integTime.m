@@ -133,10 +133,13 @@ if constants.debug.plotBacteria
 end
 
 % temp settings of variables: pls remove
-constants.dynamicDT.iterThreshholdDecrease = 500;
-constants.dynamicDT.iterThreshholdIncrease = 50;
-constants.dynamicDT.nIterThreshholdIncrease = 3;
+constants.dynamicDT.iterThresholdDecrease = 200;
+constants.dynamicDT.iterThresholdIncrease = 40;
+constants.dynamicDT.nIterThresholdIncrease = 3;
 settings.dynamicDT = true;
+
+constants.dynamicDT.initRESThresholdDecrease = 20/100;
+constants.dynamicDT.initRESThresholdIncrease = 20/100;
 
 
 
