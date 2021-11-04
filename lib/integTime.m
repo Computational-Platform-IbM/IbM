@@ -3,7 +3,7 @@ function integTime(simulation_file, directory)
 
     %% load preset file
     load(simulation_file, 'grid', 'bac', 'constants', 'init_params', 'settings')
-    constants.debug.plotConvergence = true;
+    constants.debug.plotConvergence = false;
     
     
     %% Overall settings
@@ -25,7 +25,7 @@ function integTime(simulation_file, directory)
     else
         % initiate from preset values
         [conc, bulk_concs, invHRT, reaction_matrix, pH, bac] = ...
-            initTime(grid, bac, init_params, constants);
+            initTime(grid, bac, init_params, constants, settings);
 
         % initiate time and profiling information/storage from preset
         Time = struct;
@@ -116,10 +116,10 @@ function integTime(simulation_file, directory)
         tic;
         if settings.parallelized
             [reaction_matrix(xRange, yRange, :), bac.mu, pH(xRange, yRange)] = par_calculate_reaction_matrix(grid2bac(xRange, yRange, :), ...
-                grid2nBacs(xRange, yRange), bac, diffusion_region(xRange, yRange, :), conc(xRange, yRange, :), constants, pH(xRange, yRange), chunks, nChunks_dir);
+                grid2nBacs(xRange, yRange), bac, diffusion_region(xRange, yRange, :), conc(xRange, yRange, :), constants, pH(xRange, yRange), chunks, nChunks_dir, settings);
         else
             [reaction_matrix(xRange, yRange, :), bac.mu, pH(xRange, yRange)] = calculate_reaction_matrix(grid2bac(xRange, yRange, :), ...
-                grid2nBacs(xRange, yRange), bac, diffusion_region(xRange, yRange, :), conc(xRange, yRange, :), constants, pH(xRange, yRange));
+                grid2nBacs(xRange, yRange), bac, diffusion_region(xRange, yRange, :), conc(xRange, yRange, :), constants, pH(xRange, yRange), settings);
         end
         profiling(iProf, 3) = profiling(iProf, 3) + toc;
 
@@ -347,7 +347,7 @@ function integTime(simulation_file, directory)
                     
                     % calculate and set bulk concentrations
                     tic;
-                    [bulk_concs, invHRT] = calculate_bulk_concentrations(constants, bulk_concs, invHRT, reaction_matrix, Time.dT_bac);
+                    [bulk_concs, invHRT] = calculate_bulk_concentrations(constants, bulk_concs, invHRT, reaction_matrix, constants.dT_bac, settings);
                     conc = set_concentrations(conc, bulk_concs, ~diffusion_region);
                     profiling(iProf, 10) = profiling(iProf, 10) + toc;
                     
@@ -355,10 +355,10 @@ function integTime(simulation_file, directory)
                     tic;
                     if settings.parallelized
                         [reaction_matrix(xRange, yRange, :), bac.mu, pH(xRange, yRange)] = par_calculate_reaction_matrix(grid2bac(xRange, yRange, :), ...
-                            grid2nBacs(xRange, yRange), bac, diffusion_region(xRange, yRange, :), conc(xRange, yRange, :), constants, pH(xRange, yRange), chunks, nChunks_dir);
+                            grid2nBacs(xRange, yRange), bac, diffusion_region(xRange, yRange, :), conc(xRange, yRange, :), constants, pH(xRange, yRange), chunks, nChunks_dir, settings);
                     else
                         [reaction_matrix(xRange, yRange, :), bac.mu, pH(xRange, yRange)] = calculate_reaction_matrix(grid2bac(xRange, yRange, :), ...
-                            grid2nBacs(xRange, yRange), bac, diffusion_region(xRange, yRange, :), conc(xRange, yRange, :), constants, pH(xRange, yRange));
+                            grid2nBacs(xRange, yRange), bac, diffusion_region(xRange, yRange, :), conc(xRange, yRange, :), constants, pH(xRange, yRange), settings);
                     end
                     profiling(iProf, 3) = profiling(iProf, 3) + toc;
                     
@@ -381,6 +381,15 @@ function integTime(simulation_file, directory)
                     save_slice(bac, conc, bulk_concs, pH, invHRT, Time.current, grid, constants, directory);
 %                     save_plane(bac, conc, pH, Time, grid, constants, directory); % entire plane of simulation
 
+                    %- DEBUGGING -%
+                    if constants.debug.plotBacteria
+                        plotBacs(grid, bac, constants, Time.current)
+                    end
+                    if constants.debug.plotDiffRegion
+                        plotDiffRegion(grid, bac, diffusion_region, true)
+                    end
+                    %-------------%
+                    
                     if Time.current >= Time.backup
                         % set next backup time
                         Time.backup = Time.backup + constants.dT_backup;
@@ -408,7 +417,6 @@ function integTime(simulation_file, directory)
         plotMaxErrorOverTime(maxErrors, Time.dT_bac)
         plotNorm(normOverTime, Time.dT_bac)
     end
-    
     if constants.debug.plotBulkConcsOverTime
         plotBulkConcOverTime(bulk_history, constants)
     end

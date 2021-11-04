@@ -68,7 +68,7 @@ constants.MatrixDecay = R.rm.MatrixDecay_mod;
 constants.influent_concentrations = R.Inf.St;
 constants.pOp.NH3sp = R.pOp.NH3sp; % Setpoint of NH3 in reactor
 constants.constantN = R.flagN;
-constants.kDist = 1;                                    % Extra distance between bacteria, when kDist > 1.
+constants.kDist = 1.5;                                    % Extra distance between bacteria, when kDist > 1.
 constants.max_granule_radius = 1000*10^(-6);  % C: see excel          % [m] Maximum radius of granule. To compute the detachment of bacteria when bac_norm > r_max
 constants.dT = R.Sxy.dT; % AOB/NOB/AMX -> 1e-6
 constants.dT_bac = R.Sxy.dT_bac;
@@ -78,11 +78,11 @@ constants.constantpH = false;
 constants.simulation_end = R.Sxy.maxT;
 constants.diffusion_rates = R.kTr.Diffn;
 constants.diffusion_accuracy = 1e-8; % to be tweaked still
-constants.Tol_a = R.kTr.Tolabs; % in [mol/m3], not [mol/L]!
+constants.Tol_a = 1e-12; % in [mol/m3], not [mol/L]! (prev. R.kTr.Tolabs)
 constants.pHtolerance = 1e-15;
-constants.correction_concentration_steady_state = 1e-4; % [mol/L]
-constants.correction_concentration_steady_state = 1e-6; % [mol/L]
 constants.steadystate_tolerance = 0.005; % [0, 1] -> relative/absolute tolerance of steady state
+% constants.correction_concentration_steady_state = 1e-4; % [mol/L]
+constants.correction_concentration_steady_state = R.kTr.Tolabs / constants.steadystate_tolerance; % [mol/L]
 constants.RESmethod = 'max'; % {'mean', 'max', 'norm'}
 constants.bac_MW = R.bac.bac_MW;
 constants.bac_rho = R.bac.bac_rho;
@@ -106,6 +106,11 @@ constants.debug.plotProfiling = false; %
 
 settings = struct;
 settings.parallelized = false;
+settings.structure_model = true;
+if settings.structure_model
+    settings.type = 'Neut'; % {'Neut': Neutralism, 'Comp': Competition, 'Comm': Commensalism, 'Copr': Co-protection}
+end
+settings.pHincluded = false; % true -> pH resolution included; false -> pH resolution not included
 
 init_params = struct;
 init_params.init_bulk_conc = R.Sxy.Sbc_Dir;
@@ -127,7 +132,6 @@ if constants.debug.plotBacteria
     plotBacs(grid, bac, constants)
 end
 
-
 % temp settings of variables: pls remove
 constants.dynamicDT.iterThresholdDecrease = 200;
 constants.dynamicDT.iterThresholdIncrease = 40;
@@ -140,7 +144,7 @@ constants.dynamicDT.initRESThresholdIncrease = 20/100;
 
 
 
-
+% save('sim_xxxx.mat', 'grid', 'bac', 'constants', 'init_params', 'settings')
 
 %% running the simulation
 totalTimer = tic;

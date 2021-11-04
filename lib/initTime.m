@@ -1,9 +1,9 @@
-function [conc, bulk_concs, invHRT, reaction_matrix, pH, bac] = initTime(grid, bac, init_params, constants)
+function [conc, bulk_concs, invHRT, reaction_matrix, pH, bac] = initTime(grid, bac, init_params, constants, settings)
     %% initialisation
     % initiate values from preset parameters
     
     % calculate boundary conditions
-    [bulk_concs, invHRT] = calculate_bulk_concentrations(constants, init_params.init_bulk_conc, init_params.invHRT, 0, constants.dT_bac);
+    [bulk_concs, invHRT] = calculate_bulk_concentrations(constants, init_params.init_bulk_conc, init_params.invHRT, 0, constants.dT_bac, settings);
     
     % <C: why calculate bulk concentration with dT_bac? />
     
@@ -30,6 +30,6 @@ function [conc, bulk_concs, invHRT, reaction_matrix, pH, bac] = initTime(grid, b
 
     % calculate reaction matrix
     [reaction_matrix(xRange, yRange, :), bac.mu, pH(xRange, yRange)] = calculate_reaction_matrix(grid2bac(xRange, yRange, :), ...
-        grid2nBacs(xRange, yRange), bac, diffusion_region(xRange, yRange, :), conc(xRange, yRange, :), constants, pH(xRange, yRange));
+        grid2nBacs(xRange, yRange), bac, diffusion_region(xRange, yRange, :), conc(xRange, yRange, :), constants, pH(xRange, yRange), settings);
     
 end

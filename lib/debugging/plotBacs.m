@@ -4,6 +4,7 @@ function f = plotBacs(g, bac, constants, Time)
     y = bac.y;
     r = bac.radius;
     s = bac.species;
+    act = bac.active;
     
     coloring = {'#D81B60', '#1E88E5', '#FFC107', '#004D40'}; % colorblind-friendly colours
     
@@ -12,7 +13,12 @@ function f = plotBacs(g, bac, constants, Time)
     f.Position = [60 60 1000 700];
     
     for i = 1:length(x)
-        rectangle('Curvature', [1 1], 'Position', [x(i) - r(i), y(i) - r(i), 2 * r(i), 2 * r(i)], 'LineWidth', 0.1, 'EdgeColor', [0, 0, 0], 'FaceColor', coloring{s(i)});
+        if act(i)
+            col = coloring{s(i)};
+        else
+            col = [0 0 0];
+        end
+        rectangle('Curvature', [1 1], 'Position', [x(i) - r(i), y(i) - r(i), 2 * r(i), 2 * r(i)], 'LineWidth', 0.1, 'EdgeColor', col, 'FaceColor', col);
     end
     
     axis equal;
@@ -21,10 +27,10 @@ function f = plotBacs(g, bac, constants, Time)
     ylim([0, g.nY*g.dy]);
     xt = linspace(0, g.nX*g.dx, g.nX+1);
     yt = linspace(0, g.nY*g.dy, g.nY+1);
-    xticks(xt(1:5:end));
-    yticks(yt(1:5:end));
-    xticklabels(xt(1:5:end)*1e6);
-    yticklabels(yt(1:5:end)*1e6);
+    xticks(xt(1:10:end));
+    yticks(yt(1:10:end));
+    xticklabels(xt(1:10:end)*1e6);
+    yticklabels(yt(1:10:end)*1e6);
     
     ax = gca;
     ax.XRuler.MinorTick = 'on'; %or 'off'

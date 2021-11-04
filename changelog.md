@@ -1,112 +1,100 @@
 # Changelog
-List of all changes and/or improvements betweeen versions.
+All notable changes to this project will be documented in this file.
 
-# v2.3.0
-#### General
-- Automatic initialisation of parpool with correct number of workers
-- Introduction of dynamic dT for diffusion
-- Auto switch to parallelisation when nBacs > Threshold
+## [Unreleased]
+### Added
+- Dynamic dT for diffusion
+- Dynamic dT_bac for timestepping
+- Automatic switch to parallelisation based on the number of bacteria
+- Automatic initialisation of the parallel pool with the correct number of workers
+- kDist constant implementation to shoving algorithm
+- New setting: structure model and types (Neutralism, competition, commensalism, co-protection)
+- New setting: consideration of pH or not
+### Changed
+- Calculus of "correction_concentration_steady_state" based on chosen TolAbs by user
+- Independent scripts for mu_max/decay and Monod terms calculus
+- Only structure_model: HRT is recalculated when bulk_conc is higher or lower than setpoint
+### Removed
+### Fixed
+
+
+## [2.2.0] - 2021-10-20
+### Added
+- Plotting function for reaction matrix (2D profile).
+- Improved workflow for simulation using a single file (IbM.m).
+- Saving of results.
+- Functions for analysing the result files.
+
+
+## [2.1.0] - 2021-10-19
+### Added
+- Plotting function for concentrations (2D profile).
+- Plotting function for convergence to steady state (norm of delta-concentration).
+- Parallelisation of reaction matrix calculations.
+
+### Changed
+- Updated the Materials & Methods document.
+
+### Fixed
+- Minor bug where incorrect diffusion region was taken in the final smoothing step (multigrid method).
+
+
+## [2.0.0] - 2021-10-18
+### Added
+- Docstrings for every function and file
+- Check pH after `pH_solve` to be in range [1, 14].
+- Check for negative concentrations after `pH_solve`.
+- Check for non-convergence using consecutive RES values, continue with steady-state if this is detected.
+- Variable for the number of diffusion iterations per steady-state check.
+- Shoving algorithm in Java.
+- Quadtree datastructure for shoving.
+- Complete vectorisation of the bacterial activity (division, death, inactivation, etc.).
+- Multigrid solver using V-cycles for solving the diffusion.
+- Use of convolutions in the multigrid method for potential further speedup (gpu or FFT method).
+- Adaptation in standard multigrid method to only calculate diffusion in the diffusion region.
+- Clamp the error correction in Newton-Raphson within the valid range, so that it will always converge.
+- Reimplemented the focus-region (only solve smaller domain) for significant speed-up.
+- Build-in profiling option.
+- Debug warnings for negative concentrations, non-convergence, etc.
+- Plotting function for bacteria.
+- Plotting function for bulk concentration.
+- Plotting function for convergence to steady state (RES value).
+- Plotting function for diffusion region.
+- Plotting function for maximum error over simulation time (max RES value & delta-concentration).
+- Plotting function for profiling.
+
+### Changed
+- Complete refactorisation of the code for improved readability and ease of development.
+- Restructuring the R.mat struct into separate structs/objects with different functionality.
+- Folder structure with better organisation.
+- Separation of functionality in different files.
+- Calculate kinetics only once per species per gridcell, then using the cumulative mass per species to calculate concentration change.
+- Check steady-state based on the maximum RES value instead of the average RES value.
+- Use different calculation method (convolutions) to determine the RES values.
+- Only check the close neighbours in the shoving algorithms instead of all other bacteria.
+- Only compute bulk-layer pH once per reaction matrix calculation.
 - 
+### Removed
+- Check in `pH_solve` to see whether root is present in range [1, 14] (will always hold).
+- Bracketing after Newton-Raphson jumps outside of valid pH range.
 
-#### Bug fix
--
-
-# v2.2.0
-#### General
-- Improved workflow using IbM script
-- Implement better saving of results
-- Add functions for analysing the result files
-
-
-# v2.1.0
-#### General
-- New Materials & Methods document
-- Parallelisation of `reaction_matrix` calculations
+### Fixed
+- Removed redundant function calls.
+- Correct function call order in model flow.
+- Only perform diffusion in diffusion region, not in bulk layer too.
+- Only check RES values in the diffusion region. 
 
 
-#### Bug fixes
-- correct diffRegion in last V-Cycle
-- 
+## [1.0.0] - 2021-08-28
+Direct import of code from RGC with minor bug fixes.
 
-
-# v2.0.0
-#### General
-*Improved readability*
-- Changed folder structure
-- Separation of functional components into files
-- Added function docstrings
-- Improved variable names
-- Separation of constants and variables
-- Vectorisation of bacterial activity using masks
-
-*Profiling*
-- Add build-in profiling capability grouped per major functionality of the model
-
-*Debugging/plotting*
-- Build-in functions to plot:
-    - Profiling data
-    - Bacteria (species)
-    - Diffusion region (with/without radius of boundary layer)
-    - Convergence to steady state during diffusion iterations
-    - Maximum error over simulation time
-    - Norm between new and previous concentrations over time
-    - Bulk concentrations over time
-    - 2D Concentration profiles
-- Introduction DEBUG warnings (togglable)
+### Fixed
+- Bugs regarding reaction matrix, diffusion and bulk concentration.
 
 
 
-#### Computational improvements
-*General*
-- Focus region based on diffusion region
-
-*Calculation of reaction matrix*
-- Compute bulk layer pH only once
-- Complete parallelisation possible using chunks
-
-*pH and speciation algorithm*
-- Removed check to see whether root is found in 1 < pH < 14 (Should always hold)
-- Removed bracketing whenever Sh < 1e-14
-- Introduced bounded correction, so that always Sh > `setValue`
-
-*Diffusion*
-- Change from `mldivide` to Multigrid solver using V-cycles
-- Use of convolutions for potential further speedup (gpu or FFT method)
-- Due to use of convolutions, only Jacobi smoothing is possible, even though Gauss-Seidell would be faster (in theory)
-- Integrated diffusion-region-only diffusion solver using the `diffusion_region`
-
-*Bacterial activity*
-- Complete vectorisation of bacterial activity using boolean masks
-
-*Shoving*
-- Rewritten in Java
-- Quadtree implementation for shoving
-- Only check neighbours for overlap instead of each bacterium
-
-
-#### Algorithmic changes
-*Calculation of reaction matrix*
-- Calculate kinetics only once per species per gridcell. Reaction matrix uses cumulative mass per species to calculate concentration change.
-
-*pH and speciation*
-- Add check for pH outside of [1, 14]-range
-- Add check for non-convergence
-- Add check for negative concentrations in speciation 
-
-*Steady-state check*
-- Change number of diffusion iterations per steady-state check
-- Check maximum RES value (default, but changeable)
-- Add non-converging check to continue even if steady-state is not reached based on a set convergence-tolerance
-- Use convolutions for checking of steady-state
-
-
-#### Error corrections
-*General*
-- Remove redundant function calls
-- Cleanup/correct function call order in model flow
-
-*Diffusion*
-- Diffusion was previously performed over entire (focus) domain, disregarding the bulk layer that was directly around the granule
-
-*Steady-state check*
-- Check only the RES in the `diffusion_region`. By definition, the RES value in the edge of the bulk layer will be nonzero, thus the model never converged.
+[Unreleased]: https://github.com/Computational-Platform-IbM/IbM/compare/v2.2.0...development
+[2.2.0]: https://github.com/Computational-Platform-IbM/IbM/compare/v2.1.0...v2.2.0
+[2.1.0]: https://github.com/Computational-Platform-IbM/IbM/compare/v2.0.0...v2.1.0
+[2.0.0]: https://github.com/Computational-Platform-IbM/IbM/releases/tag/v2.0.0
+[1.0.0]: https://github.com/Computational-Platform-IbM/IbM/releases/tag/v1.0.0
