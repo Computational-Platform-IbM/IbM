@@ -1,8 +1,9 @@
+
 *.asv
 Granule/ResultsSim.mat
 Granule/R.mat
 IbM_V2/testingRMatrix.mat
-Results/*.mat
+*.mat
 *.avi
 *.png
 *.vscode/*
