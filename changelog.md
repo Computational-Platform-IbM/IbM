@@ -13,6 +13,7 @@ All notable changes to this project will be documented in this file.
 ### Changed
 - Calculus of "correction_concentration_steady_state" based on chosen TolAbs by user
 - Independent scripts for mu_max/decay and Monod terms calculus
+- Only structure_model: HRT is recalculated when bulk_conc is higher or lower than setpoint
 ### Removed
 ### Fixed
 
