@@ -1,4 +1,4 @@
-function f = plotBulkConcOverTime(bulk_history, constants)
+function f = plotBulkConcOverTime(bulk_history, time_history, constants)
     % plot the concentration of all compounds in the bulk liquid over time
     %
     % bulk_history: matrix (nCompounds-by-n) with bulk concentration per
@@ -12,7 +12,7 @@ function f = plotBulkConcOverTime(bulk_history, constants)
         for subiy = 1:nPlots(2)
             plot_index = (subix - 1)*nPlots(2)+subiy;
             subplot(nPlots(1), nPlots(2), plot_index)
-            plot((0:length(bulk_history(1,:))-1)*constants.dT_bac, bulk_history(plot_index,:), 'LineWidth', 2);
+            plot(time_history, bulk_history(plot_index,:), 'LineWidth', 2);
             title(sprintf('Bulk concentration [%s] over time', constants.StNames{plot_index}));
             xlabel('Simulation time [h]')
             ylabel('Concentration [mol/L]')

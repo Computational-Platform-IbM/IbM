@@ -31,21 +31,32 @@ function integTime(simulation_file, directory)
         Time = struct;
         Time.current = 0;
         Time.steadystate = Time.current + (constants.nDiffusion_per_SScheck - 1)*constants.dT;
-        Time.bac = constants.dT_bac; % include dT_bac and dT_divide in one variable
         Time.save = constants.dT_save;
         Time.backup = constants.dT_backup;
         Time.changed_dT = 0;
+        Time.changed_dT_bac = 0;
         Time.dT = constants.dT;
-        Time.dT_bac = constants.dT_bac;
-        Time.history = zeros(ceil(constants.simulation_end / constants.dT_bac)*2, 1); % save time at each Steady-state cycle
-
-        profiling = zeros(ceil(constants.simulation_end / constants.dT_bac)*2, 11);
-        maxErrors = zeros(ceil(constants.simulation_end / constants.dT_bac)*2, 1); % store max error per dT_bac
-        normOverTime = zeros(ceil(constants.simulation_end / constants.dT_bac)*2, 1); % store norm of concentration differance per dT_bac
-        nDiffIters = zeros(ceil(constants.simulation_end / constants.dT_bac)*2, 1); % store number of diffusion iterations per steady state
-        bulk_history = zeros(size(bulk_concs, 1), ceil(constants.simulation_end / constants.dT_bac)*2);        
+        if settings.dynamicDT
+            Neumann = 0.5;
+            Time.maxDT = min(grid.dx^2./constants.diffusion_rates * Neumann);
+            clear Neumann;
+        end
+        if settings.dynamicDT
+            Time.dT_bac = constants.dT_bac / 2;
+            Time.maxDT_bac = constants.dT_bac;
+        else
+            Time.dT_bac = constants.dT_bac;
+        end
+        Time.bac = Time.dT_bac; % include dT_bac and dT_divide in one variable
+        Time.history = zeros(ceil(constants.simulation_end / constants.dT_bac)*10, 1); % save time at each Steady-state cycle
+        
+        profiling = zeros(ceil(constants.simulation_end / constants.dT_bac)*10, 11);
+        maxErrors = zeros(ceil(constants.simulation_end / constants.dT_bac)*10, 1); % store max error per dT_bac
+        normOverTime = zeros(ceil(constants.simulation_end / constants.dT_bac)*10, 1); % store norm of concentration differance per dT_bac
+        nDiffIters = zeros(ceil(constants.simulation_end / constants.dT_bac)*10, 1); % store number of diffusion iterations per steady state
+        bulk_history = zeros(size(bulk_concs, 1), ceil(constants.simulation_end / constants.dT_bac)*10);        
         bulk_history(:,1) = bulk_concs; % is added after += 1 of iProf, thus give first value already
-        maxInitRES = zeros(ceil(constants.simulation_end / constants.dT_bac)*2, 1);
+        maxInitRES = zeros(ceil(constants.simulation_end / constants.dT_bac)*10, 1);
        
         % initialise saving file
         save_slice(bac, conc, bulk_concs, pH, invHRT, 0, grid, constants, directory);
@@ -135,14 +146,15 @@ function integTime(simulation_file, directory)
                 Time.dT = Time.dT * 0.9;
                 Time.changed_dT = Time.current;
                 fprintf(2, 'upward trend in RES values detected, dT decreased to %g\n', Time.dT);
+                fprintf(2, 'Neumann value of stability: %g\n', max(constants.diffusion_rates * Time.dT / (grid.dx ^ 2)))
             end
             
             % decrease dT if system has not converged within 200 diffusion
             % iterations. Limits also the frequency with which the dT can
             % be decreased.
-            if settings.dynamicDT && Time.current > 5 && ...
-                    iDiffusion > constants.dynamicDT.iterThresholdDecrease && ...
-                    Time.current - Time.changed_dT > constants.dynamicDT.iterThresholdDecrease*2*Time.dT
+            if settings.dynamicDT && Time.current > 5 && ... % only decrease after initial phase
+                    iDiffusion > constants.dynamicDT.iterThresholdDecrease && ... % after how many iterations do we decrease dT
+                    Time.current - Time.changed_dT > Time.dT_bac % only decrease once per SS iteration
                 Time.dT = Time.dT * 0.9;
                 Time.changed_dT = Time.current;
                 fprintf(2, 'Diffusion takes longer than %d diffusion iterations, dT decreased to %g\n', constants.dynamicDT.iterThresholdDecrease, Time.dT);
@@ -153,8 +165,8 @@ function integTime(simulation_file, directory)
                 fprintf('Steady state reached after %d diffusion iterations\n', iDiffusion)
                 if iDiffusion > 1500
                     fprintf('\nNo longer converging (>1500 diffusion iterations), steady state accepted with at most %.4f %% off of steady state (norm = %e)\n', max(RESvalues(:, iRES))*100, norm_diff(iRES))
-                    if settings.dynamicDT
-                        Time.dT = Time.dT * 1.1^2;
+                    if settings.dynamicDT && Time.current > 5
+                        Time.dT = min(Time.dT * 1.1^2, Time.maxDT);
                         fprintf(2, 'Diffusion took longer than %d diffusion iterations, dT increased to %g\n\n', iDiffusion, Time.dT);
                     end
                 else
@@ -184,9 +196,8 @@ function integTime(simulation_file, directory)
 
                 %% time advancements (dT_bac)
                 if Time.current >= Time.bac
-                    % set next bacterial time
-                    Time.bac = Time.bac + Time.dT_bac;
                     
+                    % plot convergence
                     if constants.debug.plotConvergence
                         plotConvergence(RESvalues, iRES, constants, Time.current)
                         plotNormDiff(norm_diff, iRES, constants, Time.current)
@@ -199,7 +210,7 @@ function integTime(simulation_file, directory)
                     nDiffIters(iProf) = iDiffusion;
                     maxInitRES(iProf) = max(RESvalues(:, 1));
                     iDiffusion = 1;
-                    iRES = 1;
+                    iRES = 0;
                     RESvalues = zeros(sum(constants.isLiquid), 100); % reset RES value array
                     
                     % reaction_matrix & mu & pH are already calculated (steady state, so still valid)
@@ -314,18 +325,26 @@ function integTime(simulation_file, directory)
 
                     
                     %% apply dynamic dT_bac
-                    if settings.dynamicDT
-                        if maxInitRES(iProf) > constants.dynamicDT.initRESThresholdDecrease
-                            Time.dT_bac = Time.dT_bac * 0.9;
+                    if settings.dynamicDT && Time.current > 5
+                        if maxInitRES(iProf) > constants.dynamicDT.initRESThresholdDecrease && ...
+                                all(diff(maxInitRES((iProf - constants.dynamicDT.nIterThresholdIncrease + 1):iProf)) >= 0) % only decrease if in upward trend for n-1 steps
+                            Time.dT_bac = Time.dT_bac * 0.7;
+                            Time.changed_dT_bac = Time.current;
                             fprintf(2, 'large initial RES value detected, dT_bac decreased to %g\n', Time.dT_bac);
-                        elseif iProf >= constants.dynamicDT.nIterThresholdIncreaseall && ...
-                                all(maxInitRES(iProf - constants.dynamicDT.nIterThresholdIncrease + 1 : iProf ) < constants.dynamicDT.initRESThresholdIncrease)
-                            Time.dT_bac = Time.dT_bac * 1.1;
-                            fprintf(2, 'multiple cycles with initRES value of <%g, dT_bac increased to %g\n', constants.dynamicDT.initRESThresholdIncrease, Time.dT_bac);                        
+                        elseif iProf >= constants.dynamicDT.nIterThresholdIncrease && ...
+                                all(maxInitRES(iProf - constants.dynamicDT.nIterThresholdIncrease + 1 : iProf ) < constants.dynamicDT.initRESThresholdIncrease) && ...
+                                Time.current - Time.changed_dT_bac > constants.dynamicDT.nIterThresholdIncrease*Time.dT_bac
+                            Time.dT_bac = min(Time.dT_bac / 0.8, Time.maxDT_bac);
+                            Time.changed_dT_bac = Time.current;
+                            fprintf(2, 'multiple cycles with initRES value of <%g, dT_bac increased to %g\n', constants.dynamicDT.initRESThresholdIncrease*100, Time.dT_bac);                        
                         end
                     end
                     
                     %% prepare for next steady-state cycle
+                    fprintf('\n ================ \n')
+                    fprintf('Current simulation time: %.2f h\n\n', Time.current)
+                    
+                    
                     % calculate and set bulk concentrations
                     tic;
                     [bulk_concs, invHRT] = calculate_bulk_concentrations(constants, bulk_concs, invHRT, reaction_matrix, Time.dT_bac);
@@ -346,8 +365,11 @@ function integTime(simulation_file, directory)
                     iProf = iProf + 1;
                     bulk_history(:,iProf) = bulk_concs;
                     Time.history(iProf) = Time.current;
-                    fprintf('\n\n ================ \n')
-                    fprintf('Current simulation time: %.2f h\n', Time.current)
+
+                    
+                    
+                    % set next bacterial time
+                    Time.bac = Time.bac + Time.dT_bac;
                 end
                 
                 %% time advancements (dT_save)
