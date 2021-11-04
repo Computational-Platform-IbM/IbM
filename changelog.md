@@ -7,8 +7,12 @@ All notable changes to this project will be documented in this file.
 - Dynamic dT_bac for timestepping
 - Automatic switch to parallelisation based on the number of bacteria
 - Automatic initialisation of the parallel pool with the correct number of workers
-- 
+- kDist constant implementation to shoving algorithm
+- New setting: structure model and types (Neutralism, competition, commensalism, co-protection)
+- New setting: consideration of pH or not
 ### Changed
+- Calculus of "correction_concentration_steady_state" based on chosen TolAbs by user
+- Independent scripts for mu_max/decay and Monod terms calculus
 ### Removed
 ### Fixed
 
