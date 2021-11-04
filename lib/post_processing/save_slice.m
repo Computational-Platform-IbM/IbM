@@ -22,7 +22,7 @@ function save_slice(bac, conc, bulk_concentrations, pH, invHRT, Time, grid, cons
     end
     
     %% set values
-    iSave = ceil(Time / constants.dT_save) + 1;
+    iSave = ceil((Time+0.01) / constants.dT_save);
     
     % bacterial variables
     nBacs = length(bac.x);
