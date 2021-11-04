@@ -9,6 +9,6 @@ For the finished column, please use :white_check_mark: (`:white_check_mark:`) wh
 | 0001              | Base case with 500 starting bacteria   | Comparing number of starting bacteria on result | :clock1:  | v2.2.0 + dynamic dT |
 | 0002              | Base case with 5000 starting bacteria  | Comparing number of starting bacteria on result | :clock1:  | v2.2.0 + dynamic dT |
 | 0003              | Base case with 50000 starting bacteria | Comparing number of starting bacteria on result | :clock1:  | v2.2.0 + dynamic dT |
-| 0004              | <b>Neutralism</b> (Run 1)<br>[S]<sub>T</sub>=1mM<br>[O<sub>2</sub>]=0mg/L |"Stratifying game" project|      | v2.3.0       |
-| 0005              | <b>Neutralism</b> (Run 2)<br>[S]<sub>T</sub>=1mM<br>[O<sub>2</sub>]=0mg/L |"Stratifying game" project|      | v2.3.0       |
-| 0006              | <b>Neutralism</b> (Run 3)<br>[S]<sub>T</sub>=1mM<br>[O<sub>2</sub>]=0mg/L |"Stratifying game" project|      | v2.3.0       |
+| 0004              | <b>Neutralism</b> (Run 1)<br>[A]=[B]=[C]1/3mM<br>[O<sub>2</sub>]=0mg/L |"Stratifying game" project|      | v2.3.0       |
+| 0005              | <b>Neutralism</b> (Run 2)<br>[A]=[B]=[C]1/3mM<br>[O<sub>2</sub>]=0mg/L |"Stratifying game" project|      | v2.3.0       |
+| 0006              | <b>Neutralism</b> (Run 3)<br>[A]=[B]=[C]1/3mM<br>[O<sub>2</sub>]=0mg/L |"Stratifying game" project|      | v2.3.0       |
