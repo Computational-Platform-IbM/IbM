@@ -18,5 +18,5 @@ function save_profiling(profiling, maxErrors, normOverTime, nDiffIters, bulk_his
     results_file = [directory, '/profilingResults.mat'];
 
     %% save struct to file
-    save(results_file, 'profiling', 'maxErrors', 'normOverTime', 'nDiffIters', 'bulk_history', 'Time');
+    save(results_file, 'profiling', 'maxErrors', 'normOverTime', 'nDiffIters', 'bulk_history', 'Time', '-v7.3');
 end

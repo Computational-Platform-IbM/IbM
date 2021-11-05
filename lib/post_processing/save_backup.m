@@ -20,5 +20,5 @@ function save_backup(bac, bulk_concs, invHRT, conc, reaction_matrix, pH, directo
     results_file = [directory, '/backup.mat'];
 
     %% save struct to file
-    save(results_file, 'bac', 'bulk_concs', 'invHRT', 'conc', 'reaction_matrix', 'pH');
+    save(results_file, 'bac', 'bulk_concs', 'invHRT', 'conc', 'reaction_matrix', 'pH', '-v7.3');
 end
