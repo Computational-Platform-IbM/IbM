@@ -1,6 +1,7 @@
 function integTime(simulation_file, directory)
 
-
+eval('which -all diffusion')
+    
     %% load preset file
     load(simulation_file, 'grid', 'bac', 'constants', 'init_params', 'settings')
     constants.debug.plotConvergence = false;
@@ -11,7 +12,7 @@ function integTime(simulation_file, directory)
         nChunks_dir = ceil(sqrt(feature('numcores')));
         if isempty(gcp('nocreate')) % check if parpool is already started (development ease-of-work)
             pc = parcluster('local');
-            pc.JobStorageLocation = './tmp/';
+            pc.JobStorageLocation = './.tmp/';
             parpool(pc, feature('numcores'));
         end
         fprintf('Parallelisation enabled for %d cores\n', feature('numcores'));
@@ -101,7 +102,7 @@ function integTime(simulation_file, directory)
     while Time.current < constants.simulation_end
         % diffuse (MG)
         tic;
-        conc(xRange, yRange, :) = diffusion(conc(xRange, yRange, :), reaction_matrix(xRange, yRange, :), ...
+        conc(xRange, yRange, :) = diffusionMG(conc(xRange, yRange, :), reaction_matrix(xRange, yRange, :), ...
             bulk_concs, diffusion_region(xRange, yRange), grid, constants, Time.dT);
         profiling(iProf, 1) = profiling(iProf, 1) + toc;
         
@@ -292,7 +293,7 @@ function integTime(simulation_file, directory)
                         nChunks_dir = ceil(sqrt(feature('numcores')));
                         if isempty(gcp('nocreate')) % check if parpool is already started (development ease-of-work)
                             pc = parcluster('local');
-                            pc.JobStorageLocation = './tmp/';
+                            pc.JobStorageLocation = './.tmp/';
                             parpool(pc, feature('numcores'));
                         end
                         fprintf('Parallelisation enabled for %d cores\n', feature('numcores'));
