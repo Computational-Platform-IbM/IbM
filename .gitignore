@@ -7,5 +7,6 @@ IbM_V2/testingRMatrix.mat
 *.avi
 *.png
 *.gif
+*tmp/*
 *.vscode/*
 !planning/*.mat
