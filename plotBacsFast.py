@@ -39,7 +39,7 @@ def save_plot(i: int, xlim: List[float], ylim: List[float], bac: Dict):
     coll = matplotlib.collections.PatchCollection(patches)
     coll.set_facecolor(
         [c[species-1] if active else '#000000' for species, active in zip(s, a)])
-    # coll.set_alpha([1.0 if active else 0.5 for active in a])
+    coll.set_alpha([1 if active else 0.5 for active in a])
     coll.set_edgecolor('k')
     coll.set_linewidth(0.1)
     ax.add_collection(coll)
