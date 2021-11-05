@@ -12,7 +12,7 @@ from typing import Dict, List
 # %%
 
 
-def save_plot(i: int, xlim: List[float], ylim: List[float], bac:Dict):
+def save_plot(i: int, xlim: List[float], ylim: List[float], bac: Dict):
     """Create and save a figure of the bacteria at a certain point in time.
 
     Args:
@@ -59,7 +59,7 @@ def save_plot(i: int, xlim: List[float], ylim: List[float], bac:Dict):
 
 
 # %%
-def generate_gif(args:Dict):
+def generate_gif(args: Dict):
     # load data from results file
     with h5py.File(f'{directory}/results1D.mat', 'r') as f:
         print('Loading results file...')
@@ -91,7 +91,8 @@ def generate_gif(args:Dict):
     # create figure per timepoint
     filenames = []
     for i in tqdm(range(lastNonzero), desc='Generation frames'):
-        filenames.append(save_plot(i, xlim, ylim, bac))
+        if bac['nBacs'][i]:
+            filenames.append(save_plot(i, xlim, ylim, bac))
 
     # build gif
     with imageio.get_writer(f'{directory}/bacteria.gif', mode='I', fps=4) as writer:
@@ -104,8 +105,8 @@ def generate_gif(args:Dict):
     for filename in tqdm(set(filenames), desc='Removing images'):
         os.remove(filename)
 
-
     print('DONE!')
+
 
 # parse command line input
 parser = argparse.ArgumentParser(
