@@ -18,8 +18,6 @@ function [bulk_concentrations, invHRT] = calculate_bulk_concentrations(constants
     %   compound
     % -> invHRT: new 1 / (hydrolic retention time) [h-1]
     
-    structure_model = settings.structure_model;
-    type = settings.type;
     pHincluded = settings.pHincluded;
 
     %% unpack constants for easy use
@@ -41,7 +39,7 @@ function [bulk_concentrations, invHRT] = calculate_bulk_concentrations(constants
     else
         cumulative_reacted = squeeze(sum(reactionMatrix(:,:,isLiquid), [1,2])) * Vg / Vr;
         options = odeset('RelTol', 1e-8, 'AbsTol', 1e-20, 'NonNegative', ones(size(cumulative_reacted)));
-        [~, Y] = ode45(@(t, y) massbal(t, y, cumulative_reacted(isLiquid), influent, NH3sp, keepNH3fixed), [0 dT], prev_conc(isLiquid), options);
+        [~, Y] = ode45(@(t, y) massbal(t, y, cumulative_reacted(isLiquid), influent, NH3sp, keepNH3fixed, settings), [0 dT], prev_conc(isLiquid), options);
         bulk_conc_temp = Y(end, :)';
         bulk_concentrations = correct_negative_concentrations(bulk_conc_temp); %<E: Negative concentration from mass balance of reactor. />
         temp = prev_conc(1:length(Dir_k)); % <C: todo => fix that sometimes N2 is taken into account in the model, and most of the times it is not... />
@@ -60,7 +58,7 @@ function [bulk_concentrations, invHRT] = calculate_bulk_concentrations(constants
     end
     
     %% helper function
-    function dy = massbal(~, bulk_conc, cumulative_reacted, reactor_influx, NH3sp, keepNH3fixed)
+    function dy = massbal(~, bulk_conc, cumulative_reacted, reactor_influx, NH3sp, keepNH3fixed, settings)
         % Differential equation for the mass balance over the entire reactor
         % Will modify the HRT to match the setpoint of NH3 iff the outflow
         % concentration is larger than the setpoint.
@@ -78,8 +76,8 @@ function [bulk_concentrations, invHRT] = calculate_bulk_concentrations(constants
         
         dy = zeros(length(bulk_conc), 1);
 
-        if structure_model
-            switch type
+        if settings.structure_model
+            switch settings.type
                 case 'Neut'
                     if keepNH3fixed == 1 && (bulk_conc(1) > NH3sp || bulk_conc(1) < NH3sp)
                         if cumulative_reacted(1) < 0
@@ -118,7 +116,7 @@ function [bulk_concentrations, invHRT] = calculate_bulk_concentrations(constants
                     dy(2:end) = invHRT * (reactor_influx(2:end) - bulk_conc(2:end)) + cumulative_reacted(2:end);
                     dy(5:end) = 0;
                 otherwise
-                    error(['Type <', type, '> is not a registred set of simulations.'])
+                    error(['Type <', settings.type, '> is not a registred set of simulations.'])
             end
             
         else
