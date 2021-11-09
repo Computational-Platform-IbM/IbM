@@ -1,6 +1,4 @@
 function integTime(simulation_file, directory)
-
-eval('which -all diffusion')
     
     %% load preset file
     load(simulation_file, 'grid', 'bac', 'constants', 'init_params', 'settings')
@@ -12,7 +10,7 @@ eval('which -all diffusion')
         nChunks_dir = ceil(sqrt(feature('numcores')));
         if isempty(gcp('nocreate')) % check if parpool is already started (development ease-of-work)
             pc = parcluster('local');
-            pc.JobStorageLocation = './.tmp/';
+%             pc.JobStorageLocation = './.tmp/';
             parpool(pc, feature('numcores'));
         end
         fprintf('Parallelisation enabled for %d cores\n', feature('numcores'));
@@ -63,6 +61,8 @@ eval('which -all diffusion')
        
         % initialise saving file
         save_slice(bac, conc, bulk_concs, pH, invHRT, 0, grid, constants, directory);
+        
+        constants.debug.plotConvergence = true;
     end
 
 
@@ -143,35 +143,20 @@ eval('which -all diffusion')
             
             prev_conc = conc;
             
-            % decrease dT if upward trend (after a set number of iterations
-            % already)
-            if settings.dynamicDT && Time.current > 5 && iDiffusion > 50 && max(RESvalues(:, iRES)) - max(RESvalues(:, iRES - 10)) > 0.01
-                Time.dT = Time.dT * 0.9;
-                Time.changed_dT = Time.current;
-                fprintf(2, 'upward trend in RES values detected, dT decreased to %g\n', Time.dT);
-                fprintf(2, 'Neumann value of stability: %g\n', max(constants.diffusion_rates * Time.dT / (grid.dx ^ 2)))
+            % perform dynamic dT for diffusion
+            if settings.dynamicDT
+                Time = dynamicDT_diffusion(Time, iDiffusion, RESvalues, constants, grid.dx, ssReached);
             end
-            
-            % decrease dT if system has not converged within 200 diffusion
-            % iterations. Limits also the frequency with which the dT can
-            % be decreased.
-            if settings.dynamicDT && Time.current > 5 && ... % only decrease after initial phase
-                    iDiffusion > constants.dynamicDT.iterThresholdDecrease && ... % after how many iterations do we decrease dT
-                    Time.current - Time.changed_dT > Time.dT_bac % only decrease once per SS iteration
-                Time.dT = Time.dT * 0.9;
-                Time.changed_dT = Time.current;
-                fprintf(2, 'Diffusion takes longer than %d diffusion iterations, dT decreased to %g\n', constants.dynamicDT.iterThresholdDecrease, Time.dT);
-            end
-            
+                        
                         
             if ssReached || iDiffusion > 1500
                 fprintf('Steady state reached after %d diffusion iterations\n', iDiffusion)
                 if iDiffusion > 1500
                     fprintf('\nNo longer converging (>1500 diffusion iterations), steady state accepted with at most %.4f %% off of steady state (norm = %e)\n', max(RESvalues(:, iRES))*100, norm_diff(iRES))
-                    if settings.dynamicDT && Time.current > 5
-                        Time.dT = min(Time.dT * 1.1^2, Time.maxDT);
-                        fprintf(2, 'Diffusion took longer than %d diffusion iterations, dT increased to %g\n\n', iDiffusion, Time.dT);
-                    end
+%                     if settings.dynamicDT && Time.current > 5
+%                         Time.dT = min(Time.dT * 1.1^2, Time.maxDT);
+%                         fprintf(2, 'Diffusion took longer than %d diffusion iterations, dT increased to %g\n\n', iDiffusion, Time.dT);
+%                     end
                 else
                     fprintf('\twith at most %.4f %% off of steady state (norm = %e)\n', max(RESvalues(:, iRES))*100, norm_diff(iRES))
                 end
@@ -183,17 +168,12 @@ eval('which -all diffusion')
                     Time.current = constants.simulation_end - Time.dT;
                 end
                 
-                % increase the dT if multiple steady-states have been
-                % reached with large diffusion iterations
-                if settings.dynamicDT && Time.current > 5 && ...
-                        Time.current - Time.changed_dT > constants.dynamicDT.nIterThresholdIncrease*Time.dT_bac && ...
-                        all([nDiffIters(iProf-constants.dynamicDT.nIterThresholdIncrease+1:iProf-1)', iDiffusion] > constants.dynamicDT.iterThresholdIncrease)
-                    Time.dT = Time.dT * 1.1;
-                    Time.changed_dT = Time.current;
-                    fprintf(2, 'Multiple steady states reached with more than %d diffusion iterations, \n\tthus dT increased to %g\n', constants.dynamicDT.iterThresholdIncrease, Time.dT);
+                % perform dynamic dT for diffusion
+                if settings.dynamicDT
+                    Time = dynamicDT_diffusion(Time, iDiffusion, RESvalues, nDiffIters, iProf, constants, grid.dx, ssReached);
                 end
-                    
                 
+                                
                 % calculate actual dT for integration of bacterial mass
                 dT_actual = Time.current - previousTime;
 
@@ -293,7 +273,7 @@ eval('which -all diffusion')
                         nChunks_dir = ceil(sqrt(feature('numcores')));
                         if isempty(gcp('nocreate')) % check if parpool is already started (development ease-of-work)
                             pc = parcluster('local');
-                            pc.JobStorageLocation = './.tmp/';
+%                             pc.JobStorageLocation = './.tmp/';
                             parpool(pc, feature('numcores'));
                         end
                         fprintf('Parallelisation enabled for %d cores\n', feature('numcores'));
