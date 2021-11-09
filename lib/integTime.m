@@ -145,7 +145,7 @@ function integTime(simulation_file, directory)
             
             % perform dynamic dT for diffusion
             if settings.dynamicDT
-                Time = dynamicDT_diffusion(Time, iDiffusion, RESvalues, constants, grid.dx, ssReached);
+                Time = dynamicDT_diffusion(Time, iDiffusion, iRES, iProf, RESvalues, nDiffIters, constants, grid.dx, ssReached);
             end
                         
                         
@@ -170,7 +170,7 @@ function integTime(simulation_file, directory)
                 
                 % perform dynamic dT for diffusion
                 if settings.dynamicDT
-                    Time = dynamicDT_diffusion(Time, iDiffusion, RESvalues, nDiffIters, iProf, constants, grid.dx, ssReached);
+                    Time = dynamicDT_diffusion(Time, iDiffusion, iRES, iProf, RESvalues, nDiffIters, constants, grid.dx, ssReached);
                 end
                 
                                 
@@ -333,7 +333,7 @@ function integTime(simulation_file, directory)
                     
                     % save all important variables
                     save_slice(bac, conc, bulk_concs, pH, invHRT, Time.current, grid, constants, directory);
-%                     save_plane(bac, conc, pH, Time, grid, constants, directory); % entire plane of simulation
+%                     save_profile(bac, conc, bulk_concs, pH, invHRT, Time.current, grid, constants, directory); % entire plane of simulation
 
                     
                     if Time.current >= Time.backup
@@ -383,6 +383,7 @@ Figure reservations:
 9) Norm(conc1 - conc0) to steady state
 10) Reaction profiles (2D)
 11) RES value (or residual of diffusion) profile (2D)
+12) BacSim error (approximation of dC/dt)
 %}
 
 
