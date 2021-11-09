@@ -147,3 +147,4 @@ For the finished column, please use :white_check_mark: (`:white_check_mark:`) wh
 | 0139              | <b>Aerobic-Commensalism</b> (Run 1)<br>[A]=0.1mM<br>[O<sub>2</sub>]=14.0mg/L              |"Stratifying game" project| | v2.3.0  |
 | 0140              | <b>Aerobic-Commensalism</b> (Run 2)<br>[A]=0.1mM<br>[O<sub>2</sub>]=14.0mg/L              |"Stratifying game" project| | v2.3.0  |
 | 0141              | <b>Aerobic-Commensalism</b> (Run 3)<br>[A]=0.1mM<br>[O<sub>2</sub>]=14.0mg/L              |"Stratifying game" project| | v2.3.0  |
+| 0142 | <b>Anaerobic-Commensalism</b> (Run 1)<br> [A]=0.1mM <br> [O2]=0mg/L | Stratifying game project | | v2.3.0 |
