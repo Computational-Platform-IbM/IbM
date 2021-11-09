@@ -28,7 +28,9 @@ if R.settings.structure_model
 else
     R.settings.type = 'ND'; % {'ND': Not-defined}
 end
-R.settings.pHincluded = logical(SetParam(3));
+R.settings.constantpH = logical(SetParam(3));
+R.settings.pHincluded = logical(SetParam(4));
+R.settings.inactivationBac = logical(SetParam(5));
 
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % General parameters of the simulation (Temperature, pH, ...)

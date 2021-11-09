@@ -28,7 +28,7 @@ function mat_creator(num_replicates)
                 matID = matID + 1;
                 [simname, siminfo, simgoal] = mc(excel.name, matID);
                 clear R
-                py.cell2md.writemd(matID, simname, siminfo, simgoal, version, r);
+                py.readwrite_md.writemd(matID, simname, siminfo, simgoal, version, r);
             end
         end
     end
@@ -94,6 +94,7 @@ function [simname, siminfo, simgoal] = mc(filename, sim_number)
     % bac.active = bac.active(retain);
 
     constants = struct;
+    constants.constantpH = R.settings.constantpH;
     constants.pHsetpoint = R.pOp.pH;
     constants.T = R.pOp.T;
     constants.isLiquid = strcmp(R.St.Phase(1:5), 'L') | strcmp(R.St.Phase(1:5), 'P');
@@ -118,7 +119,6 @@ function [simname, siminfo, simgoal] = mc(filename, sim_number)
     constants.dT_bac = R.Sxy.dT_bac;
     constants.dT_divide = R.Sxy.dT_Div;
     constants.dT_save = R.Sxy.dT_Print;
-    constants.constantpH = true;
     constants.simulation_end = R.Sxy.maxT;
     constants.diffusion_rates = R.kTr.Diffn;
     constants.diffusion_accuracy = 1e-8; % to be tweaked still
@@ -131,7 +131,7 @@ function [simname, siminfo, simgoal] = mc(filename, sim_number)
     constants.bac_MW = R.bac.bac_MW;
     constants.bac_rho = R.bac.bac_rho;
     constants.max_nBac = R.bac.bac_nmax; % <TODO: calculate with better method?>
-    constants.inactivationEnabled = true;
+    constants.inactivationEnabled = R.settings.inactivationBac;
     constants.min_bac_mass_grams = R.bac.bac_mmin;
     constants.max_bac_mass_grams = R.bac.bac_mmax;
     constants.bac_max_radius = R.bac.bac_rmax;
