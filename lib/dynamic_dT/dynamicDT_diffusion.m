@@ -1,4 +1,4 @@
-function Time = dynamicDT_diffusion(Time, iDiffusion, RESvalues, nDiffIters, iProf, constants, dx, ssReached)
+function Time = dynamicDT_diffusion(Time, iDiffusion, iRES, iProf, RESvalues, nDiffIters, constants, dx, ssReached)
     % Function to dynamically reduce or increase the dT for diffusion after
     % the initial simulation hours, based on:
     % 1) whether there is an upward trend in the RES values (decrease)

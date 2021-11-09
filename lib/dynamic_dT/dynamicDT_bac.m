@@ -2,8 +2,8 @@ function Time = dynamicDT_bac(Time, maxInitRES, iProf, constants)
     % Dynamically adjust the dT_bac to limit the relative/absolute amount
     % of change in the bulk_concentrations
     % based on:
-    % 1)
-    % 2)
+    % 1) high initial RES values (decrease)
+    % 2) multiple low initial RES values (increase)
     %
     % Also sets the last time the dT_bac was changed, to prevent multiple
     % consecutive dT_bac changes.
