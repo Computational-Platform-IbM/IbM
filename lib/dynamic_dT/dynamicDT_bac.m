@@ -18,7 +18,7 @@ function Time = dynamicDT_bac(Time, maxInitRES, iProf, constants)
     end
     
     
-    if settings.dynamicDT && Time.current > 5
+    if Time.current > 5
         if  initRES_above_threshold && upward_trend 
             Time.dT_bac = Time.dT_bac * 0.7;
             Time.changed_dT_bac = Time.current;

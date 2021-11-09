@@ -30,7 +30,7 @@ function IbM(simulation_number)
     
     %% java import for shoving
 %     javaaddpath([pwd '/lib/shovingQuadTree.jar']);
-    javaaddpath([pwd '/lib/shovingQuadTreekDist.jar']);
+    javaaddpath([pwd '/lib/bacteria/shovingQuadTreekDist.jar']);
     addpath(genpath('lib')); % make every subfolder with functions accessible to the code
     
     %% enable/disable debug disp/warning
