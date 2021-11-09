@@ -170,9 +170,9 @@ function [simname, siminfo, simgoal] = mc(filename, sim_number)
     end
 
     % temp settings of variables: pls remove
-    constants.dynamicDT.iterThreshholdDecrease = 500;
-    constants.dynamicDT.iterThreshholdIncrease = 50;
-    constants.dynamicDT.nIterThreshholdIncrease = 3;
+    constants.dynamicDT.iterThresholdDecrease = 500;
+    constants.dynamicDT.iterThresholdIncrease = 50;
+    constants.dynamicDT.nIterThresholdIncrease = 3;
     settings.dynamicDT = true;
     
     save(fullfile(folder_name, mat_name), 'grid', 'bac', 'constants', 'init_params', 'settings', '-v7.3')
