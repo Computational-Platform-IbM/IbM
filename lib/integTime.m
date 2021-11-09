@@ -219,44 +219,25 @@ function integTime(simulation_file, directory)
                         bac = bacteria_die(bac, constants);
                     end
 
-
-                    %{
-                      <E: In the PREV model we are able to include some evolution-adaptation of bacteria (for example Ks, Ki, Yield etc) />
-                      <E: For this reason, in R struct you can see a matrix of Ks and Ki for every single bacterium, because everyone is an entity with its own kinetic properties. />
-                      <E: In this case, I'm thinking some options here: (1) To include the Ks_Ki matrix, 
-                                                                        (2) To include a matrix with Ks and Ki multipliers for every bacterium, 
-                                                                        (3) Two IbM versions: one w/ evolution-adaptation and another w/o. />
-                    %}
-
-                    %{
-                    <C: I'm leaning towards the 3rd option, for now
-                    we don't seem to be using evolution. So doesn't
-                    seem fit to be using redundant memory space...
-                    would be easy to introduce when we need it
-                    %}
-
+                    
                     % bacteria: divide
                     bac = bacteria_divide(bac, constants);
                     profiling(iProf, 5) = profiling(iProf, 5) + toc;
 
+                    
                     % shove bacteria
-                    % <E: we could only call bacteria_shove if
-                    % division is done. />
                     tic;
                     bac = bacteria_shove(bac, grid, constants);
-                    bac = bacteria_shove(bac, grid, constants); % add second shove to make ensure no overlap
+                    bac = bacteria_shove(bac, grid, constants); % perform second shove call in case of overcrowding
                     profiling(iProf, 6) = profiling(iProf, 6) + toc;
 
-                    %{
-                      <E: Here we could add a constant to define if we want include detachment and how we simulate this detachment. />
-                      <E: For now, only the rough detachment in included. />
-                      <C: agree, for now this works
-                    %}
-                    % bacteria: detachment
+                    
+                    % bacteria: detachment {for now only rough detachment is implemented}
                     tic;
                     bac = bacteria_detachment(bac, grid, constants);
                     profiling(iProf, 7) = profiling(iProf, 7) + toc;
 
+                    
                     % display number of bacteria in system
                     fprintf('current number of bacteria: %d \n', length(bac.x))
 
@@ -279,11 +260,13 @@ function integTime(simulation_file, directory)
                         fprintf('Parallelisation enabled for %d cores\n', feature('numcores'));
                     end
 
+                    
                     % update/re-determine where bacs
                     tic;
                     [grid2bac, grid2nBacs] = determine_where_bacteria_in_grid(grid, bac);
                     profiling(iProf, 8) = profiling(iProf, 8) + toc;
 
+                    
                     % update diffusion region
                     tic;
                     [diffusion_region, focus_region] = determine_diffusion_region(grid2bac, grid2nBacs, bac, grid);
@@ -302,10 +285,6 @@ function integTime(simulation_file, directory)
 
                         % recalculate the grid2bac matrix
                         [grid2bac, ~] = determine_where_bacteria_in_grid(grid, bac);
-                    end
-
-                    if constants.debug.plotDiffRegion
-                        plotDiffRegion(grid, bac, diffusion_region, true)
                     end
 
                     
@@ -366,14 +345,6 @@ function integTime(simulation_file, directory)
                     save_slice(bac, conc, bulk_concs, pH, invHRT, Time.current, grid, constants, directory);
 %                     save_plane(bac, conc, pH, Time, grid, constants, directory); % entire plane of simulation
 
-                    %- DEBUGGING -%
-                    if constants.debug.plotBacteria
-                        plotBacs(grid, bac, constants, Time.current)
-                    end
-                    if constants.debug.plotDiffRegion
-                        plotDiffRegion(grid, bac, diffusion_region, true)
-                    end
-                    %-------------%
                     
                     if Time.current >= Time.backup
                         % set next backup time
@@ -398,14 +369,6 @@ function integTime(simulation_file, directory)
         iDiffusion = iDiffusion + 1;
     end
     
-    if constants.debug.plotMaxErrors
-        plotMaxErrorOverTime(maxErrors, Time.dT_bac)
-        plotNorm(normOverTime, Time.dT_bac)
-    end
-    if constants.debug.plotBulkConcsOverTime
-        plotBulkConcOverTime(bulk_history, constants)
-    end
-    
     % save all important variables one last time?
     save_slice(bac, conc, bulk_concs, pH, invHRT, Time.current, grid, constants, directory);
     % save_profile(bac, conc, bulk_concs, pH, invHRT, Time.current, grid, constants, directory); % entire plane of simulation
@@ -413,9 +376,6 @@ function integTime(simulation_file, directory)
     save_profiling(profiling, maxErrors, normOverTime, nDiffIters, bulk_history, Time, directory)
     
     
-%     plotConcs(conc, constants, Time.current);
-%     plotBacs(grid, bac, constants);
-%     plotDiffRegion(grid, bac, diffusion_region, false);
 end
 
 
