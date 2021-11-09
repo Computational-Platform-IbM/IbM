@@ -289,20 +289,10 @@ function integTime(simulation_file, directory)
 
                     
                     %% apply dynamic dT_bac
-                    if settings.dynamicDT && Time.current > 5
-                        if maxInitRES(iProf) > constants.dynamicDT.initRESThresholdDecrease && ...
-                                all(diff(maxInitRES((iProf - constants.dynamicDT.nIterThresholdIncrease + 1):iProf)) >= 0) % only decrease if in upward trend for n-1 steps
-                            Time.dT_bac = Time.dT_bac * 0.7;
-                            Time.changed_dT_bac = Time.current;
-                            fprintf(2, 'large initial RES value detected, dT_bac decreased to %g\n', Time.dT_bac);
-                        elseif iProf >= constants.dynamicDT.nIterThresholdIncrease && ...
-                                all(maxInitRES(iProf - constants.dynamicDT.nIterThresholdIncrease + 1 : iProf ) < constants.dynamicDT.initRESThresholdIncrease) && ...
-                                Time.current - Time.changed_dT_bac > constants.dynamicDT.nIterThresholdIncrease*Time.dT_bac
-                            Time.dT_bac = min(Time.dT_bac / 0.8, Time.maxDT_bac);
-                            Time.changed_dT_bac = Time.current;
-                            fprintf(2, 'multiple cycles with initRES value of <%g, dT_bac increased to %g\n', constants.dynamicDT.initRESThresholdIncrease*100, Time.dT_bac);                        
-                        end
+                    if settings.dynamicDT
+                        Time = dynamicDT_bac(Time, maxInitRES, iProf, constants);
                     end
+                    
                     
                     %% prepare for next steady-state cycle
                     fprintf('\n ================ \n')
