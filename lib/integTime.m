@@ -2,7 +2,7 @@ function integTime(simulation_file, directory)
     
     %% load preset file
     load(simulation_file, 'grid', 'bac', 'constants', 'init_params', 'settings')
-    constants.debug.plotConvergence = false;
+    constants.debug.plotConvergence = true;
     
     
     %% Overall settings
@@ -185,6 +185,12 @@ function integTime(simulation_file, directory)
                         plotConvergence(RESvalues, iRES, constants, Time.current)
                         plotNormDiff(norm_diff, iRES, constants, Time.current)
                         plotBacSimError(res_bacsim, iRES, constants, Time.current)
+                        
+                        plotBulkConcOverTime(bulk_history(:, iProf-10:iProf), Time.history(iProf-10:iProf), constants);
+                        
+                        figure(20);
+                        plot(Time.history(iProf - 10:iProf-1), diff(bulk_history(:, iProf-10:iProf), 1, 2) ./ (bulk_history(:, iProf-10:iProf-1)+1e-20), 'LineWidth', 2);
+                        legend(constants.StNames, 'Location', 'northwest');
                         drawnow();
                     end
                     
@@ -301,7 +307,7 @@ function integTime(simulation_file, directory)
                     
                     % calculate and set bulk concentrations
                     tic;
-                    [bulk_concs, invHRT] = calculate_bulk_concentrations(constants, bulk_concs, invHRT, reaction_matrix, constants.dT_bac, settings);
+                    [bulk_concs, invHRT] = calculate_bulk_concentrations(constants, bulk_concs, invHRT, reaction_matrix, Time.dT_bac, settings);
                     conc = set_concentrations(conc, bulk_concs, ~diffusion_region);
                     profiling(iProf, 10) = profiling(iProf, 10) + toc;
                     
