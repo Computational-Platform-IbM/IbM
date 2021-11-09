@@ -53,8 +53,7 @@ R.flagN = pOp.varHRT;
 [States, StNames] = xlsread(filename, strcat('States'));
 St.StV = States(:,1);
 St.Phase = StNames(:,end);
-St.StNames = StNames(:,1)
-pause()
+St.StNames = StNames(:,1);
 St.StVLiq = St.StV(1:(find(strcmp(St.Phase,'S'),1)-1));
 if R.settings.structure_model
     St.StVLiq2 = St.StVLiq;
