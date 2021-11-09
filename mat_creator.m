@@ -1,13 +1,6 @@
 function mat_creator(num_replicates)
-    % Creates .mat files (sim_####.mat)
+    % Creates .mat files & registrate them in "simulation_log.md"
     % > num_replicates: number of replicates for each simulation
-    %{
-    1) Create a folder w/ Excels: where gathers information about the simulation (to be added 'simulation_log.md') and model parameters
-        > Name of Excels (from 1 to 9999)
-    2) Generates corresponding .mat files (considering num_replicates)
-    3) Saves sim_####.mat on 'planning' folder
-    4) Registers simulation to 'simulation_log.md'
-    %}
     
     %% argument validation
     arguments
@@ -23,7 +16,7 @@ function mat_creator(num_replicates)
     fileparts(which('readwrite_md.py'));
     matID = double(py.readwrite_md.readmd());
     
-    %% Simulation creation (.mat files) & registration (simulation_log.md)
+    %% Creation & registration of simulations 
     excels = dir('planning\Excels\*.xlsx');
     if size(excels,1) == 0
         disp('>> Error 404: Excel files not found.')
