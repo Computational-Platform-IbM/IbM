@@ -46,6 +46,7 @@ function integTime(simulation_file, directory)
         if settings.dynamicDT
             Time.dT_bac = constants.dT_bac / 2;
             Time.maxDT_bac = constants.dT_bac;
+            Time.minDT_bac = Time.maxDT_bac / 20;
         else
             Time.dT_bac = constants.dT_bac;
         end
@@ -68,6 +69,23 @@ function integTime(simulation_file, directory)
 
     % ----- DEBUG -----
     constants.Tol_a = 1e-16;
+    % ----- END DEBUG -----
+    
+    % ----- DEBUG -----
+    % overall settings dynamic dT
+    settings.dynamicDT = true;
+    constants.dynamicDT.nIterThresholdIncrease = 3;
+
+    % dynamic dT diffusion
+    constants.dynamicDT.iterThresholdDecrease = 200;
+    constants.dynamicDT.iterThresholdIncrease = 25;
+
+    % dynamic dT bac
+    constants.dynamicDT.initRESThresholdIncrease = 20/100;
+
+    constants.dynamicDT.nItersCycle = 500; % in diffusion to steady state, after how many diffusion iterations should bulk conc be recalculated
+    constants.dynamicDT.tolerance_no_convergence = 1e-4; % maximum difference between RES values between diffusion iterations to be considered not converging
+    constants.dynamicDT.maxRelDiffBulkConc = 0.02; % maximum relative difference between bulk concentration values
     % ----- END DEBUG -----
     
 
@@ -342,8 +360,8 @@ function integTime(simulation_file, directory)
 
                     
                     %% apply dynamic dT_bac
-                    if settings.dynamicDT
-                        Time = dynamicDT_bac(Time, maxInitRES, iProf, constants);
+                    if settings.dynamicDT && multiple_low_initRES(iProf, maxInitRES, Time, constants)
+                        Time = increase_dT_bac(Time, sprintf('Multiple steady state cycles with initRES value of <%.1f %%', constants.dynamicDT.initRESThresholdIncrease*100));
                     end
                     
                     
@@ -354,21 +372,17 @@ function integTime(simulation_file, directory)
                     
                     % calculate and set bulk concentrations
                     tic;
-                    while 1 % should be a "do while" loop, but Matlab doesn't have that functionality...
+                    while true % should be a "do while" loop, but Matlab doesn't have that functionality...
                         [new_bulk_concs, invHRT] = calculate_bulk_concentrations(constants, bulk_concs, invHRT, reaction_matrix, Time.dT_bac, settings);
-                        if ~settings.dynamicDT || all(abs(new_bulk_concs - bulk_concs) ./ bulk_concs < 0.1)
+                        if ~settings.dynamicDT || bulk_conc_diff_within_limit(new_bulk_concs, bulk_concs, constants)
                             break
                         end
-                        if Time.dT_bac < Time.maxDT_bac/20
+                        if Time.dT_bac < Time.minDT_bac
                             fprintf(2, 'Smallest dT_bac reached, cannot decrease smaller than %g h', Time.maxDT_bac/20);
                             break
                         end
-                        Time.dT_bac = Time.dT_bac * 0.9;
-                        Time.changed_dT_bac = Time.current;
+                        Time = decrease_dT_bac(Time, 'Too large bulk concentration jump detected');
                         [new_bulk_concs, invHRT] = calculate_bulk_concentrations(constants, bulk_concs, invHRT, reaction_matrix, Time.dT_bac, settings);
-                        fprintf(2, 'Too large bulk concentration jump detected, \n\tthus dT_bac decreased to %g\n', Time.dT_bac)
-                        
-
                     end
                     
                     bulk_concs = new_bulk_concs;
