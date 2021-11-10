@@ -40,6 +40,7 @@ function integTime(simulation_file, directory)
         if settings.dynamicDT
             Neumann = 0.5;
             Time.maxDT = min(grid.dx^2./constants.diffusion_rates * Neumann);
+            Time.minDT = Time.maxDT / 50;
             clear Neumann;
         end
         if settings.dynamicDT
@@ -106,8 +107,17 @@ function integTime(simulation_file, directory)
     while Time.current < constants.simulation_end
         % diffuse (MG)
         tic;
-        conc(xRange, yRange, :) = diffusionMG(conc(xRange, yRange, :), reaction_matrix(xRange, yRange, :), ...
-            bulk_concs, diffusion_region(xRange, yRange), grid, constants, Time.dT);
+        try
+            conc(xRange, yRange, :) = diffusionMG(conc(xRange, yRange, :), reaction_matrix(xRange, yRange, :), ...
+                bulk_concs, diffusion_region(xRange, yRange), grid, constants, Time.dT);
+        catch e
+            switch e.identifier
+                case 'Diffusion:NegativeConcentration'
+                    Time = decrease_dT_diffusion(Time, grid.dx, 'Negative concentration occurred in diffusion solution');
+                otherwise
+                    rethrow(e)
+            end            
+        end
         profiling(iProf, 1) = profiling(iProf, 1) + toc;
         
         % set bulk layer concentrations (in theory, not needed anymore with
@@ -133,6 +143,7 @@ function integTime(simulation_file, directory)
         
         if mod(iDiffusion, 500) == 0
             Time.dT = Time.dT / 0.9; % temp, try if this helps with speed up...
+            Time.changed_dT = Time.current;
             
             [bulk_concs, invHRT] = calculate_bulk_concentrations(constants, bulk_concs, invHRT, reaction_matrix, Time.dT_bac - Time.current, settings);
             conc = set_concentrations(conc, bulk_concs, ~diffusion_region);
@@ -176,23 +187,19 @@ function integTime(simulation_file, directory)
             prev_conc = conc;
             
             % perform dynamic dT for diffusion
-            if settings.dynamicDT
-                Time = dynamicDT_diffusion(Time, iDiffusion, iRES, iProf, RESvalues, nDiffIters, constants, grid.dx, ssReached);
+            if settings.dynamicDT 
+                if upward_trend(iDiffusion, iRES, RESvalues, constants)
+                    Time = decrease_dT_diffusion(Time, grid.dx, 'Upward trend in RES values detected');
+                elseif non_convergent(iDiffusion, iRES, RESvalues, Time, constants)
+                    Time = decrease_dT_diffusion(Time, grid.dx, sprintf('Diffusion takes longer than %d diffusion iterations', constants.dynamicDT.iterThresholdDecrease));
+                end
             end
             
             
             
             if ssReached
                 fprintf('Steady state reached after %d diffusion iterations\n', iDiffusion)
-                if iDiffusion > 1500
-                    fprintf('\nNo longer converging (>1500 diffusion iterations), steady state accepted with at most %.4f %% off of steady state (norm = %e)\n', max(RESvalues(:, iRES))*100, norm_diff(iRES))
-%                     if settings.dynamicDT && Time.current > 5
-%                         Time.dT = min(Time.dT * 1.1^2, Time.maxDT);
-%                         fprintf(2, 'Diffusion took longer than %d diffusion iterations, dT increased to %g\n\n', iDiffusion, Time.dT);
-%                     end
-                else
-                    fprintf('\twith at most %.4f %% off of steady state (norm = %e)\n', max(RESvalues(:, iRES))*100, norm_diff(iRES))
-                end
+                fprintf('\twith at most %.4f %% off of steady state (norm = %e)\n', max(RESvalues(:, iRES))*100, norm_diff(iRES))
                                 
                 % set time to next bacterial activity time
                 previousTime = Time.current;
@@ -202,8 +209,8 @@ function integTime(simulation_file, directory)
                 end
                 
                 % perform dynamic dT for diffusion
-                if settings.dynamicDT
-                    Time = dynamicDT_diffusion(Time, iDiffusion, iRES, iProf, RESvalues, nDiffIters, constants, grid.dx, ssReached);
+                if settings.dynamicDT && multiple_high_iters(iDiffusion, iProf, Time, constants)
+                    Time = increase_dT_diffusion(Time, grid.dx, sprintf('Multiple steady states reached with more than %d diffusion iterations', constants.dynamicDT.iterThresholdIncrease));
                 end
                 
                                 

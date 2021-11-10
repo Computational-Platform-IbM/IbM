@@ -1,4 +1,4 @@
-function conc = diffusion(conc, reaction_matrix, bulk_concentrations, diffRegion, grid, constants, dT)
+function conc = diffusionMG(conc, reaction_matrix, bulk_concentrations, diffRegion, grid, constants, dT)
     % Solve diffusion for all molecules in the liquid phase using the 
     % multigrid method. IMPORTANT: only runs for all dirichlet conditions 
     % as of now. Future versions should include variable conditions per 
@@ -70,8 +70,9 @@ function conc = diffusion(conc, reaction_matrix, bulk_concentrations, diffRegion
         % apply correction for negative values
         negative_concentration = conc(:,:,iCompound) < 0;
         if any(negative_concentration, 'all')
-            warning('DEBUG:noActionRequired', 'debug: negative concentration encountered in diffusion solution of compound %s... correction applied', constants.StNames{iCompound})
-            conc(:,:,iCompound) = ~negative_concentration.*conc(:,:,iCompound) + negative_concentration*absolute_tolerance; % set negative concentrations to very small number, not to 0 because of divide-by-0 in other parts of the code
+%             warning('DEBUG:noActionRequired', 'debug: negative concentration encountered in diffusion solution of compound %s... correction applied', constants.StNames{iCompound})
+%             conc(:,:,iCompound) = ~negative_concentration.*conc(:,:,iCompound) + negative_concentration*absolute_tolerance; % set negative concentrations to very small number, not to 0 because of divide-by-0 in other parts of the code
+            error('Diffusion:NegativeConcentration', 'Negative concentration encountered & corrected in diffusion solution of compound %s', constants.StNames{iCompound})
         end    
     end
     
