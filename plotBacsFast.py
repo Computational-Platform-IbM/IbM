@@ -3,6 +3,7 @@ import numpy as np
 import h5py
 import matplotlib.pyplot as plt
 import matplotlib.collections
+from matplotlib.lines import Line2D
 import imageio
 import argparse
 from tqdm import tqdm
@@ -31,7 +32,8 @@ def save_plot(i: int, xlim: List[float], ylim: List[float], bac: Dict):
     s = bac['species'][0:nBacs, i]
     a = bac['active'][0:nBacs, i]
 
-    c = ['#D81B60', '#1E88E5', '#FFC107', '#004D40']
+    # c = ['#CC66FF', '#00B04F', '#FFA200', '#FF1482'] # Old colours
+    c = ['#0072B2', '#009E73', '#F0E442', '#CC79A7'] # colourblind-friendly (https://www.color-hex.com/color-palette/49436)
     patches = [plt.Circle((x, y), radius) for x, y, radius in zip(x, y, r)]
 
     fig, ax = plt.subplots()
@@ -41,7 +43,7 @@ def save_plot(i: int, xlim: List[float], ylim: List[float], bac: Dict):
         [c[species-1] if active else '#000000' for species, active in zip(s, a)])
     # coll.set_alpha([1.0 if active else 0.5 for active in a])
     coll.set_edgecolor('k')
-    coll.set_linewidth(0.1)
+    coll.set_linewidth(0.05)
     ax.add_collection(coll)
 
     plt.xlim(xlim * 1e6)
@@ -50,6 +52,15 @@ def save_plot(i: int, xlim: List[float], ylim: List[float], bac: Dict):
     plt.ylabel('Position along y-axis [μm]')
     ax.set_aspect(1/ax.get_data_ratio(), adjustable='box')
     # plt.margins(0.01)
+    
+    # Legend
+    L1 = Line2D([0], [0], linestyle="none", marker="o", markersize=10, markerfacecolor=c[0], markeredgecolor=c[0])
+    L2 = Line2D([0], [0], linestyle="none", marker="o", markersize=10, markerfacecolor=c[1], markeredgecolor=c[1])
+    L3 = Line2D([0], [0], linestyle="none", marker="o", markersize=10, markerfacecolor=c[2], markeredgecolor=c[2])
+    # L4 = Line2D([0], [0], linestyle="none", marker="o", markersize=10, markerfacecolor=c[3], markeredgecolor=c[3])
+    
+    plt.legend((L1,L2,L3), ('B1', 'B2', 'B3'), numpoints=1, loc="upper left", frameon=False) # Structures
+    # plt.legend((L1,L2,L3,L4), ('AOB', 'Nitrobacter', 'Nitrospira', 'AMX'), numpoints=1, loc="upper left", frameon=False) # AOB/NOB/AMX
 
     filename = f'{directory}/{i}.png'
     plt.savefig(filename)
