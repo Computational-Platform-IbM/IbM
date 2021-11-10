@@ -65,6 +65,10 @@ function integTime(simulation_file, directory)
         constants.debug.plotConvergence = true;
     end
 
+    % ----- DEBUG -----
+    constants.Tol_a = 1e-16;
+    % ----- END DEBUG -----
+    
 
     RESvalues = zeros(sum(constants.isLiquid), 200); % reserve for n steady state checks beforehand (can be more)
     norm_diff = zeros(200,1);
@@ -126,6 +130,34 @@ function integTime(simulation_file, directory)
         end
         profiling(iProf, 3) = profiling(iProf, 3) + toc;
 
+        
+        if mod(iDiffusion, 500) == 0
+            Time.dT = Time.dT / 0.9; % temp, try if this helps with speed up...
+            
+            [bulk_concs, invHRT] = calculate_bulk_concentrations(constants, bulk_concs, invHRT, reaction_matrix, Time.dT_bac - Time.current, settings);
+            conc = set_concentrations(conc, bulk_concs, ~diffusion_region);
+
+            % ----- DEBUG -----
+            plotConvergence(RESvalues, iRES, constants, Time.current)
+            plotNormDiff(norm_diff, iRES, constants, Time.current)
+            plotBacSimError(res_bacsim, iRES, constants, Time.current)
+            drawnow()
+            fprintf('max RES value at the moment: %.2f %%\n\n', max(RESvalues(:,iRES))*100)
+            % ----- END DEBUG -----
+            
+            % recompute reaction matrix
+            tic;
+            if settings.parallelized
+                [reaction_matrix(xRange, yRange, :), bac.mu, pH(xRange, yRange)] = par_calculate_reaction_matrix(grid2bac(xRange, yRange, :), ...
+                    grid2nBacs(xRange, yRange), bac, diffusion_region(xRange, yRange, :), conc(xRange, yRange, :), constants, pH(xRange, yRange), chunks, nChunks_dir, settings);
+            else
+                [reaction_matrix(xRange, yRange, :), bac.mu, pH(xRange, yRange)] = calculate_reaction_matrix(grid2bac(xRange, yRange, :), ...
+                    grid2nBacs(xRange, yRange), bac, diffusion_region(xRange, yRange, :), conc(xRange, yRange, :), constants, pH(xRange, yRange), settings);
+            end
+            profiling(iProf, 3) = profiling(iProf, 3) + toc;
+        end
+        
+        
 
         % if T>T_ss: calculate residual
         if Time.current >= Time.steadystate
@@ -147,9 +179,10 @@ function integTime(simulation_file, directory)
             if settings.dynamicDT
                 Time = dynamicDT_diffusion(Time, iDiffusion, iRES, iProf, RESvalues, nDiffIters, constants, grid.dx, ssReached);
             end
-                        
-                        
-            if ssReached || iDiffusion > 1500
+            
+            
+            
+            if ssReached
                 fprintf('Steady state reached after %d diffusion iterations\n', iDiffusion)
                 if iDiffusion > 1500
                     fprintf('\nNo longer converging (>1500 diffusion iterations), steady state accepted with at most %.4f %% off of steady state (norm = %e)\n', max(RESvalues(:, iRES))*100, norm_diff(iRES))
@@ -185,12 +218,19 @@ function integTime(simulation_file, directory)
                         plotConvergence(RESvalues, iRES, constants, Time.current)
                         plotNormDiff(norm_diff, iRES, constants, Time.current)
                         plotBacSimError(res_bacsim, iRES, constants, Time.current)
+                        drawnow()
                         
-                        plotBulkConcOverTime(bulk_history(:, iProf-10:iProf), Time.history(iProf-10:iProf), constants);
+%                       plotBulkConcOverTime(bulk_history(:, iProf-10:iProf), Time.history(iProf-10:iProf), constants);
+                        if iProf > 20
+                        figure(19);
+                        plot(Time.history(1:iProf), bulk_history(2, 1:iProf), 'LineWidth', 2);
+                        legend('NO2 bulk_conc', 'Location', 'northwest')
                         
+
                         figure(20);
                         plot(Time.history(iProf - 10:iProf-1), diff(bulk_history(:, iProf-10:iProf), 1, 2) ./ (bulk_history(:, iProf-10:iProf-1)+1e-20), 'LineWidth', 2);
                         legend(constants.StNames, 'Location', 'northwest');
+                        end
                         drawnow();
                     end
                     
@@ -307,7 +347,24 @@ function integTime(simulation_file, directory)
                     
                     % calculate and set bulk concentrations
                     tic;
-                    [bulk_concs, invHRT] = calculate_bulk_concentrations(constants, bulk_concs, invHRT, reaction_matrix, Time.dT_bac, settings);
+                    while 1 % should be a "do while" loop, but Matlab doesn't have that functionality...
+                        [new_bulk_concs, invHRT] = calculate_bulk_concentrations(constants, bulk_concs, invHRT, reaction_matrix, Time.dT_bac, settings);
+                        if ~settings.dynamicDT || all(abs(new_bulk_concs - bulk_concs) ./ bulk_concs < 0.1)
+                            break
+                        end
+                        if Time.dT_bac < Time.maxDT_bac/20
+                            fprintf(2, 'Smallest dT_bac reached, cannot decrease smaller than %g h', Time.maxDT_bac/20);
+                            break
+                        end
+                        Time.dT_bac = Time.dT_bac * 0.9;
+                        Time.changed_dT_bac = Time.current;
+                        [new_bulk_concs, invHRT] = calculate_bulk_concentrations(constants, bulk_concs, invHRT, reaction_matrix, Time.dT_bac, settings);
+                        fprintf(2, 'Too large bulk concentration jump detected, \n\tthus dT_bac decreased to %g\n', Time.dT_bac)
+                        
+
+                    end
+                    
+                    bulk_concs = new_bulk_concs;
                     conc = set_concentrations(conc, bulk_concs, ~diffusion_region);
                     profiling(iProf, 10) = profiling(iProf, 10) + toc;
                     
