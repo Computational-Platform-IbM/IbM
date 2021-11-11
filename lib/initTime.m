@@ -29,7 +29,7 @@ function [conc, bulk_concs, invHRT, reaction_matrix, pH, bac] = initTime(grid, b
     conc = set_concentrations(conc, bulk_concs, ~diffusion_region);
 
     % calculate reaction matrix
-    [reaction_matrix(xRange, yRange, :), bac.mu, pH(xRange, yRange)] = calculate_reaction_matrix(grid2bac(xRange, yRange, :), ...
+    [reaction_matrix(xRange, yRange, :), bac.mu, bac.muRatio, pH(xRange, yRange)] = calculate_reaction_matrix(grid2bac(xRange, yRange, :), ...
         grid2nBacs(xRange, yRange), bac, diffusion_region(xRange, yRange, :), conc(xRange, yRange, :), constants, pH(xRange, yRange), settings);
     
 end

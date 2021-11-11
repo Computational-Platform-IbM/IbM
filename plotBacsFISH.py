@@ -35,9 +35,9 @@ def save_plot(i: int, xlim: List[float], ylim: List[float], bac: Dict):
     muRatio = bac['muRatio'][0:nBacs, i]
     inc = 1000 # Recommended: 1.5 - 2.0  (inc = 1000 -> alpha = 1)
     muAlpha = (muRatio + inc) / (1 + inc)
-    
+
     # HEX code
-    # c = ['#CC66FF', '#00B04F', '#FFA200', '#FF1482'] # Old colours
+    # c = ['#00FFFF', '#5A8D03', '#FFE800', '#A233A2'] # FISH-like colours:
     c = ['#0072B2', '#D55E00', '#F0E442', '#CC79A7'] # Colourblind-friendly: ( https://www.color-hex.com/color-palette/49436 )
     # HEX to RGB
     rC, gC, bC = [0]*len(c), [0]*len(c), [0]*len(c)
@@ -47,17 +47,20 @@ def save_plot(i: int, xlim: List[float], ylim: List[float], bac: Dict):
         rC[cSet] = RGB[0] / 255
         gC[cSet] = RGB[1] / 255
         bC[cSet] = RGB[2] / 255
-        
+    
     patches = [plt.Circle((x, y), radius) for x, y, radius in zip(x, y, r)]
+
+    plt.style.use('dark_background')
 
     fig, ax = plt.subplots()
 
     coll = matplotlib.collections.PatchCollection(patches)
+    # coll.set_facecolor(
+    #     [c[species-1] if active else '#555555' for species, active in zip(s, a)])
     coll.set_facecolor(
-        [(rC[species-1]*muAlpha[iBac], gC[species-1]*muAlpha[iBac], bC[species-1]*muAlpha[iBac]) if active else '#000000' for iBac, species, active in zip(vBacs, s, a)])
-    # coll.set_alpha([1.0 if active else 0.5 for active in a])
+        [(rC[species-1], gC[species-1], bC[species-1], muAlpha[iBac]) if active else '#555555' for iBac, species, active in zip(vBacs, s, a)])
     coll.set_edgecolor('k')
-    coll.set_linewidth(0.05)
+    # coll.set_linewidth(0.05)
     ax.add_collection(coll)
 
     plt.xlim(xlim * 1e6)
@@ -75,6 +78,7 @@ def save_plot(i: int, xlim: List[float], ylim: List[float], bac: Dict):
     
     plt.legend((L1,L2,L3), ('B1', 'B2', 'B3'), numpoints=1, loc="best", frameon=False) # Structures
     # plt.legend((L1,L2,L3,L4), ('AOB', 'Nitrobacter', 'Nitrospira', 'AMX'), numpoints=1, loc="upper left", frameon=False) # AOB/NOB/AMX
+
 
     filename = f'{directory}/{i}.png'
     plt.savefig(filename)
@@ -120,7 +124,7 @@ def generate_gif(args: Dict):
             filenames.append(save_plot(i, xlim, ylim, bac))
 
     # build gif
-    with imageio.get_writer(f'{directory}/bacteria.gif', mode='I', fps=4) as writer:
+    with imageio.get_writer(f'{directory}/bacteriaFISH.gif', mode='I', fps=4) as writer:
         for filename in tqdm(filenames, desc='Gif'):
             image = imageio.imread(filename)
             writer.append_data(image)
