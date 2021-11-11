@@ -65,7 +65,6 @@ def save_plot(i: int, xlim: List[float], ylim: List[float], bac: Dict):
     plt.xlabel('Position along x-axis [μm]')
     plt.ylabel('Position along y-axis [μm]')
     ax.set_aspect(1/ax.get_data_ratio(), adjustable='box')
-    ax.set_facecolor("#FAFAFA")
     # plt.margins(0.01)
     
     # Legend
