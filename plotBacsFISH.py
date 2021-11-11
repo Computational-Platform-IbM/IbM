@@ -26,13 +26,22 @@ def save_plot(i: int, xlim: List[float], ylim: List[float], bac: Dict):
     """
 
     nBacs = bac['nBacs'][i]
+    vBacs = np.arange(nBacs)
     x = bac['x'][0:nBacs, i] * 1e6
     y = bac['y'][0:nBacs, i] * 1e6
     r = bac['radius'][0:nBacs, i] * 1e6
     s = bac['species'][0:nBacs, i]
     a = bac['active'][0:nBacs, i]
+    muRatio = bac['muRatio'][0:nBacs, i]
+    inc = 1 # Higher value, less transparency (Infinite -> alpha = 1)
+    muAlpha = (muRatio + inc) / (1 + inc)
 
-    c = ['#00FFFF', '#5A8D03', '#FFE800', '#A233A2'] # ['cyan', 'green', 'yellow', 'purple']
+    # ['cyan', 'green', 'yellow', 'purple']
+    c = ['#00FFFF', '#5A8D03', '#FFE800', '#A233A2'] 
+    rC = [0/255,    90/255,  255/255, 162/255]
+    gC = [255/255,  141/255, 232/255, 51/255]
+    bC = [255/255,  3/255,   0/255,   162/255]
+    
     patches = [plt.Circle((x, y), radius) for x, y, radius in zip(x, y, r)]
 
     plt.style.use('dark_background')
@@ -40,9 +49,10 @@ def save_plot(i: int, xlim: List[float], ylim: List[float], bac: Dict):
     fig, ax = plt.subplots()
 
     coll = matplotlib.collections.PatchCollection(patches)
+    # coll.set_facecolor(
+    #     [c[species-1] if active else '#555555' for species, active in zip(s, a)])
     coll.set_facecolor(
-        [c[species-1] if active else '#555555' for species, active in zip(s, a)])
-    # coll.set_alpha([1.0 if active else 0.5 for active in a])
+        [(rC[species-1], gC[species-1], bC[species-1], muAlpha[iBac]) if active else '#555555' for iBac, species, active in zip(vBacs, s, a)])
     coll.set_edgecolor('k')
     # coll.set_linewidth(0.05)
     ax.add_collection(coll)
@@ -60,7 +70,7 @@ def save_plot(i: int, xlim: List[float], ylim: List[float], bac: Dict):
     L3 = Line2D([0], [0], linestyle="none", marker="o", markersize=10, markerfacecolor=c[2], markeredgecolor=c[2])
     # L4 = Line2D([0], [0], linestyle="none", marker="o", markersize=10, markerfacecolor=c[3], markeredgecolor=c[3])
     
-    plt.legend((L1,L2,L3), ('B1', 'B2', 'B3'), numpoints=1, loc="upper left", frameon=False) # Structures
+    plt.legend((L1,L2,L3), ('B1', 'B2', 'B3'), numpoints=1, loc="best", frameon=False) # Structures
     # plt.legend((L1,L2,L3,L4), ('AOB', 'Nitrobacter', 'Nitrospira', 'AMX'), numpoints=1, loc="upper left", frameon=False) # AOB/NOB/AMX
 
 
