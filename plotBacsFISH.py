@@ -33,14 +33,20 @@ def save_plot(i: int, xlim: List[float], ylim: List[float], bac: Dict):
     s = bac['species'][0:nBacs, i]
     a = bac['active'][0:nBacs, i]
     muRatio = bac['muRatio'][0:nBacs, i]
-    inc = 1 # Higher value, less transparency (Infinite -> alpha = 1)
+    inc = 1000 # Recommended: 1.5 - 2.0  (inc = 1000 -> alpha = 1)
     muAlpha = (muRatio + inc) / (1 + inc)
 
-    # ['cyan', 'green', 'yellow', 'purple']
-    c = ['#00FFFF', '#5A8D03', '#FFE800', '#A233A2'] 
-    rC = [0/255,    90/255,  255/255, 162/255]
-    gC = [255/255,  141/255, 232/255, 51/255]
-    bC = [255/255,  3/255,   0/255,   162/255]
+    # HEX code
+    # c = ['#00FFFF', '#5A8D03', '#FFE800', '#A233A2'] # FISH-like colours:
+    c = ['#0072B2', '#D55E00', '#F0E442', '#CC79A7'] # Colourblind-friendly: ( https://www.color-hex.com/color-palette/49436 )
+    # HEX to rgb
+    rC, gC, bC = [0]*len(c), [0]*len(c), [0]*len(c)
+    for cSet in range(len(c)):
+        C = c[cSet]
+        RGB = tuple(int(C.lstrip('#')[i:i+2], 16) for i in (0, 2, 4))
+        rC[cSet] = RGB[0] / 255
+        gC[cSet] = RGB[1] / 255
+        bC[cSet] = RGB[2] / 255
     
     patches = [plt.Circle((x, y), radius) for x, y, radius in zip(x, y, r)]
 

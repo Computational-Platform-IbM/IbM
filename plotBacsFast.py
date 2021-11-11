@@ -26,21 +26,35 @@ def save_plot(i: int, xlim: List[float], ylim: List[float], bac: Dict):
     """
 
     nBacs = bac['nBacs'][i]
+    vBacs = np.arange(nBacs)
     x = bac['x'][0:nBacs, i] * 1e6
     y = bac['y'][0:nBacs, i] * 1e6
     r = bac['radius'][0:nBacs, i] * 1e6
     s = bac['species'][0:nBacs, i]
     a = bac['active'][0:nBacs, i]
-
+    muRatio = bac['muRatio'][0:nBacs, i]
+    inc = 1000 # Recommended: 1.5 - 2.0  (inc = 1000 -> alpha = 1)
+    muAlpha = (muRatio + inc) / (1 + inc)
+    
+    # HEX code
     # c = ['#CC66FF', '#00B04F', '#FFA200', '#FF1482'] # Old colours
-    c = ['#0072B2', '#009E73', '#F0E442', '#CC79A7'] # colourblind-friendly (https://www.color-hex.com/color-palette/49436)
+    c = ['#0072B2', '#D55E00', '#F0E442', '#CC79A7'] # Colourblind-friendly: ( https://www.color-hex.com/color-palette/49436 )
+    # HEX to rgb
+    rC, gC, bC = [0]*len(c), [0]*len(c), [0]*len(c)
+    for cSet in range(len(c)):
+        C = c[cSet]
+        RGB = tuple(int(C.lstrip('#')[i:i+2], 16) for i in (0, 2, 4))
+        rC[cSet] = RGB[0] / 255
+        gC[cSet] = RGB[1] / 255
+        bC[cSet] = RGB[2] / 255
+        
     patches = [plt.Circle((x, y), radius) for x, y, radius in zip(x, y, r)]
 
     fig, ax = plt.subplots()
 
     coll = matplotlib.collections.PatchCollection(patches)
     coll.set_facecolor(
-        [c[species-1] if active else '#000000' for species, active in zip(s, a)])
+        [(rC[species-1]*muAlpha[iBac], gC[species-1]*muAlpha[iBac], bC[species-1]*muAlpha[iBac]) if active else '#000000' for iBac, species, active in zip(vBacs, s, a)])
     # coll.set_alpha([1.0 if active else 0.5 for active in a])
     coll.set_edgecolor('k')
     coll.set_linewidth(0.05)
@@ -51,6 +65,7 @@ def save_plot(i: int, xlim: List[float], ylim: List[float], bac: Dict):
     plt.xlabel('Position along x-axis [μm]')
     plt.ylabel('Position along y-axis [μm]')
     ax.set_aspect(1/ax.get_data_ratio(), adjustable='box')
+    ax.set_facecolor("#FAFAFA")
     # plt.margins(0.01)
     
     # Legend
@@ -59,7 +74,7 @@ def save_plot(i: int, xlim: List[float], ylim: List[float], bac: Dict):
     L3 = Line2D([0], [0], linestyle="none", marker="o", markersize=10, markerfacecolor=c[2], markeredgecolor=c[2])
     # L4 = Line2D([0], [0], linestyle="none", marker="o", markersize=10, markerfacecolor=c[3], markeredgecolor=c[3])
     
-    plt.legend((L1,L2,L3), ('B1', 'B2', 'B3'), numpoints=1, loc="upper left", frameon=False) # Structures
+    plt.legend((L1,L2,L3), ('B1', 'B2', 'B3'), numpoints=1, loc="best", frameon=False) # Structures
     # plt.legend((L1,L2,L3,L4), ('AOB', 'Nitrobacter', 'Nitrospira', 'AMX'), numpoints=1, loc="upper left", frameon=False) # AOB/NOB/AMX
 
     filename = f'{directory}/{i}.png'
