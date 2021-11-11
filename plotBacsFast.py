@@ -39,7 +39,7 @@ def save_plot(i: int, xlim: List[float], ylim: List[float], bac: Dict):
     # HEX code
     # c = ['#CC66FF', '#00B04F', '#FFA200', '#FF1482'] # Old colours
     c = ['#0072B2', '#D55E00', '#F0E442', '#CC79A7'] # Colourblind-friendly: ( https://www.color-hex.com/color-palette/49436 )
-    # HEX to rgb
+    # HEX to RGB
     rC, gC, bC = [0]*len(c), [0]*len(c), [0]*len(c)
     for cSet in range(len(c)):
         C = c[cSet]
