@@ -32,6 +32,8 @@ function save_profile(bac, conc, bulk_concentrations, pH, invHRT, Time, grid, co
     bac_saved.radius(iSave, 1:nBacs) = bac.radius;
     bac_saved.species(iSave, 1:nBacs) = bac.species;
     bac_saved.active(iSave, 1:nBacs) = bac.active;
+    bac_saved.mu(iSave, 1:nBacs) = bac.mu;
+    bac_saved.muRatio(iSave, 1:nBacs) = max(0,bac.muRatio);
     
     % concentration variable
     conc_saved(iSave, :, :, :) = conc; % save horizontal slice through center of granule
@@ -71,6 +73,8 @@ function [bac_saved, conc_saved, pH_saved, reactor_saved] = init_save(constants,
     bac_saved.radius = zeros(nSaves, constants.max_nBac, 'single');
     bac_saved.species = zeros(nSaves, constants.max_nBac, 'uint8');
     bac_saved.active = zeros(nSaves, constants.max_nBac, 'logical');
+    bac_saved.mu = zeros(nSaves, constants.max_nBac, 'single');
+    bac_saved.muRatio = zeros(nSaves, constants.max_nBac, 'single');
     
     % concentration variable
     nCompounds = length(constants.StNames);

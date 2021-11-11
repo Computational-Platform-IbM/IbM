@@ -18,5 +18,6 @@ function bac = bacteria_detachment(bac, grid, constants)
         bac.molarMass(bac_detach) = [];
         bac.active(bac_detach) = [];
         bac.mu(bac_detach) = [];
+        bac.muRatio(bac_detach) = [];
     end
 end

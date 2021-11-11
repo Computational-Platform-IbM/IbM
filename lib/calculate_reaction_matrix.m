@@ -1,4 +1,4 @@
-function [reaction_matrix, mu, pH] = calculate_reaction_matrix(grid2bac, grid2nBacs, bac, diffRegion, conc, constants, pH, settings)
+function [reaction_matrix, mu, muRatio, pH] = calculate_reaction_matrix(grid2bac, grid2nBacs, bac, diffRegion, conc, constants, pH, settings)
     % Calculate how much compounds are consumed/produced per grid cell due
     % to bacterial activity. Also updates the growth rate of the respective
     % bacteria.
@@ -50,6 +50,7 @@ function [reaction_matrix, mu, pH] = calculate_reaction_matrix(grid2bac, grid2nB
     
     reaction_matrix = zeros(size(conc));
     mu = zeros(size(bac.x));
+    muRatio = zeros(size(bac.x));
     
     % pre-compute for bulk-liquid (at 1,1 there should never be diffusion
     % layer)
@@ -116,6 +117,7 @@ function [reaction_matrix, mu, pH] = calculate_reaction_matrix(grid2bac, grid2nB
                         mu_noMaintenance = mu_max * M;                                                                      % [1/h]
                         mu_withMaintenance = mu_noMaintenance - maint;                                                      % [1/h]
                         mu(iBacs(speciesGrid == curr_species)) = mu_withMaintenance;                                        % [1/h]
+                        muRatio(iBacs(speciesGrid == curr_species)) = mu(iBacs(speciesGrid == curr_species))/mu_max;        % [DN]
 
                         % update reaction_matrix element for this grid cell
                         concentrationChange = mMetabolism(:, curr_species) * mu_noMaintenance;                              % [molS/molX/h]
