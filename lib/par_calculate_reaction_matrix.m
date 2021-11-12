@@ -1,4 +1,4 @@
-function [reaction_matrix, mu, muRatio, pH] = par_calculate_reaction_matrix(grid2bac, grid2nBacs, bac, diffRegion, conc, constants, pH, chunks, nChunks_dir, settings)
+function [reaction_matrix, mu, pH] = par_calculate_reaction_matrix(grid2bac, grid2nBacs, bac, diffRegion, conc, constants, pH, chunks, nChunks_dir, settings)
     % Calculate how much compounds are consumed/produced per grid cell due
     % to bacterial activity. Also updates the growth rate of the respective
     % bacteria.
@@ -52,7 +52,6 @@ function [reaction_matrix, mu, muRatio, pH] = par_calculate_reaction_matrix(grid
     
     reaction_matrix = zeros(size(conc));
     mu = zeros(size(bac.x));
-    muRatio = zeros(size(bac.x));
     
     % pre-compute for bulk-liquid 
     % -> at 1,1 there should never be diffusion layer
@@ -108,12 +107,11 @@ function [reaction_matrix, mu, muRatio, pH] = par_calculate_reaction_matrix(grid
     chunk_rMatrix = arrayfun(@(xlen, ylen) zeros(xlen, ylen, nCompounds), xlens, ylens, 'UniformOutput', false);
     chunk_pH = arrayfun(@(xlen, ylen) zeros(xlen, ylen), xlens, ylens, 'UniformOutput', false);
     chunk_mu = arrayfun(@(x) zeros(x, 1), chunk2nBacs, 'UniformOutput', false);
-    chunk_muRatio = arrayfun(@(x) zeros(x, 1), chunk2nBacs, 'UniformOutput', false);
     
     
     % calculate reaction matrix per chunk in parallel
     parfor iChunk = 1:nChunks
-        [chunk_rMatrix{iChunk}, chunk_mu{iChunk}, chunk_muRatio{iChunk}, chunk_pH{iChunk}] = ...
+        [chunk_rMatrix{iChunk}, chunk_mu{iChunk}, chunk_pH{iChunk}] = ...
             rMatrix_chunk(chunk_pH_OG{iChunk}, chunk_conc{iChunk}, chunk_grid2bac{iChunk}, chunk_grid2nBacs{iChunk}, chunk_diffRegion{iChunk}, ...
             chunk_grouped_bac{iChunk}, chunk2nBacs(iChunk), bacOffset(iChunk), ...
             reactive_form, Ks, Ki, Keq, chrM, mMetabolism, mDecay, constantValues, structure_model, pHincluded);
@@ -129,7 +127,6 @@ function [reaction_matrix, mu, muRatio, pH] = par_calculate_reaction_matrix(grid
         reaction_matrix(xRange, yRange, :) = chunk_rMatrix{iChunk};
         pH(xRange, yRange) = chunk_pH{iChunk};
         mu(bacRange) = chunk_mu{iChunk};
-        muRatio(bacRange) = chunk_muRatio{iChunk};
     end
     
     
@@ -137,7 +134,7 @@ function [reaction_matrix, mu, muRatio, pH] = par_calculate_reaction_matrix(grid
     reaction_matrix = reaction_matrix / Vg;
 end
 
-function [reaction_matrix, mu, muRatio, pH_new] = rMatrix_chunk(pH, conc, grid2bac, grid2nBacs, diffRegion, ...
+function [reaction_matrix, mu, pH_new] = rMatrix_chunk(pH, conc, grid2bac, grid2nBacs, diffRegion, ...
     grouped_bac, nBacs, bacOffset, ...
     reactive_form, Ks, Ki, Keq, chrM, mMetabolism, mDecay, constants, structure_model, pHincluded)
     % Calculate reaction matrix, mu and pH in one chunk
@@ -161,7 +158,6 @@ function [reaction_matrix, mu, muRatio, pH_new] = rMatrix_chunk(pH, conc, grid2b
     bac_molarMass = grouped_bac(:,2);
 
     mu = zeros(nBacs, 1);
-    muRatio = zeros(nBacs,1);
     reaction_matrix = zeros(size(conc));
     pH_new = zeros(size(pH));
 
@@ -222,7 +218,6 @@ function [reaction_matrix, mu, muRatio, pH_new] = rMatrix_chunk(pH, conc, grid2b
                         mu_noMaintenance = mu_max * M;                                                                      % [1/h]
                         mu_withMaintenance = mu_noMaintenance - maint;                                                      % [1/h]
                         mu(iBacs(speciesGrid == curr_species)) = mu_withMaintenance;                                        % [1/h]
-                        muRatio(iBacs(speciesGrid == curr_species)) = mu(iBacs(speciesGrid == curr_species))/mu_max;        % [DN]
 
                         % update reaction_matrix element for this grid cell
                         concentrationChange = mMetabolism(:, curr_species) * mu_noMaintenance;                              % [molS/molX/h]

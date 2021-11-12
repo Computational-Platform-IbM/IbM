@@ -117,14 +117,13 @@ function integTime(simulation_file, directory)
         % calculate reaction matrix
         tic;
         if settings.parallelized
-            [reaction_matrix(xRange, yRange, :), bac.mu, bac.muRatio, pH(xRange, yRange)] = par_calculate_reaction_matrix(grid2bac(xRange, yRange, :), ...
+            [reaction_matrix(xRange, yRange, :), bac.mu, pH(xRange, yRange)] = par_calculate_reaction_matrix(grid2bac(xRange, yRange, :), ...
                 grid2nBacs(xRange, yRange), bac, diffusion_region(xRange, yRange, :), conc(xRange, yRange, :), constants, pH(xRange, yRange), chunks, nChunks_dir, settings);
         else
-            [reaction_matrix(xRange, yRange, :), bac.mu, bac.muRatio, pH(xRange, yRange)] = calculate_reaction_matrix(grid2bac(xRange, yRange, :), ...
+            [reaction_matrix(xRange, yRange, :), bac.mu, pH(xRange, yRange)] = calculate_reaction_matrix(grid2bac(xRange, yRange, :), ...
                 grid2nBacs(xRange, yRange), bac, diffusion_region(xRange, yRange, :), conc(xRange, yRange, :), constants, pH(xRange, yRange), settings);
         end
         profiling(iProf, 3) = profiling(iProf, 3) + toc;
-
 
         % if T>T_ss: calculate residual
         if Time.current >= Time.steadystate
@@ -358,10 +357,10 @@ function integTime(simulation_file, directory)
                     % recompute reaction matrix for next cycle
                     tic;
                     if settings.parallelized
-                        [reaction_matrix(xRange, yRange, :), bac.mu, bac.muRatio, pH(xRange, yRange)] = par_calculate_reaction_matrix(grid2bac(xRange, yRange, :), ...
+                        [reaction_matrix(xRange, yRange, :), bac.mu, pH(xRange, yRange)] = par_calculate_reaction_matrix(grid2bac(xRange, yRange, :), ...
                             grid2nBacs(xRange, yRange), bac, diffusion_region(xRange, yRange, :), conc(xRange, yRange, :), constants, pH(xRange, yRange), chunks, nChunks_dir, settings);
                     else
-                        [reaction_matrix(xRange, yRange, :), bac.mu, bac.muRatio, pH(xRange, yRange)] = calculate_reaction_matrix(grid2bac(xRange, yRange, :), ...
+                        [reaction_matrix(xRange, yRange, :), bac.mu, pH(xRange, yRange)] = calculate_reaction_matrix(grid2bac(xRange, yRange, :), ...
                             grid2nBacs(xRange, yRange), bac, diffusion_region(xRange, yRange, :), conc(xRange, yRange, :), constants, pH(xRange, yRange), settings);
                     end
                     profiling(iProf, 3) = profiling(iProf, 3) + toc;
