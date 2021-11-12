@@ -78,7 +78,7 @@ function integTime(simulation_file, directory)
 
     % dynamic dT diffusion
     constants.dynamicDT.iterThresholdDecrease = 200;
-    constants.dynamicDT.iterThresholdIncrease = 25;
+    constants.dynamicDT.iterThresholdIncrease = 40;
 
     % dynamic dT bac
     constants.dynamicDT.initRESThresholdIncrease = 20/100;
@@ -131,7 +131,7 @@ function integTime(simulation_file, directory)
         catch e
             switch e.identifier
                 case 'Diffusion:NegativeConcentration'
-                    Time = decrease_dT_diffusion(Time, grid.dx, 'Negative concentration occurred in diffusion solution');
+                    Time = decrease_dT_diffusion(Time, e.message, grid.dx, constants);
                 otherwise
                     rethrow(e)
             end            
@@ -159,9 +159,10 @@ function integTime(simulation_file, directory)
         profiling(iProf, 3) = profiling(iProf, 3) + toc;
 
         
-        if mod(iDiffusion, 500) == 0
-            Time.dT = Time.dT / 0.9; % temp, try if this helps with speed up...
-            Time.changed_dT = Time.current;
+        if mod(iDiffusion, constants.dynamicDT.nItersCycle) == 0 && ...
+                non_convergent(iDiffusion, iRES, RESvalues, Time, constants)
+%             Time.dT = Time.dT / 0.9; % temp, try if this helps with speed up...
+%             Time.changed_dT = Time.current;
             
             [bulk_concs, invHRT] = calculate_bulk_concentrations(constants, bulk_concs, invHRT, reaction_matrix, Time.dT_bac - Time.current, settings);
             conc = set_concentrations(conc, bulk_concs, ~diffusion_region);
@@ -207,9 +208,9 @@ function integTime(simulation_file, directory)
             % perform dynamic dT for diffusion
             if settings.dynamicDT 
                 if upward_trend(iDiffusion, iRES, RESvalues, constants)
-                    Time = decrease_dT_diffusion(Time, grid.dx, 'Upward trend in RES values detected');
+                    Time = decrease_dT_diffusion(Time, 'Upward trend in RES values detected', grid.dx, constants);
                 elseif non_convergent(iDiffusion, iRES, RESvalues, Time, constants)
-                    Time = decrease_dT_diffusion(Time, grid.dx, sprintf('Diffusion takes longer than %d diffusion iterations', constants.dynamicDT.iterThresholdDecrease));
+                    Time = decrease_dT_diffusion(Time, sprintf('Diffusion takes longer than %d diffusion iterations', constants.dynamicDT.iterThresholdDecrease), grid.dx, constants);
                 end
             end
             
@@ -227,8 +228,8 @@ function integTime(simulation_file, directory)
                 end
                 
                 % perform dynamic dT for diffusion
-                if settings.dynamicDT && multiple_high_iters(iDiffusion, iProf, Time, constants)
-                    Time = increase_dT_diffusion(Time, grid.dx, sprintf('Multiple steady states reached with more than %d diffusion iterations', constants.dynamicDT.iterThresholdIncrease));
+                if settings.dynamicDT && multiple_high_iters(iDiffusion, iProf, nDiffIters, Time, constants)
+                    Time = increase_dT_diffusion(Time, sprintf('Multiple steady states reached with more than %d diffusion iterations', constants.dynamicDT.iterThresholdIncrease), grid.dx, constants);
                 end
                 
                                 
@@ -377,8 +378,8 @@ function integTime(simulation_file, directory)
                         if ~settings.dynamicDT || bulk_conc_diff_within_limit(new_bulk_concs, bulk_concs, constants)
                             break
                         end
-                        if Time.dT_bac < Time.minDT_bac
-                            fprintf(2, 'Smallest dT_bac reached, cannot decrease smaller than %g h', Time.maxDT_bac/20);
+                        if Time.dT_bac <= Time.minDT_bac
+                            fprintf(2, 'Smallest dT_bac reached, cannot decrease smaller than %g h\n', Time.minDT_bac);
                             break
                         end
                         Time = decrease_dT_bac(Time, 'Too large bulk concentration jump detected');

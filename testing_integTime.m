@@ -132,16 +132,20 @@ if constants.debug.plotBacteria
     plotBacs(grid, bac, constants)
 end
 
-% temp settings of variables: pls remove
-constants.dynamicDT.iterThresholdDecrease = 200;
-constants.dynamicDT.iterThresholdIncrease = 40;
-constants.dynamicDT.nIterThresholdIncrease = 3;
+% overall settings dynamic dT
 settings.dynamicDT = true;
+constants.dynamicDT.nIterThresholdIncrease = 3;
 
-constants.dynamicDT.initRESThresholdDecrease = 20/100;
+% dynamic dT diffusion
+constants.dynamicDT.iterThresholdDecrease = 200;
+constants.dynamicDT.iterThresholdIncrease = 25;
+
+% dynamic dT bac
 constants.dynamicDT.initRESThresholdIncrease = 20/100;
 
-
+constants.dynamicDT.nItersCycle = 500; % in diffusion to steady state, after how many diffusion iterations should bulk conc be recalculated
+constants.dynamicDT.tolerance_no_convergence = 1e-4; % maximum difference between RES values between diffusion iterations to be considered not converging
+constants.dynamicDT.maxRelDiffBulkConc = 0.02; % maximum relative difference between bulk concentration values
 
 
 % save('sim_xxxx.mat', 'grid', 'bac', 'constants', 'init_params', 'settings')

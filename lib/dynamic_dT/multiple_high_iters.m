@@ -1,4 +1,4 @@
-function bool = multiple_high_iters(iDiffusion, iProf, Time, constants)
+function bool = multiple_high_iters(iDiffusion, iProf, nDiffIters, Time, constants)
     % Detect whether the previous steady states have been reached with a
     % high number of diffusion iterations
     
