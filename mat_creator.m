@@ -82,7 +82,6 @@ function [simname, siminfo, simgoal] = mc(filename, sim_number)
     bac.molarMass = R.bac.atrib(1,3) * ones(n, 1);
     bac.radius = R.bac.atrib(1,6) * ones(n, 1);
     bac.active = ones(size(bac.x), 'logical');
-    bac.muRatio = ones(size(bac.x));
     clear n radius;
 
     % % retain only a handful of bacteria for faster debugging
