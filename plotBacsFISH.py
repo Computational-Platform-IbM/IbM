@@ -9,9 +9,57 @@ import argparse
 from tqdm import tqdm
 import os
 from typing import Dict, List
+import collections
 
 # %%
+def HEX2RGBsplit(c):
+    """Convert HEX code of colours to RGB, spliting in Red, Green and Blue values.
 
+    Args:
+        c (string): HEX value of colours (it can be an array)
+
+    Returns:
+        rC, gC, bC (float): Red, Gren and Blue values of RGB code, respectively
+    """
+    
+    rC, gC, bC = [0]*len(c), [0]*len(c), [0]*len(c)
+    for cSet in range(len(c)):
+        C = c[cSet]
+        RGB = tuple(int(C.lstrip('#')[i:i+2], 16) for i in (0, 2, 4))
+        rC[cSet] = RGB[0] / 255
+        gC[cSet] = RGB[1] / 255
+        bC[cSet] = RGB[2] / 255
+        
+    return(rC, gC, bC)
+
+def muRatio(mu, s, inc):
+    """Calculate ratio between mu[i] and max(mu[i,s]) for each bacterium [i] of specific specie [s].
+
+    Args:
+        mu (float): actual mu values
+        s (int): specie ID
+        inc(float): value to modify the transparency range of bacteria colour
+
+    Returns:
+        muA (float): alpha values to represent the ratio of mu (with transparency)
+    """
+    mu_noneg = np.maximum(mu, 0.0)
+    dct = {}
+    for i, j in zip(s, mu_noneg):
+        dct.setdefault(i, []).append(j)
+    sort_dct = collections.OrderedDict(sorted(dct.items()))
+    max_mu = [max(sort_dct[key]) for key in sort_dct]
+    max_mu = [1.0 if i == 0.0 else i for i in max_mu]
+    muR = [mu/max_mu[s-1] for mu, s in zip(mu_noneg, s)]
+
+    if inc == 0:
+        muA = muR
+    elif inc == 'NoAlpha':
+        muA = np.ones(np.size(mu))
+    else:
+        muA = (np.array(muR) + inc) / (1 + inc)
+    
+    return(muA)
 
 def save_plot(i: int, xlim: List[float], ylim: List[float], bac: Dict):
     """Create and save a figure of the bacteria at a certain point in time.
@@ -32,21 +80,16 @@ def save_plot(i: int, xlim: List[float], ylim: List[float], bac: Dict):
     r = bac['radius'][0:nBacs, i] * 1e6
     s = bac['species'][0:nBacs, i]
     a = bac['active'][0:nBacs, i]
-    muRatio = bac['muRatio'][0:nBacs, i]
-    inc = 1000 # Recommended: 1.5 - 2.0  (inc = 1000 -> alpha = 1)
-    muAlpha = (muRatio + inc) / (1 + inc)
+    mu = bac['mu'][0:nBacs, i]
+    
+    # Calculus of mu/max(mu)
+    inc = 2 # Recommended: 1.0 - 2.0  (inc = 'NoAlpha' -> alpha = 1; inc = 0 -> alpha = mu/max_mu)
+    muAlpha = muRatio(mu, s, inc)
 
-    # HEX code
+    # Colours: HEX code
     # c = ['#00FFFF', '#5A8D03', '#FFE800', '#A233A2'] # FISH-like colours:
     c = ['#0072B2', '#D55E00', '#F0E442', '#CC79A7'] # Colourblind-friendly: ( https://www.color-hex.com/color-palette/49436 )
-    # HEX to RGB
-    rC, gC, bC = [0]*len(c), [0]*len(c), [0]*len(c)
-    for cSet in range(len(c)):
-        C = c[cSet]
-        RGB = tuple(int(C.lstrip('#')[i:i+2], 16) for i in (0, 2, 4))
-        rC[cSet] = RGB[0] / 255
-        gC[cSet] = RGB[1] / 255
-        bC[cSet] = RGB[2] / 255
+    rC, gC, bC = HEX2RGBsplit(c) # HEX to RGB
     
     patches = [plt.Circle((x, y), radius) for x, y, radius in zip(x, y, r)]
 
