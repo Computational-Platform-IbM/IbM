@@ -383,7 +383,6 @@ function integTime(simulation_file, directory)
                             break
                         end
                         Time = decrease_dT_bac(Time, 'Too large bulk concentration jump detected');
-                        [new_bulk_concs, invHRT] = calculate_bulk_concentrations(constants, bulk_concs, invHRT, reaction_matrix, Time.dT_bac, settings);
                     end
                     
                     bulk_concs = new_bulk_concs;
