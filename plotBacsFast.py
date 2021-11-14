@@ -74,7 +74,6 @@ def save_plot(i: int, xlim: List[float], ylim: List[float], bac: Dict):
     """
 
     nBacs = bac['nBacs'][i]
-    vBacs = np.arange(nBacs)
     x = bac['x'][0:nBacs, i] * 1e6
     y = bac['y'][0:nBacs, i] * 1e6
     r = bac['radius'][0:nBacs, i] * 1e6
@@ -97,7 +96,7 @@ def save_plot(i: int, xlim: List[float], ylim: List[float], bac: Dict):
 
     coll = matplotlib.collections.PatchCollection(patches)
     coll.set_facecolor(
-        [(rC[species-1]*muAlpha[iBac], gC[species-1]*muAlpha[iBac], bC[species-1]*muAlpha[iBac]) if active else '#000000' for iBac, species, active in zip(vBacs, s, a)])
+        [(rC[species-1]*muA, gC[species-1]*muA, bC[species-1]*muA) if active else '#000000' for muA, species, active in zip(muAlpha, s, a)])
     # coll.set_alpha([1.0 if active else 0.5 for active in a])
     coll.set_edgecolor('k')
     coll.set_linewidth(0.05)

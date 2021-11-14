@@ -74,7 +74,6 @@ def save_plot(i: int, xlim: List[float], ylim: List[float], bac: Dict):
     """
 
     nBacs = bac['nBacs'][i]
-    vBacs = np.arange(nBacs)
     x = bac['x'][0:nBacs, i] * 1e6
     y = bac['y'][0:nBacs, i] * 1e6
     r = bac['radius'][0:nBacs, i] * 1e6
@@ -83,7 +82,7 @@ def save_plot(i: int, xlim: List[float], ylim: List[float], bac: Dict):
     mu = bac['mu'][0:nBacs, i]
     
     # Calculus of mu/max(mu)
-    inc = 2 # Recommended: 1.0 - 2.0  (inc = 'NoAlpha' -> alpha = 1; inc = 0 -> alpha = mu/max_mu)
+    inc = 1 # Recommended: 1.0 - 2.0  (inc = 'NoAlpha' -> alpha = 1; inc = 0 -> alpha = mu/max_mu)
     muAlpha = muRatio(mu, s, inc)
 
     # Colours: HEX code
@@ -101,7 +100,7 @@ def save_plot(i: int, xlim: List[float], ylim: List[float], bac: Dict):
     # coll.set_facecolor(
     #     [c[species-1] if active else '#555555' for species, active in zip(s, a)])
     coll.set_facecolor(
-        [(rC[species-1], gC[species-1], bC[species-1], muAlpha[iBac]) if active else '#555555' for iBac, species, active in zip(vBacs, s, a)])
+        [(rC[species-1], gC[species-1], bC[species-1], muA) if active else '#555555' for muA, species, active in zip(muAlpha, s, a)])
     coll.set_edgecolor('k')
     # coll.set_linewidth(0.05)
     ax.add_collection(coll)
