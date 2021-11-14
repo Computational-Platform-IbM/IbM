@@ -28,7 +28,7 @@ function integTime(simulation_file, directory)
     else
         % initiate from preset values
         [conc, bulk_concs, invHRT, reaction_matrix, pH, bac] = ...
-        initTime(grid, bac, init_params, constants, settings);
+            initTime(grid, bac, init_params, constants, settings);
 
         % initiate time and profiling information/storage from preset
         Time = struct;
@@ -126,21 +126,17 @@ function integTime(simulation_file, directory)
     while Time.current < constants.simulation_end
         % diffuse (MG)
         tic;
-
         try
             conc(xRange, yRange, :) = diffusionMG(conc(xRange, yRange, :), reaction_matrix(xRange, yRange, :), ...
                 bulk_concs, diffusion_region(xRange, yRange), grid, constants, Time.dT);
         catch e
-
             switch e.identifier
                 case 'Diffusion:NegativeConcentration'
                     Time = decrease_dT_diffusion(Time, e.message, grid.dx, constants);
                 otherwise
                     rethrow(e)
             end
-
         end
-
         profiling(iProf, 1) = profiling(iProf, 1) + toc;
 
         % set bulk layer concentrations (in theory, not needed anymore with
@@ -154,7 +150,6 @@ function integTime(simulation_file, directory)
 
         % calculate reaction matrix
         tic;
-
         if settings.parallelized
             [reaction_matrix(xRange, yRange, :), bac.mu, pH(xRange, yRange)] = par_calculate_reaction_matrix(grid2bac(xRange, yRange, :), ...
                 grid2nBacs(xRange, yRange), bac, diffusion_region(xRange, yRange, :), conc(xRange, yRange, :), constants, pH(xRange, yRange), chunks, nChunks_dir, settings);
@@ -162,7 +157,6 @@ function integTime(simulation_file, directory)
             [reaction_matrix(xRange, yRange, :), bac.mu, pH(xRange, yRange)] = calculate_reaction_matrix(grid2bac(xRange, yRange, :), ...
                 grid2nBacs(xRange, yRange), bac, diffusion_region(xRange, yRange, :), conc(xRange, yRange, :), constants, pH(xRange, yRange), settings);
         end
-
         profiling(iProf, 3) = profiling(iProf, 3) + toc;
 
         % if T>T_ss: calculate residual
@@ -183,13 +177,11 @@ function integTime(simulation_file, directory)
 
             % perform dynamic dT for diffusion
             if settings.dynamicDT
-
                 if upward_trend(iDiffusion, iRES, RESvalues, constants)
                     Time = decrease_dT_diffusion(Time, 'Upward trend in RES values detected', grid.dx, constants);
                 elseif non_convergent(iDiffusion, iRES, RESvalues, Time, constants)
                     Time = decrease_dT_diffusion(Time, sprintf('Diffusion takes longer than %d diffusion iterations', constants.dynamicDT.iterThresholdDecrease), grid.dx, constants);
                 end
-
             end
 
             if ssReached
@@ -259,7 +251,6 @@ function integTime(simulation_file, directory)
 
                     % bacteria: inactivate or die
                     tic;
-
                     if constants.inactivationEnabled
                         bac = bacteria_inactivate(bac, constants);
                     else
@@ -283,10 +274,6 @@ function integTime(simulation_file, directory)
 
                     % display number of bacteria in system
                     fprintf('current number of bacteria: %d \n', length(bac.x))
-
-                    if constants.debug.plotBacteria
-                        plotBacs(grid, bac, constants)
-                    end
 
                     % auto detect when to switch to parallel
                     % computation of rMatrix
@@ -341,10 +328,8 @@ function integTime(simulation_file, directory)
 
                     % calculate and set bulk concentrations
                     tic;
-
                     while true % should be a "do while" loop, but Matlab doesn't have that functionality ...
-                            [new_bulk_concs, invHRT] = calculate_bulk_concentrations(constants, bulk_concs, invHRT, reaction_matrix, Time.dT_bac, settings);
-
+                        [new_bulk_concs, invHRT] = calculate_bulk_concentrations(constants, bulk_concs, invHRT, reaction_matrix, Time.dT_bac, settings);
                         if ~settings.dynamicDT || bulk_conc_diff_within_limit(new_bulk_concs, bulk_concs, constants)
                             break
                         end
@@ -363,7 +348,6 @@ function integTime(simulation_file, directory)
 
                     % recompute reaction matrix for next cycle
                     tic;
-
                     if settings.parallelized
                         [reaction_matrix(xRange, yRange, :), bac.mu, pH(xRange, yRange)] = par_calculate_reaction_matrix(grid2bac(xRange, yRange, :), ...
                             grid2nBacs(xRange, yRange), bac, diffusion_region(xRange, yRange, :), conc(xRange, yRange, :), constants, pH(xRange, yRange), chunks, nChunks_dir, settings);
@@ -371,7 +355,6 @@ function integTime(simulation_file, directory)
                         [reaction_matrix(xRange, yRange, :), bac.mu, pH(xRange, yRange)] = calculate_reaction_matrix(grid2bac(xRange, yRange, :), ...
                             grid2nBacs(xRange, yRange), bac, diffusion_region(xRange, yRange, :), conc(xRange, yRange, :), constants, pH(xRange, yRange), settings);
                     end
-
                     profiling(iProf, 3) = profiling(iProf, 3) + toc;
 
                     iProf = iProf + 1;
@@ -400,9 +383,7 @@ function integTime(simulation_file, directory)
                         save_backup(bac, bulk_concs, invHRT, conc, reaction_matrix, pH, directory)
                         save_profiling(profiling, maxErrors, normOverTime, nDiffIters, bulk_history, Time, directory)
                     end
-
                 end
-
             end
 
             % set next steadystate time
@@ -420,7 +401,6 @@ function integTime(simulation_file, directory)
     % save_profile(bac, conc, bulk_concs, pH, invHRT, Time.current, grid, constants, directory); % entire plane of simulation
     save_backup(bac, bulk_concs, invHRT, conc, reaction_matrix, pH, directory)
     save_profiling(profiling, maxErrors, normOverTime, nDiffIters, bulk_history, Time, directory)
-
 end
 
 %{
