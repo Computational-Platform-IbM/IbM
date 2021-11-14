@@ -27,4 +27,5 @@ function bac = sort_bacteria_into_chunks(bac, grid, chunks, focus_region, nChunk
     bac.molarMass = bac.molarMass(sortChunkIndex);
     bac.radius = bac.radius(sortChunkIndex);
     bac.active = bac.active(sortChunkIndex);
+    bac.mu = bac.mu(sortChunkIndex);
 end
