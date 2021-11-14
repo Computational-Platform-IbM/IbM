@@ -72,7 +72,7 @@ function [reaction_matrix, mu, pH] = calculate_reaction_matrix(grid2bac, grid2nB
     else
         constantValues = [pH_bulk, constants.constantpH, constants.pHtolerance, constants.T, iNH3, iNO2, iO2];
     end
-    grouped_bac = [bac.species, bac.molarMass];
+    grouped_bac = [bac.species, bac.molarMass, bac.active];
 
     if settings.parallelized
         % ================ PARALLEL CALCULATION ====================
@@ -116,7 +116,7 @@ function [reaction_matrix, mu, pH] = calculate_reaction_matrix(grid2bac, grid2nB
         % calculate reaction matrix per chunk in parallel
         parfor iChunk = 1:nChunks
             [chunk_rMatrix{iChunk}, chunk_mu{iChunk}, chunk_pH{iChunk}] = ...
-                rMatrix_chunk(chunk_pH_OG{iChunk}, chunk_conc{iChunk}, chunk_grid2bac{iChunk}, chunk_grid2nBacs{iChunk}, chunk_diffRegion{iChunk}, ...
+                rMatrix_section(chunk_pH_OG{iChunk}, chunk_conc{iChunk}, chunk_grid2bac{iChunk}, chunk_grid2nBacs{iChunk}, chunk_diffRegion{iChunk}, ...
                 chunk_grouped_bac{iChunk}, chunk2nBacs(iChunk), bacOffset(iChunk), ...
                 reactive_form, Ks, Ki, Keq, chrM, mMetabolism, mDecay, constantValues, structure_model, pHincluded);
         end
@@ -138,7 +138,7 @@ function [reaction_matrix, mu, pH] = calculate_reaction_matrix(grid2bac, grid2nB
         bacOffset = 0;
         % calculate by using just one chunk
         [reaction_matrix, mu, pH] = ...
-            rMatrix_chunk(pH, conc, grid2bac, grid2nBacs, diffRegion, ...
+            rMatrix_section(pH, conc, grid2bac, grid2nBacs, diffRegion, ...
             grouped_bac, length(bac.x), bacOffset, ...
             reactive_form, Ks, Ki, Keq, chrM, mMetabolism, mDecay, constantValues, structure_model, pHincluded);
     end
