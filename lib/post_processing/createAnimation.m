@@ -39,7 +39,7 @@ function createAnimation(simulation_number)
     
     %% load results
     load(simulation_result, 'bac_saved', 'conc_saved', 'pH_saved', 'reactor_saved');
-    load(profiling_result, 'profiling', 'maxErrors', 'nDiffIters', 'bulk_history');
+    load(profiling_result, 'profiling', 'maxErrors', 'normOverTime', 'nDiffIters', 'bulk_history', 'Time');
     load(simulation_file, 'constants', 'grid');
     
     
@@ -51,7 +51,8 @@ function createAnimation(simulation_number)
     fprintf('\n===== BULK CONCENTRATIONS =====\n')
     bulk_conc_plot = sprintf('%s/bulk_concentrations.png', output_dir);
     if ~isfile(bulk_conc_plot)
-        f = plotBulkConcOverTime(bulk_history, constants);
+        last_timeIndex = find(Time.history ~= 0, 1, 'last');
+        f = plotBulkConcOverTime(bulk_history(:, 1:last_timeIndex), Time.history(1:last_timeIndex), constants);
         saveas(f, bulk_conc_plot);
         fprintf('Created and saved.\n')
     else
