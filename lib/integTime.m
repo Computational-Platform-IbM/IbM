@@ -158,6 +158,28 @@ function integTime(simulation_file, directory)
             grid2nBacs(xRange, yRange), bac, diffusion_region(xRange, yRange, :), conc(xRange, yRange, :), constants, pH(xRange, yRange), chunks, nChunks_dir, settings);
         profiling(iProf, 3) = profiling(iProf, 3) + toc;
 
+        if mod(iDiffusion, constants.dynamicDT.nItersCycle) == 0 && ...
+                non_convergent(iDiffusion, iRES, RESvalues, Time, constants)
+            
+            [bulk_concs, invHRT] = calculate_bulk_concentrations(constants, bulk_concs, invHRT, reaction_matrix, Time.dT_bac - Time.current, settings);
+            conc = set_concentrations(conc, bulk_concs, ~diffusion_region);
+
+            % ----- DEBUG -----
+            plotConvergence(RESvalues, iRES, constants, Time.current)
+            plotNormDiff(norm_diff, iRES, constants, Time.current)
+            plotBacSimError(res_bacsim, iRES, constants, Time.current)
+            drawnow()
+            fprintf('max RES value at the moment: %.2f %%\n\n', max(RESvalues(:,iRES))*100)
+            % ----- END DEBUG -----
+            
+            % recompute reaction matrix
+            tic;
+            [reaction_matrix(xRange, yRange, :), bac.mu, pH(xRange, yRange)] = calculate_reaction_matrix(grid2bac(xRange, yRange, :), ...
+                grid2nBacs(xRange, yRange), bac, diffusion_region(xRange, yRange, :), conc(xRange, yRange, :), constants, pH(xRange, yRange), chunks, nChunks_dir, settings);
+            profiling(iProf, 3) = profiling(iProf, 3) + toc;
+        end
+        
+        
         % if T>T_ss: calculate residual
         if Time.current >= Time.steadystate
 
