@@ -12,8 +12,6 @@ from typing import Dict, List
 import collections
 
 # %%
-
-
 def HEX2RGBsplit(c):
     """Convert HEX code of colours to RGB, spliting in Red, Green and Blue values.
 
@@ -23,7 +21,7 @@ def HEX2RGBsplit(c):
     Returns:
         rC, gC, bC (float): Red, Gren and Blue values of RGB code, respectively
     """
-
+    
     rC, gC, bC = [0]*len(c), [0]*len(c), [0]*len(c)
     for cSet in range(len(c)):
         C = c[cSet]
@@ -31,9 +29,8 @@ def HEX2RGBsplit(c):
         rC[cSet] = RGB[0] / 255
         gC[cSet] = RGB[1] / 255
         bC[cSet] = RGB[2] / 255
-
+        
     return(rC, gC, bC)
-
 
 def muRatio(mu, s, inc):
     """Calculate ratio between mu[i] and max(mu[i,s]) for each bacterium [i] of specific specie [s].
@@ -41,10 +38,10 @@ def muRatio(mu, s, inc):
     Args:
         mu (float): actual mu values
         s (int): specie ID
-        inc(float): value to modify the darkening range of bacteria colour
+        inc(float): value to modify the transparency range of bacteria colour
 
     Returns:
-        muA (float): alpha values to represent the ratio of mu (with darkening)
+        muA (float): alpha values to represent the ratio of mu (with transparency)
     """
     mu_noneg = np.maximum(mu, 0.0)
     dct = {}
@@ -61,9 +58,8 @@ def muRatio(mu, s, inc):
         muA = np.ones(np.size(mu))
     else:
         muA = (np.array(muR) + inc) / (1 + inc)
-
+    
     return(muA)
-
 
 def save_plot(i: int, xlim: List[float], ylim: List[float], bac: Dict):
     """Create and save a figure of the bacteria at a certain point in time.
@@ -84,28 +80,29 @@ def save_plot(i: int, xlim: List[float], ylim: List[float], bac: Dict):
     s = bac['species'][0:nBacs, i]
     a = bac['active'][0:nBacs, i]
     mu = bac['mu'][0:nBacs, i]
-
+    
     # Calculus of mu/max(mu)
-    # Recommended: 1.0 - 2.0  (inc = 'NoAlpha' -> alpha = 1; inc = 0 -> alpha = mu/max_mu)
-    inc = 1
+    inc = 1 # Recommended: 1.0 - 2.0  (inc = 'NoAlpha' -> alpha = 1; inc = 0 -> alpha = mu/max_mu)
     muAlpha = muRatio(mu, s, inc)
 
     # Colours: HEX code
-    # c = ['#CC66FF', '#00B04F', '#FFA200', '#FF1482'] # Old colours
-    # Colourblind-friendly: ( https://www.color-hex.com/color-palette/49436 )
-    c = ['#0072B2', '#D55E00', '#F0E442', '#CC79A7']
-    rC, gC, bC = HEX2RGBsplit(c)  # HEX to RGB
-
+    # c = ['#00FFFF', '#5A8D03', '#FFE800', '#A233A2'] # FISH-like colours:
+    c = ['#0072B2', '#D55E00', '#F0E442', '#CC79A7'] # Colourblind-friendly: ( https://www.color-hex.com/color-palette/49436 )
+    rC, gC, bC = HEX2RGBsplit(c) # HEX to RGB
+    
     patches = [plt.Circle((x, y), radius) for x, y, radius in zip(x, y, r)]
+
+    plt.style.use('dark_background')
 
     fig, ax = plt.subplots()
 
     coll = matplotlib.collections.PatchCollection(patches)
+    # coll.set_facecolor(
+    #     [c[species-1] if active else '#555555' for species, active in zip(s, a)])
     coll.set_facecolor(
-        [(rC[species-1]*muA, gC[species-1]*muA, bC[species-1]*muA) if active else '#000000' for muA, species, active in zip(muAlpha, s, a)])
-    # coll.set_alpha([1.0 if active else 0.5 for active in a])
+        [(rC[species-1], gC[species-1], bC[species-1], muA) if active else '#555555' for muA, species, active in zip(muAlpha, s, a)])
     coll.set_edgecolor('k')
-    coll.set_linewidth(0.05)
+    # coll.set_linewidth(0.05)
     ax.add_collection(coll)
 
     plt.xlim(xlim * 1e6)
@@ -114,19 +111,16 @@ def save_plot(i: int, xlim: List[float], ylim: List[float], bac: Dict):
     plt.ylabel('Position along y-axis [μm]')
     ax.set_aspect(1/ax.get_data_ratio(), adjustable='box')
     # plt.margins(0.01)
-
+    
     # Legend
-    L1 = Line2D([0], [0], linestyle="none", marker="o",
-                markersize=10, markerfacecolor=c[0], markeredgecolor=c[0])
-    L2 = Line2D([0], [0], linestyle="none", marker="o",
-                markersize=10, markerfacecolor=c[1], markeredgecolor=c[1])
-    L3 = Line2D([0], [0], linestyle="none", marker="o",
-                markersize=10, markerfacecolor=c[2], markeredgecolor=c[2])
+    L1 = Line2D([0], [0], linestyle="none", marker="o", markersize=10, markerfacecolor=c[0], markeredgecolor=c[0])
+    L2 = Line2D([0], [0], linestyle="none", marker="o", markersize=10, markerfacecolor=c[1], markeredgecolor=c[1])
+    L3 = Line2D([0], [0], linestyle="none", marker="o", markersize=10, markerfacecolor=c[2], markeredgecolor=c[2])
     # L4 = Line2D([0], [0], linestyle="none", marker="o", markersize=10, markerfacecolor=c[3], markeredgecolor=c[3])
-
-    plt.legend((L1, L2, L3), ('B1', 'B2', 'B3'), numpoints=1,
-               loc="best", frameon=False)  # Structures
+    
+    plt.legend((L1,L2,L3), ('B1', 'B2', 'B3'), numpoints=1, loc="best", frameon=False) # Structures
     # plt.legend((L1,L2,L3,L4), ('AOB', 'Nitrobacter', 'Nitrospira', 'AMX'), numpoints=1, loc="upper left", frameon=False) # AOB/NOB/AMX
+
 
     filename = f'{directory}/{i}.png'
     plt.savefig(filename)
@@ -172,7 +166,7 @@ def generate_gif(args: Dict):
             filenames.append(save_plot(i, xlim, ylim, bac))
 
     # build gif
-    with imageio.get_writer(f'{directory}/bacteria.gif', mode='I', fps=4) as writer:
+    with imageio.get_writer(f'{directory}/bacteriaFISH.gif', mode='I', fps=4) as writer:
         for filename in tqdm(filenames, desc='Gif'):
             image = imageio.imread(filename)
             writer.append_data(image)

@@ -41,9 +41,9 @@ function f = plotBacs(g, bac, constants, Time)
     ax.YRuler.MinorTickValues = yt; %just like major ticks
     ax.YRuler.MinorTickValuesMode = 'manual'; %or 'manual'
     
-    grid on;
-    ax.XMinorGrid = 'on';
-    ax.YMinorGrid = 'on';
+    grid off;
+    ax.XMinorGrid = 'off';
+    ax.YMinorGrid = 'off';
     
     % add dummy scatters to make legend 
     hold on;

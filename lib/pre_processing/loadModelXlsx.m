@@ -8,6 +8,31 @@ R = []; % R initialization
 fprintf('> LOADING AND CREATING MODEL STRUCTURE AND PARAMETERS...\n')
 
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% SIMULATION INFORMATION
+[~, Info]   = xlsread(filename, strcat('Information'));
+R.info.simname = string(Info(2,1));
+siminfo = [];
+for i = 2:size(Info(:,2),1)
+    siminfo = [siminfo '<br>' Info(i,2)]; %#ok<AGROW>
+end
+R.info.siminfo = strjoin(string(siminfo));
+R.info.simgoal = string(Info(2,3));
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% SIMULATION SETTINGS
+[SetParam, SetNames] = xlsread(filename, strcat('Settings'));
+
+R.settings.structure_model = logical(SetParam(1));
+if R.settings.structure_model
+    R.settings.type = string(SetNames(2,2)); % {'Neut': Neutralism, 'Comp': Competition, 'Comm': Commensalism, 'Copr': Co-protection}
+else
+    R.settings.type = 'ND'; % {'ND': Not-defined}
+end
+R.settings.constantpH = logical(SetParam(3));
+R.settings.pHincluded = logical(SetParam(4));
+R.settings.inactivationBac = logical(SetParam(5));
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % General parameters of the simulation (Temperature, pH, ...)
 [OperatParam, pOpNames]   = xlsread(filename, strcat('Parameters'));
 aux = '';
@@ -23,6 +48,8 @@ eval(strcat('pOp = struct(', char(aux), ');'));
 pOp.Vgas = pOp.Vgas*1000; %#ok<NODEF> %L
 pOp.Vr = pOp.Vr*1000; %L
 pOp.invHRT = 1/pOp.HRT;
+R.flagN = pOp.varHRT;
+    
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % STATE VARIABLES Structure and initial values
 [States, StNames] = xlsread(filename, strcat('States'));
@@ -30,8 +57,13 @@ St.StV = States(:,1);
 St.Phase = StNames(:,end);
 St.StNames = StNames(:,1);
 St.StVLiq = St.StV(1:(find(strcmp(St.Phase,'S'),1)-1));
-St.StVLiq2 = St.StV(1:(find(strcmp(St.Phase,'G'),1)-1));
-St.StVLiq3 = St.StV(1:(find(strcmp(St.Phase,'P'),1)-1));
+if R.settings.structure_model
+    St.StVLiq2 = St.StVLiq;
+    St.StVLiq3 = St.StVLiq;
+else
+    St.StVLiq2 = St.StV(1:(find(strcmp(St.Phase,'G'),1)-1));
+    St.StVLiq3 = St.StV(1:(find(strcmp(St.Phase,'P'),1)-1));
+end
 St.StVIni = St.StVLiq;
 St.StVX = St.StV(find(strcmp(St.Phase,'S'),1):end);
 St.numX = length(St.StVX);
@@ -50,34 +82,43 @@ end
 St.Liq2Gas = Liq2Gas;
 
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Parameters of the microbial species (qmax, Ks, Yield)
-[SpecParam, SpecNames] = xlsread(filename, strcat('SpecParam'));
+% Parameters of the microbial species (OLD)
+% [SpecParam, SpecNames] = xlsread(filename, strcat('SpecParam'));
 
 % aux = strcmp('mu_max',SpecNames(1,2:end));
 % pTh.mu_max = SpecParam((isfinite(SpecParam(:,aux))),aux);
 
-aux = strcmp('Ks_NH3',SpecNames(1,2:end));
-Ks_NH3 = SpecParam((isfinite(SpecParam(:,aux))),aux);
+% aux = strcmp('Ks_NH3',SpecNames(1,2:end));
+% Ks_NH3 = SpecParam((isfinite(SpecParam(:,aux))),aux);
+% 
+% aux = strcmp('Ks_NO2',SpecNames(1,2:end));
+% Ks_NO2 = SpecParam((isfinite(SpecParam(:,aux))),aux);
+% 
+% aux = strcmp('Ks_O2',SpecNames(1,2:end));
+% Ks_O2 = SpecParam((isfinite(SpecParam(:,aux))),aux);
+% 
+% aux = strcmp('Ki_NH3',SpecNames(1,2:end));
+% Ki_NH3 = SpecParam((isfinite(SpecParam(:,aux))),aux);
+% 
+% aux = strcmp('Ki_HNO2',SpecNames(1,2:end));
+% Ki_HNO2 = SpecParam((isfinite(SpecParam(:,aux))),aux);
+% 
+% aux = strcmp('Ki_O2',SpecNames(1,2:end));
+% Ki_O2 = SpecParam((isfinite(SpecParam(:,aux))),aux);
 
-aux = strcmp('Ks_NO2',SpecNames(1,2:end));
-Ks_NO2 = SpecParam((isfinite(SpecParam(:,aux))),aux);
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Parameters of the microbial species (NEW)
+% (Ks)
+Ks = xlsread(filename, strcat('Ks'));
+pTh.Ks = Ks;
 
-aux = strcmp('Ks_O2',SpecNames(1,2:end));
-Ks_O2 = SpecParam((isfinite(SpecParam(:,aux))),aux);
+% (Ki)
+Ki = xlsread(filename, strcat('Ki'));
+pTh.Ki = Ki;
 
-aux = strcmp('Ki_NH3',SpecNames(1,2:end));
-Ki_NH3 = SpecParam((isfinite(SpecParam(:,aux))),aux);
-
-aux = strcmp('Ki_HNO2',SpecNames(1,2:end));
-Ki_HNO2 = SpecParam((isfinite(SpecParam(:,aux))),aux);
-
-aux = strcmp('Ki_O2',SpecNames(1,2:end));
-Ki_O2 = SpecParam((isfinite(SpecParam(:,aux))),aux);
-
-pTh.Ks = [Ks_NH3, Ks_NO2, Ks_O2, Ki_NH3, Ki_HNO2, Ki_O2];
-
-aux = strcmp('Yield',SpecNames(1,2:end));
-pTh.Y = SpecParam((isfinite(SpecParam(:,aux))),aux);
+% (Yield)
+[Y, Y_str] = xlsread(filename, strcat('Yield'));
+pTh.Y = Y;
 
 % aux = strcmp('DGdis',SpecNames(1,2:end));
 % pTh.DGdis = SpecParam((isfinite(SpecParam(:,aux))),aux);
@@ -112,8 +153,7 @@ for k = 1:St.numX
 end
 
 rm.MatrixDecay_mod = MatrixDecay_mod;
-
-eD = SpecNames(2:end,end);
+eD = Y_str(2:end,end);
 lCat_eD = zeros(St.numX,1);
 for i=1:St.numX
     lCat_eD(i) = -MatrixAn_mod(strcmp(rm.rNamesS, eD(i,:)), i);
@@ -169,7 +209,7 @@ pTh.Kh = 0;
 
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Parameters of the IbModel (maximum cell's weight, parameters for shoving...)
-[BacteriaParam, BacteriaNames]   = xlsread(filename, strcat('Bacteria'));
+[BacteriaParam, BacteriaNames] = xlsread(filename, strcat('Bacteria'));
 aux = '';
 for i=1:length(BacteriaParam)
     % Building the string command for the structure, last without ', '
@@ -346,26 +386,26 @@ R.bac = bac;
 R.Sxy = Sxy;
 R.kTr = kTr;
 
-
 R.flagGas = 1;
 
 R.flagDG = 1;
+assignin('base', 'R', R) % Writing R in the Workspace
+% clear x prompt
+fprintf('> ... MODEL STRUCTURE AND PARAMETERS LOADED.')
+fprintf('\n------------ooo\n')
 
-fprintf('\n>>>>>>>>>>>>>>>>>>>>>>> VERSION WITH pH VARIABLE >>>>>>>>>>>>>>>>>>>>>>>>>>\n\n')
-
-prompt = '>> Do you want to keep the NH3 fixed (variable HRT)? (default [Y]) [Y = 1/N = 2]\n>> Answer: ';
-x = input(prompt);
-if isempty(x)
-    x = 1;
+%{
+if isempty(constantSP)
+    constantSP = 1;
 end
-if x == 1
+if constantSP == 1
     fprintf('--> YES\n')
     %         if R.Inf.St(1) ==  R.St.StVIni(1)
     %             error('NH3 influent = NH3 initial - Change the NH3 influent!')
     %         end
 else
     fprintf('--> NO\n')
-    x = 2;
+    constantSP = 2;
     if ne(R.Inf.St(1),  R.St.StVIni(1))
         prompt = '>> NH3 influent is different than NH3 initial. Do you want to continue? (default [Y]) [Y = 1/N = 2]\n>> Answer: ';
         y = input(prompt);
@@ -381,22 +421,20 @@ else
     end
     
 end
-R.flagN = x;
-assignin('base', 'R', R) % Writing R in the Workspace
-clear x prompt
+R.flagN = constantSP;
 
-fprintf('> ... MODEL STRUCTURE AND PARAMETERS LOADED.')
-fprintf('\n------------ooo\n')
-VN = Sxy.dT*kTr.Diffn/(Sxy.dx*Sxy.dy);
-for i =1:St.numStVLiq2
-    fprintf('Von Neumann coefficient of stability for %s: %.2e\n', char(St.StNames(i)),VN(i))
-end
-fprintf('>>> If Von Neumann coefficient larger than 0.5, consider Backward Euler instead of Crank-Nicolson')
-fprintf('\n------------ooo\n')
-for i = 1:(R.St.numX)
-    fprintf('Number of cells of type %d Name %s : %d\n', i,char(R.rm.rNamesX(i)),R.bac.bac_ns(i))
-end
-fprintf('>>> INITIAL TOTAL Number of cells: %d', R.bac.bac_n)
-fprintf('\n------------ooo\n')
-fprintf('\n>>> Push any key to start the simulation...\n')
-pause()
+
+% VN = Sxy.dT*kTr.Diffn/(Sxy.dx*Sxy.dy);
+% for i =1:St.numStVLiq2
+%     fprintf('Von Neumann coefficient of stability for %s: %.2e\n', char(St.StNames(i)),VN(i))
+% end
+% fprintf('>>> If Von Neumann coefficient larger than 0.5, consider Backward Euler instead of Crank-Nicolson')
+% fprintf('\n------------ooo\n')
+% for i = 1:(R.St.numX)
+%     fprintf('Number of cells of type %d Name %s : %d\n', i,char(R.rm.rNamesX(i)),R.bac.bac_ns(i))
+% end
+% fprintf('>>> INITIAL TOTAL Number of cells: %d', R.bac.bac_n)
+% fprintf('\n------------ooo\n')
+% fprintf('\n>>> Push any key to start the simulation...\n')
+% pause()
+%}

@@ -126,7 +126,6 @@ function integTime(simulation_file, directory)
         end
         profiling(iProf, 3) = profiling(iProf, 3) + toc;
 
-
         % if T>T_ss: calculate residual
         if Time.current >= Time.steadystate
             
