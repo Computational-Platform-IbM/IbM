@@ -34,8 +34,10 @@ function IbM(simulation_number)
     addpath(genpath('lib')); % make every subfolder with functions accessible to the code
     
     %% enable/disable debug disp/warning
+    warning('on', 'verbose')
     warning('off', 'DEBUG:noActionRequired');
     warning('on', 'DEBUG:actionRequired');
+    warning('error', 'MATLAB:ode45:IntegrationTolNotMet')
     
     
     %% ========== Time advancements ==========

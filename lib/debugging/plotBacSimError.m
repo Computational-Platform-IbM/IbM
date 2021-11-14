@@ -14,6 +14,7 @@ function plotBacSimError(res_bacsim, iRES, constants, Time)
     ylim([0, 100])
     legend('bacsim res', 'norm/dT');
     xlabel('diffusion iteration');
+    xlim([0, inf]);
     
 %     set(gca, 'YScale', 'log')
     title(sprintf('[mol/h] residuals at t=%.1f', Time))
