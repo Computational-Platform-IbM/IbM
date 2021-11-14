@@ -26,7 +26,6 @@ function [reaction_matrix, mu, pH] = calculate_reaction_matrix(grid2bac, grid2nB
     end
     
     % init
-    T = constants.T;
     Keq = constants.Keq;
     chrM = constants.chrM;
     Vg = constants.Vg;
@@ -48,9 +47,6 @@ function [reaction_matrix, mu, pH] = calculate_reaction_matrix(grid2bac, grid2nB
         iO2 = find(strcmp(compounds, 'O2'));
     end
     
-    reaction_matrix = zeros(size(conc));
-    mu = zeros(size(bac.x));
-    
     % pre-compute for bulk-liquid (at 1,1 there should never be diffusion
     % layer)
     Sh_bulk = 10^-pH(1, 1);
@@ -62,74 +58,21 @@ function [reaction_matrix, mu, pH] = calculate_reaction_matrix(grid2bac, grid2nB
         pH_bulk = pH(1, 1);
     end
     
-    % for each gridcell
-    for ix = 1:size(conc, 1) % parfor?
-        for iy = 1:size(conc, 2)
-            if ~diffRegion(ix, iy) % bulk layer
-                pH(ix, iy) = pH_bulk;
-                
-            else % in diffusion layer, thus pH calculation needs to be performed
-                % calculate pH & speciation
-                if pHincluded
-                    Sh_old = 10^-pH(ix, iy);
-                    [spcM, Sh] = solve_pH(Sh_old, [reshape(conc(ix,iy,:), [], 1, 1); 1; 0], Keq, chrM, constants.constantpH, constants.pHtolerance); % <C: why [...; 1; 0]? />
-                    pH(ix, iy) = -log10(Sh);
-                else
-                    pH(ix, iy) = pH_bulk;
-                    Sh = 10^-pH(ix, iy);
-                    spcM = reshape(conc(ix,iy,:), [], 1, 1);
-                end
-                
-                if grid2nBacs(ix, iy)
-                    % get bacteria in this grid cell
-                    iBacs = reshape(grid2bac(ix, iy, 1:grid2nBacs(ix, iy)), [], 1); % n-by-1 vector of bacterial indices
-
-                    speciesGrid = bac.species(iBacs);
-                    unique_species = unique(speciesGrid); % which species
-                    for i = 1:length(unique_species)
-                        curr_species = unique_species(i);
-
-                        % update mu_max per species based on pH
-                        [mu_max, maint] = determine_max_growth_rate_and_maint(curr_species, T, Sh, structure_model);
-
-                        % get reactive concentrations for soluble components
-                        if structure_model
-                            if pHincluded
-                                reactive_conc = [spcM(iA, reactive_form(iA)), ...
-                                    spcM(iB, reactive_form(iB)), ...
-                                    spcM(iC, reactive_form(iC)), ...
-                                    spcM(iO2, reactive_form(iO2))];
-                            else
-                                reactive_conc = [spcM(iA), ...
-                                                spcM(iB), ...
-                                                spcM(iC), ...
-                                                spcM(iO2)];  
-                            end
-                        else
-                            reactive_conc = [spcM(iNH3, reactive_form(iNH3)), ...
-                                spcM(iNO2, reactive_form(iNO2)), ...
-                                spcM(iO2, reactive_form(iO2))];
-                        end
-
-                        % set mu for all bacteria of same species in that gridcell
-                        M = calculate_monod(Ks(curr_species,:), Ki(curr_species, :), reactive_conc);                        % [DN]
-                        mu_noMaintenance = mu_max * M;                                                                      % [1/h]
-                        mu_withMaintenance = mu_noMaintenance - maint;                                                      % [1/h]
-                        mu(iBacs(speciesGrid == curr_species)) = mu_withMaintenance;                                        % [1/h]
-
-                        % update reaction_matrix element for this grid cell
-                        concentrationChange = mMetabolism(:, curr_species) * mu_noMaintenance;                              % [molS/molX/h]
-                        if mu_withMaintenance < 0
-                            concentrationChange = concentrationChange - mDecay(:, curr_species) * mu_withMaintenance;       % [molS/molX/h]
-                        end
-                        concentrationChange = concentrationChange * sum(bac.molarMass(iBacs(speciesGrid == curr_species))); % [molS/h]
-
-                        reaction_matrix(ix, iy, :) = reaction_matrix(ix, iy, :) + reshape(concentrationChange, 1,1,[]);     % [molS/h]
-                    end
-                end
-            end
-        end
+    % prep for call to rMatrix_chunk
+    grouped_bac = [bac.species, bac.molarMass];
+    bacOffset = 0;
+    
+    if structure_model
+        constantValues = [pH_bulk, constants.constantpH, constants.pHtolerance, constants.T, iA, iB, iC, iO2];
+    else
+        constantValues = [pH_bulk, constants.constantpH, constants.pHtolerance, constants.T, iNH3, iNO2, iO2];
     end
+    
+    % calculate by using just one chunk
+    [reaction_matrix, mu, pH] = ...
+            rMatrix_chunk(pH, conc, grid2bac, grid2nBacs, diffRegion, ...
+            grouped_bac, length(bac.x), bacOffset, ...
+            reactive_form, Ks, Ki, Keq, chrM, mMetabolism, mDecay, constantValues, structure_model, pHincluded);
     
     reaction_matrix = reaction_matrix / Vg;                                                                                 % [molS/L/h]
 
