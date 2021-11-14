@@ -21,6 +21,7 @@ function [reaction_matrix, mu, pH_new] = rMatrix_chunk(pH, conc, grid2bac, grid2
 
     bac_species = grouped_bac(:,1);
     bac_molarMass = grouped_bac(:,2);
+    bac_active = grouped_bac(:,3);
 
     mu = zeros(nBacs, 1);
     reaction_matrix = zeros(size(conc));
@@ -84,12 +85,15 @@ function [reaction_matrix, mu, pH_new] = rMatrix_chunk(pH, conc, grid2bac, grid2
                         mu_withMaintenance = mu_noMaintenance - maint;                                                      % [1/h]
                         mu(iBacs(speciesGrid == curr_species)) = mu_withMaintenance;                                        % [1/h]
 
+                        % calculate cumulative mass of active bacteria
+                        cumulative_mass = sum(bac_molarMass(iBacs(speciesGrid == curr_species)) .* bac_active(iBacs(speciesGrid == curr_species)));
+                        
                         % update reaction_matrix element for this grid cell
                         concentrationChange = mMetabolism(:, curr_species) * mu_noMaintenance;                              % [molS/molX/h]
                         if mu_withMaintenance < 0
                             concentrationChange = concentrationChange - mDecay(:, curr_species) * mu_withMaintenance;       % [molS/molX/h]
                         end
-                        concentrationChange = concentrationChange * sum(bac_molarMass(iBacs(speciesGrid == curr_species))); % [molS/h]
+                        concentrationChange = concentrationChange * cumulative_mass; % [molS/h]
 
                         reaction_matrix(ix, iy, :) = reaction_matrix(ix, iy, :) + reshape(concentrationChange, 1,1,[]);     % [molS/h]
                     end
