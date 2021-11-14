@@ -159,7 +159,7 @@ function integTime(simulation_file, directory)
         profiling(iProf, 3) = profiling(iProf, 3) + toc;
 
         if mod(iDiffusion, constants.dynamicDT.nItersCycle) == 0 && ...
-                non_convergent(iDiffusion, iRES, RESvalues, Time, constants)
+                non_convergent(iRES, RESvalues, constants)
             
             [bulk_concs, invHRT] = calculate_bulk_concentrations(constants, bulk_concs, invHRT, reaction_matrix, Time.dT_bac - Time.current, settings);
             conc = set_concentrations(conc, bulk_concs, ~diffusion_region);
@@ -200,7 +200,7 @@ function integTime(simulation_file, directory)
             if settings.dynamicDT
                 if upward_trend(iDiffusion, iRES, RESvalues, constants)
                     Time = decrease_dT_diffusion(Time, 'Upward trend in RES values detected', grid.dx, constants);
-                elseif non_convergent(iDiffusion, iRES, RESvalues, Time, constants)
+                elseif non_convergent_diffusion(iDiffusion, iRES, RESvalues, Time, constants)
                     Time = decrease_dT_diffusion(Time, sprintf('Diffusion takes longer than %d diffusion iterations', constants.dynamicDT.iterThresholdDecrease), grid.dx, constants);
                 end
             end
