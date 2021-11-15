@@ -1,7 +1,7 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [Unreleased]
+## [2.3.0] - 2021-11-15
 ### Added
 - Dynamic dT for diffusion
 - Dynamic dT_bac for timestepping
@@ -11,13 +11,12 @@ All notable changes to this project will be documented in this file.
 - kDist constant implementation to shoving algorithm
 - New setting: structure model and types (Neutralism, competition, commensalism, co-protection)
 - New setting: consideration of pH or not
+- Documentation for dynamic dT
 ### Changed
 - Calculus of "correction_concentration_steady_state" based on chosen TolAbs by user
 - Independent scripts for mu_max/decay and Monod terms calculus
 - All reaction matrix calculations are now in one function, which changes behaviour based on settings.parallelized
 - Only structure_model: HRT is recalculated when bulk_conc is higher or lower than setpoint
-### Removed
-### Fixed
 
 
 ## [2.2.0] - 2021-10-20
@@ -95,7 +94,8 @@ Direct import of code from RGC with minor bug fixes.
 
 
 
-[Unreleased]: https://github.com/Computational-Platform-IbM/IbM/compare/v2.2.0...development
+[Unreleased]: https://github.com/Computational-Platform-IbM/IbM/compare/v2.3.0...development
+[2.3.0]: https://github.com/Computational-Platform-IbM/IbM/compare/v2.2.0...v2.3.0
 [2.2.0]: https://github.com/Computational-Platform-IbM/IbM/compare/v2.1.0...v2.2.0
 [2.1.0]: https://github.com/Computational-Platform-IbM/IbM/compare/v2.0.0...v2.1.0
 [2.0.0]: https://github.com/Computational-Platform-IbM/IbM/releases/tag/v2.0.0
