@@ -1,5 +1,149 @@
-| Simulation number | Parameter description                         | Goal                                                     | Finished?         |
-|-------------------|-----------------------------------------------|----------------------------------------------------------|-------------------|
-| 0001              | Base case with 5000 starting bacteria         | Testing                                                  | [x] (until 300h)  |
-| 0002              | copy of 0001, but with dT_bac & dT_div = 0.5h | Getting rid of non-convergence at later simulation hours | [x] (until 1415h) |
-| 0003              | copy of 0002                                  |                                                          |                   |
+Please edit using https://www.tablesgenerator.com/markdown_tables.
+
+For the finished column, please use :white_check_mark: (`:white_check_mark:`) when finished and :clock1: (`:clock1:`) when running. When not started yet, leave empty.
+
+
+
+| Simulation number | Simulation description                 | Goal                                            | Finished? | Version             |
+|-------------------|----------------------------------------|-------------------------------------------------|-----------|---------------------|
+| 0001              | Base case with 500 starting bacteria   | Comparing number of starting bacteria on result | :clock1:  | v2.2.0 + dynamic dT |
+| 0002              | Base case with 5000 starting bacteria  | Comparing number of starting bacteria on result | :clock1:  | v2.2.0 + dynamic dT |
+| 0003              | Base case with 50000 starting bacteria | Comparing number of starting bacteria on result | :clock1:  | v2.2.0 + dynamic dT |
+| 0004              | <b>Anaerobic-Neutralism</b> (Run 1)<br>[A]=[B]=[C]=1/3mM<br>[O<sub>2</sub>]=0mg/L         |"Stratifying game" project| | v2.3.0  |
+| 0005              | <b>Anaerobic-Neutralism</b> (Run 2)<br>[A]=[B]=[C]=1/3mM<br>[O<sub>2</sub>]=0mg/L         |"Stratifying game" project| | v2.3.0  |
+| 0006              | <b>Anaerobic-Neutralism</b> (Run 3)<br>[A]=[B]=[C]=1/3mM<br>[O<sub>2</sub>]=0mg/L         |"Stratifying game" project| | v2.3.0  |
+| 0007              | <b>Anaerobic-Neutralism</b> (Run 1)<br>[A]=[B]=[C]=0.5/3mM<br>[O<sub>2</sub>]=0mg/L       |"Stratifying game" project| | v2.3.0  |
+| 0008              | <b>Anaerobic-Neutralism</b> (Run 2)<br>[A]=[B]=[C]=0.5/3mM<br>[O<sub>2</sub>]=0mg/L       |"Stratifying game" project| | v2.3.0  |
+| 0009              | <b>Anaerobic-Neutralism</b> (Run 3)<br>[A]=[B]=[C]=0.5/3mM<br>[O<sub>2</sub>]=0mg/L       |"Stratifying game" project| | v2.3.0  |
+| 0010              | <b>Anaerobic-Neutralism</b> (Run 1)<br>[A]=[B]=[C]=0.1/3mM<br>[O<sub>2</sub>]=0mg/L       |"Stratifying game" project| | v2.3.0  |
+| 0011              | <b>Anaerobic-Neutralism</b> (Run 2)<br>[A]=[B]=[C]=0.1/3mM<br>[O<sub>2</sub>]=0mg/L       |"Stratifying game" project| | v2.3.0  |
+| 0012              | <b>Anaerobic-Neutralism</b> (Run 3)<br>[A]=[B]=[C]=0.1/3mM<br>[O<sub>2</sub>]=0mg/L       |"Stratifying game" project| | v2.3.0  |
+| 0013              | <b>Anaerobic-Competition</b> (Run 1)<br>[A]=1mM<br>[O<sub>2</sub>]=0mg/L                  |"Stratifying game" project| | v2.3.0  |
+| 0014              | <b>Anaerobic-Competition</b> (Run 2)<br>[A]=1mM<br>[O<sub>2</sub>]=0mg/L                  |"Stratifying game" project| | v2.3.0  |
+| 0015              | <b>Anaerobic-Competition</b> (Run 3)<br>[A]=1mM<br>[O<sub>2</sub>]=0mg/L                  |"Stratifying game" project| | v2.3.0  |
+| 0016              | <b>Anaerobic-Competition</b> (Run 1)<br>[A]=0.5mM<br>[O<sub>2</sub>]=0mg/L                |"Stratifying game" project| | v2.3.0  |
+| 0017              | <b>Anaerobic-Competition</b> (Run 2)<br>[A]=0.5mM<br>[O<sub>2</sub>]=0mg/L                |"Stratifying game" project| | v2.3.0  |
+| 0018              | <b>Anaerobic-Competition</b> (Run 3)<br>[A]=0.5mM<br>[O<sub>2</sub>]=0mg/L                |"Stratifying game" project| | v2.3.0  |
+| 0019              | <b>Anaerobic-Competition</b> (Run 1)<br>[A]=0.1mM<br>[O<sub>2</sub>]=0mg/L                |"Stratifying game" project| | v2.3.0  |
+| 0020              | <b>Anaerobic-Competition</b> (Run 2)<br>[A]=0.1mM<br>[O<sub>2</sub>]=0mg/L                |"Stratifying game" project| | v2.3.0  |
+| 0021              | <b>Anaerobic-Competition</b> (Run 3)<br>[A]=0.1mM<br>[O<sub>2</sub>]=0mg/L                |"Stratifying game" project| | v2.3.0  |
+| 0022              | <b>Anaerobic-Competition</b> (Run 1)<br>[A]=0.05mM<br>[O<sub>2</sub>]=0mg/L               |"Stratifying game" project| | v2.3.0  |
+| 0023              | <b>Anaerobic-Competition</b> (Run 2)<br>[A]=0.05mM<br>[O<sub>2</sub>]=0mg/L               |"Stratifying game" project| | v2.3.0  |
+| 0024              | <b>Anaerobic-Competition</b> (Run 3)<br>[A]=0.05mM<br>[O<sub>2</sub>]=0mg/L               |"Stratifying game" project| | v2.3.0  |
+| 0025              | <b>Anaerobic-Commensalism</b> (Run 1)<br>[A]=1mM<br>[O<sub>2</sub>]=0mg/L                 |"Stratifying game" project| | v2.3.0  |
+| 0026              | <b>Anaerobic-Commensalism</b> (Run 2)<br>[A]=1mM<br>[O<sub>2</sub>]=0mg/L                 |"Stratifying game" project| | v2.3.0  |
+| 0027              | <b>Anaerobic-Commensalism</b> (Run 3)<br>[A]=1mM<br>[O<sub>2</sub>]=0mg/L                 |"Stratifying game" project| | v2.3.0  |
+| 0028              | <b>Anaerobic-Commensalism</b> (Run 1)<br>[A]=0.5mM<br>[O<sub>2</sub>]=0mg/L               |"Stratifying game" project| | v2.3.0  |
+| 0029              | <b>Anaerobic-Commensalism</b> (Run 2)<br>[A]=0.5mM<br>[O<sub>2</sub>]=0mg/L               |"Stratifying game" project| | v2.3.0  |
+| 0030              | <b>Anaerobic-Commensalism</b> (Run 3)<br>[A]=0.5mM<br>[O<sub>2</sub>]=0mg/L               |"Stratifying game" project| | v2.3.0  |
+| 0031              | <b>Anaerobic-Commensalism</b> (Run 1)<br>[A]=0.1mM<br>[O<sub>2</sub>]=0mg/L               |"Stratifying game" project| | v2.3.0  |
+| 0032              | <b>Anaerobic-Commensalism</b> (Run 2)<br>[A]=0.1mM<br>[O<sub>2</sub>]=0mg/L               |"Stratifying game" project| | v2.3.0  |
+| 0033              | <b>Anaerobic-Commensalism</b> (Run 3)<br>[A]=0.1mM<br>[O<sub>2</sub>]=0mg/L               |"Stratifying game" project| | v2.3.0  |
+| 0034              | <b>Anaerobic-Commensalism</b> (Run 1)<br>[A]=0.05mM<br>[O<sub>2</sub>]=0mg/L              |"Stratifying game" project| | v2.3.0  |
+| 0035              | <b>Anaerobic-Commensalism</b> (Run 2)<br>[A]=0.05mM<br>[O<sub>2</sub>]=0mg/L              |"Stratifying game" project| | v2.3.0  |
+| 0036              | <b>Anaerobic-Commensalism</b> (Run 3)<br>[A]=0.05mM<br>[O<sub>2</sub>]=0mg/L              |"Stratifying game" project| | v2.3.0  |
+| 0037              | <b>Anaerobic-Coprotection</b> (Run 1)<br>[A]=1mM<br>[O<sub>2</sub>]=0mg/L<br>Ki=5mM       |"Stratifying game" project| | v2.3.0  |
+| 0038              | <b>Anaerobic-Coprotection</b> (Run 2)<br>[A]=1mM<br>[O<sub>2</sub>]=0mg/L<br>Ki=5mM       |"Stratifying game" project| | v2.3.0  |
+| 0039              | <b>Anaerobic-Coprotection</b> (Run 3)<br>[A]=1mM<br>[O<sub>2</sub>]=0mg/L<br>Ki=5mM       |"Stratifying game" project| | v2.3.0  |
+| 0040              | <b>Anaerobic-Coprotection</b> (Run 1)<br>[A]=0.5mM<br>[O<sub>2</sub>]=0mg/L<br>Ki=5mM     |"Stratifying game" project| | v2.3.0  |
+| 0041              | <b>Anaerobic-Coprotection</b> (Run 2)<br>[A]=0.5mM<br>[O<sub>2</sub>]=0mg/L<br>Ki=5mM     |"Stratifying game" project| | v2.3.0  |
+| 0042              | <b>Anaerobic-Coprotection</b> (Run 3)<br>[A]=0.5mM<br>[O<sub>2</sub>]=0mg/L<br>Ki=5mM     |"Stratifying game" project| | v2.3.0  |
+| 0043              | <b>Anaerobic-Coprotection</b> (Run 1)<br>[A]=0.1mM<br>[O<sub>2</sub>]=0mg/L<br>Ki=5mM     |"Stratifying game" project| | v2.3.0  |
+| 0044              | <b>Anaerobic-Coprotection</b> (Run 2)<br>[A]=0.1mM<br>[O<sub>2</sub>]=0mg/L<br>Ki=5mM     |"Stratifying game" project| | v2.3.0  |
+| 0045              | <b>Anaerobic-Coprotection</b> (Run 3)<br>[A]=0.1mM<br>[O<sub>2</sub>]=0mg/L<br>Ki=5mM     |"Stratifying game" project| | v2.3.0  |
+| 0046              | <b>Anaerobic-Coprotection</b> (Run 1)<br>[A]=0.05mM<br>[O<sub>2</sub>]=0mg/L<br>Ki=5mM    |"Stratifying game" project| | v2.3.0  |
+| 0047              | <b>Anaerobic-Coprotection</b> (Run 2)<br>[A]=0.05mM<br>[O<sub>2</sub>]=0mg/L<br>Ki=5mM    |"Stratifying game" project| | v2.3.0  |
+| 0048              | <b>Anaerobic-Coprotection</b> (Run 3)<br>[A]=0.05mM<br>[O<sub>2</sub>]=0mg/L<br>Ki=5mM    |"Stratifying game" project| | v2.3.0  |
+| 0049              | <b>Anaerobic-Coprotection</b> (Run 1)<br>[A]=1mM<br>[O<sub>2</sub>]=0mg/L<br>Ki=2mM       |"Stratifying game" project| | v2.3.0  |
+| 0050              | <b>Anaerobic-Coprotection</b> (Run 2)<br>[A]=1mM<br>[O<sub>2</sub>]=0mg/L<br>Ki=2mM       |"Stratifying game" project| | v2.3.0  |
+| 0051              | <b>Anaerobic-Coprotection</b> (Run 3)<br>[A]=1mM<br>[O<sub>2</sub>]=0mg/L<br>Ki=2mM       |"Stratifying game" project| | v2.3.0  |
+| 0052              | <b>Anaerobic-Coprotection</b> (Run 1)<br>[A]=0.5mM<br>[O<sub>2</sub>]=0mg/L<br>Ki=2mM     |"Stratifying game" project| | v2.3.0  |
+| 0053              | <b>Anaerobic-Coprotection</b> (Run 2)<br>[A]=0.5mM<br>[O<sub>2</sub>]=0mg/L<br>Ki=2mM     |"Stratifying game" project| | v2.3.0  |
+| 0054              | <b>Anaerobic-Coprotection</b> (Run 3)<br>[A]=0.5mM<br>[O<sub>2</sub>]=0mg/L<br>Ki=2mM     |"Stratifying game" project| | v2.3.0  |
+| 0055              | <b>Anaerobic-Coprotection</b> (Run 1)<br>[A]=0.1mM<br>[O<sub>2</sub>]=0mg/L<br>Ki=2mM     |"Stratifying game" project| | v2.3.0  |
+| 0056              | <b>Anaerobic-Coprotection</b> (Run 2)<br>[A]=0.1mM<br>[O<sub>2</sub>]=0mg/L<br>Ki=2mM     |"Stratifying game" project| | v2.3.0  |
+| 0057              | <b>Anaerobic-Coprotection</b> (Run 3)<br>[A]=0.1mM<br>[O<sub>2</sub>]=0mg/L<br>Ki=2mM     |"Stratifying game" project| | v2.3.0  |
+| 0058              | <b>Anaerobic-Coprotection</b> (Run 1)<br>[A]=0.05mM<br>[O<sub>2</sub>]=0mg/L<br>Ki=2mM    |"Stratifying game" project| | v2.3.0  |
+| 0059              | <b>Anaerobic-Coprotection</b> (Run 2)<br>[A]=0.05mM<br>[O<sub>2</sub>]=0mg/L<br>Ki=2mM    |"Stratifying game" project| | v2.3.0  |
+| 0060              | <b>Anaerobic-Coprotection</b> (Run 3)<br>[A]=0.05mM<br>[O<sub>2</sub>]=0mg/L<br>Ki=2mM    |"Stratifying game" project| | v2.3.0  |
+| 0061              | <b>Anaerobic-Coprotection</b> (Run 1)<br>[A]=1.0mM<br>[O<sub>2</sub>]=0mg/L<br>Ki=1mM     |"Stratifying game" project| | v2.3.0  |
+| 0062              | <b>Anaerobic-Coprotection</b> (Run 2)<br>[A]=1.0mM<br>[O<sub>2</sub>]=0mg/L<br>Ki=1mM     |"Stratifying game" project| | v2.3.0  |
+| 0063              | <b>Anaerobic-Coprotection</b> (Run 3)<br>[A]=1.0mM<br>[O<sub>2</sub>]=0mg/L<br>Ki=1mM     |"Stratifying game" project| | v2.3.0  |
+| 0064              | <b>Anaerobic-Coprotection</b> (Run 1)<br>[A]=0.5mM<br>[O<sub>2</sub>]=0mg/L<br>Ki=1mM     |"Stratifying game" project| | v2.3.0  |
+| 0065              | <b>Anaerobic-Coprotection</b> (Run 2)<br>[A]=0.5mM<br>[O<sub>2</sub>]=0mg/L<br>Ki=1mM     |"Stratifying game" project| | v2.3.0  |
+| 0066              | <b>Anaerobic-Coprotection</b> (Run 3)<br>[A]=0.5mM<br>[O<sub>2</sub>]=0mg/L<br>Ki=1mM     |"Stratifying game" project| | v2.3.0  |
+| 0067              | <b>Anaerobic-Coprotection</b> (Run 1)<br>[A]=0.1mM<br>[O<sub>2</sub>]=0mg/L<br>Ki=1mM     |"Stratifying game" project| | v2.3.0  |
+| 0068              | <b>Anaerobic-Coprotection</b> (Run 2)<br>[A]=0.1mM<br>[O<sub>2</sub>]=0mg/L<br>Ki=1mM     |"Stratifying game" project| | v2.3.0  |
+| 0069              | <b>Anaerobic-Coprotection</b> (Run 3)<br>[A]=0.1mM<br>[O<sub>2</sub>]=0mg/L<br>Ki=1mM     |"Stratifying game" project| | v2.3.0  |
+| 0070              | <b>Anaerobic-Coprotection</b> (Run 1)<br>[A]=0.05mM<br>[O<sub>2</sub>]=0mg/L<br>Ki=1mM    |"Stratifying game" project| | v2.3.0  |
+| 0071              | <b>Anaerobic-Coprotection</b> (Run 2)<br>[A]=0.05mM<br>[O<sub>2</sub>]=0mg/L<br>Ki=1mM    |"Stratifying game" project| | v2.3.0  |
+| 0072              | <b>Anaerobic-Coprotection</b> (Run 3)<br>[A]=0.05mM<br>[O<sub>2</sub>]=0mg/L<br>Ki=1mM    |"Stratifying game" project| | v2.3.0  |
+| 0073              | <b>Aerobic-Neutralism</b> (Run 1)<br>[A]=[B]=[C]=1/3mM<br>[O<sub>2</sub>]=10mg/L          |"Stratifying game" project| | v2.3.0  |
+| 0074              | <b>Aerobic-Neutralism</b> (Run 2)<br>[A]=[B]=[C]=1/3mM<br>[O<sub>2</sub>]=10mg/L          |"Stratifying game" project| | v2.3.0  |
+| 0075              | <b>Aerobic-Neutralism</b> (Run 3)<br>[A]=[B]=[C]=1/3mM<br>[O<sub>2</sub>]=10mg/L          |"Stratifying game" project| | v2.3.0  |
+| 0076              | <b>Aerobic-Neutralism</b> (Run 1)<br>[A]=[B]=[C]=1/3mM<br>[O<sub>2</sub>]=6mg/L           |"Stratifying game" project| | v2.3.0  |
+| 0077              | <b>Aerobic-Neutralism</b> (Run 2)<br>[A]=[B]=[C]=1/3mM<br>[O<sub>2</sub>]=6mg/L           |"Stratifying game" project| | v2.3.0  |
+| 0078              | <b>Aerobic-Neutralism</b> (Run 3)<br>[A]=[B]=[C]=1/3mM<br>[O<sub>2</sub>]=6mg/L           |"Stratifying game" project| | v2.3.0  |
+| 0079              | <b>Aerobic-Neutralism</b> (Run 1)<br>[A]=[B]=[C]=1/3mM<br>[O<sub>2</sub>]=1mg/L           |"Stratifying game" project| | v2.3.0  |
+| 0080              | <b>Aerobic-Neutralism</b> (Run 2)<br>[A]=[B]=[C]=1/3mM<br>[O<sub>2</sub>]=1mg/L           |"Stratifying game" project| | v2.3.0  |
+| 0081              | <b>Aerobic-Neutralism</b> (Run 3)<br>[A]=[B]=[C]=1/3mM<br>[O<sub>2</sub>]=1mg/L           |"Stratifying game" project| | v2.3.0  |
+| 0082              | <b>Aerobic-Neutralism</b> (Run 1)<br>[A]=[B]=[C]=1/3mM<br>[O<sub>2</sub>]=0.5mg/L         |"Stratifying game" project| | v2.3.0  |
+| 0083              | <b>Aerobic-Neutralism</b> (Run 2)<br>[A]=[B]=[C]=1/3mM<br>[O<sub>2</sub>]=0.5mg/L         |"Stratifying game" project| | v2.3.0  |
+| 0084              | <b>Aerobic-Neutralism</b> (Run 3)<br>[A]=[B]=[C]=1/3mM<br>[O<sub>2</sub>]=0.5mg/L         |"Stratifying game" project| | v2.3.0  |
+| 0085              | <b>Aerobic-Commensalism</b> (Run 1)<br>[A]=1mM<br>[O<sub>2</sub>]=10mg/L                  |"Stratifying game" project| | v2.3.0  |
+| 0086              | <b>Aerobic-Commensalism</b> (Run 2)<br>[A]=1mM<br>[O<sub>2</sub>]=10mg/L                  |"Stratifying game" project| | v2.3.0  |
+| 0087              | <b>Aerobic-Commensalism</b> (Run 3)<br>[A]=1mM<br>[O<sub>2</sub>]=10mg/L                  |"Stratifying game" project| | v2.3.0  |
+| 0088              | <b>Aerobic-Commensalism</b> (Run 1)<br>[A]=1mM<br>[O<sub>2</sub>]=6mg/L                   |"Stratifying game" project| | v2.3.0  |
+| 0089              | <b>Aerobic-Commensalism</b> (Run 2)<br>[A]=1mM<br>[O<sub>2</sub>]=6mg/L                   |"Stratifying game" project| | v2.3.0  |
+| 0090              | <b>Aerobic-Commensalism</b> (Run 3)<br>[A]=1mM<br>[O<sub>2</sub>]=6mg/L                   |"Stratifying game" project| | v2.3.0  |
+| 0091              | <b>Aerobic-Commensalism</b> (Run 1)<br>[A]=1mM<br>[O<sub>2</sub>]=1mg/L                   |"Stratifying game" project| | v2.3.0  |
+| 0092              | <b>Aerobic-Commensalism</b> (Run 2)<br>[A]=1mM<br>[O<sub>2</sub>]=1mg/L                   |"Stratifying game" project| | v2.3.0  |
+| 0093              | <b>Aerobic-Commensalism</b> (Run 3)<br>[A]=1mM<br>[O<sub>2</sub>]=1mg/L                   |"Stratifying game" project| | v2.3.0  |
+| 0094              | <b>Aerobic-Commensalism</b> (Run 1)<br>[A]=1mM<br>[O<sub>2</sub>]=0.5mg/L                 |"Stratifying game" project| | v2.3.0  |
+| 0095              | <b>Aerobic-Commensalism</b> (Run 2)<br>[A]=1mM<br>[O<sub>2</sub>]=0.5mg/L                 |"Stratifying game" project| | v2.3.0  |
+| 0096              | <b>Aerobic-Commensalism</b> (Run 3)<br>[A]=1mM<br>[O<sub>2</sub>]=0.5mg/L                 |"Stratifying game" project| | v2.3.0  |
+| 0097              | <b>Aerobic-Commensalism</b> (Run 1)<br>[A]=0.5mM<br>[O<sub>2</sub>]=10mg/L                |"Stratifying game" project| | v2.3.0  |
+| 0098              | <b>Aerobic-Commensalism</b> (Run 2)<br>[A]=0.5mM<br>[O<sub>2</sub>]=10mg/L                |"Stratifying game" project| | v2.3.0  |
+| 0099              | <b>Aerobic-Commensalism</b> (Run 3)<br>[A]=0.5mM<br>[O<sub>2</sub>]=10mg/L                |"Stratifying game" project| | v2.3.0  |
+| 0100              | <b>Aerobic-Commensalism</b> (Run 1)<br>[A]=0.5mM<br>[O<sub>2</sub>]=6mg/L                 |"Stratifying game" project| | v2.3.0  |
+| 0101              | <b>Aerobic-Commensalism</b> (Run 2)<br>[A]=0.5mM<br>[O<sub>2</sub>]=6mg/L                 |"Stratifying game" project| | v2.3.0  |
+| 0102              | <b>Aerobic-Commensalism</b> (Run 3)<br>[A]=0.5mM<br>[O<sub>2</sub>]=6mg/L                 |"Stratifying game" project| | v2.3.0  |
+| 0103              | <b>Aerobic-Commensalism</b> (Run 1)<br>[A]=0.5mM<br>[O<sub>2</sub>]=1mg/L                 |"Stratifying game" project| | v2.3.0  |
+| 0104              | <b>Aerobic-Commensalism</b> (Run 2)<br>[A]=0.5mM<br>[O<sub>2</sub>]=1mg/L                 |"Stratifying game" project| | v2.3.0  |
+| 0105              | <b>Aerobic-Commensalism</b> (Run 3)<br>[A]=0.5mM<br>[O<sub>2</sub>]=1mg/L                 |"Stratifying game" project| | v2.3.0  |
+| 0106              | <b>Aerobic-Commensalism</b> (Run 1)<br>[A]=0.5mM<br>[O<sub>2</sub>]=0.5mg/L               |"Stratifying game" project| | v2.3.0  |
+| 0107              | <b>Aerobic-Commensalism</b> (Run 2)<br>[A]=0.5mM<br>[O<sub>2</sub>]=0.5mg/L               |"Stratifying game" project| | v2.3.0  |
+| 0108              | <b>Aerobic-Commensalism</b> (Run 3)<br>[A]=0.5mM<br>[O<sub>2</sub>]=0.5mg/L               |"Stratifying game" project| | v2.3.0  |
+| 0109              | <b>Aerobic-Commensalism</b> (Run 1)<br>[A]=0.1mM<br>[O<sub>2</sub>]=10mg/L                |"Stratifying game" project| | v2.3.0  |
+| 0110              | <b>Aerobic-Commensalism</b> (Run 2)<br>[A]=0.1mM<br>[O<sub>2</sub>]=10mg/L                |"Stratifying game" project| | v2.3.0  |
+| 0111              | <b>Aerobic-Commensalism</b> (Run 3)<br>[A]=0.1mM<br>[O<sub>2</sub>]=10mg/L                |"Stratifying game" project| | v2.3.0  |
+| 0112              | <b>Aerobic-Commensalism</b> (Run 1)<br>[A]=0.1mM<br>[O<sub>2</sub>]=6mg/L                 |"Stratifying game" project| | v2.3.0  |
+| 0113              | <b>Aerobic-Commensalism</b> (Run 2)<br>[A]=0.1mM<br>[O<sub>2</sub>]=6mg/L                 |"Stratifying game" project| | v2.3.0  |
+| 0114              | <b>Aerobic-Commensalism</b> (Run 3)<br>[A]=0.1mM<br>[O<sub>2</sub>]=6mg/L                 |"Stratifying game" project| | v2.3.0  |
+| 0115              | <b>Aerobic-Commensalism</b> (Run 1)<br>[A]=0.1mM<br>[O<sub>2</sub>]=1mg/L                 |"Stratifying game" project| | v2.3.0  |
+| 0116              | <b>Aerobic-Commensalism</b> (Run 2)<br>[A]=0.1mM<br>[O<sub>2</sub>]=1mg/L                 |"Stratifying game" project| | v2.3.0  |
+| 0117              | <b>Aerobic-Commensalism</b> (Run 3)<br>[A]=0.1mM<br>[O<sub>2</sub>]=1mg/L                 |"Stratifying game" project| | v2.3.0  |
+| 0118              | <b>Aerobic-Commensalism</b> (Run 1)<br>[A]=0.1mM<br>[O<sub>2</sub>]=0.5mg/L               |"Stratifying game" project| | v2.3.0  |
+| 0119              | <b>Aerobic-Commensalism</b> (Run 2)<br>[A]=0.1mM<br>[O<sub>2</sub>]=0.5mg/L               |"Stratifying game" project| | v2.3.0  |
+| 0120              | <b>Aerobic-Commensalism</b> (Run 3)<br>[A]=0.1mM<br>[O<sub>2</sub>]=0.5mg/L               |"Stratifying game" project| | v2.3.0  |
+| 0121              | <b>Aerobic-Commensalism</b> (Run 1)<br>[A]=0.05mM<br>[O<sub>2</sub>]=10mg/L               |"Stratifying game" project| | v2.3.0  |
+| 0122              | <b>Aerobic-Commensalism</b> (Run 2)<br>[A]=0.05mM<br>[O<sub>2</sub>]=10mg/L               |"Stratifying game" project| | v2.3.0  |
+| 0123              | <b>Aerobic-Commensalism</b> (Run 3)<br>[A]=0.05mM<br>[O<sub>2</sub>]=10mg/L               |"Stratifying game" project| | v2.3.0  |
+| 0124              | <b>Aerobic-Commensalism</b> (Run 1)<br>[A]=0.05mM<br>[O<sub>2</sub>]=6mg/L                |"Stratifying game" project| | v2.3.0  |
+| 0125              | <b>Aerobic-Commensalism</b> (Run 2)<br>[A]=0.05mM<br>[O<sub>2</sub>]=6mg/L                |"Stratifying game" project| | v2.3.0  |
+| 0126              | <b>Aerobic-Commensalism</b> (Run 3)<br>[A]=0.05mM<br>[O<sub>2</sub>]=6mg/L                |"Stratifying game" project| | v2.3.0  |
+| 0127              | <b>Aerobic-Commensalism</b> (Run 1)<br>[A]=0.05mM<br>[O<sub>2</sub>]=1mg/L                |"Stratifying game" project| | v2.3.0  |
+| 0128              | <b>Aerobic-Commensalism</b> (Run 2)<br>[A]=0.05mM<br>[O<sub>2</sub>]=1mg/L                |"Stratifying game" project| | v2.3.0  |
+| 0129              | <b>Aerobic-Commensalism</b> (Run 3)<br>[A]=0.05mM<br>[O<sub>2</sub>]=1mg/L                |"Stratifying game" project| | v2.3.0  |
+| 0130              | <b>Aerobic-Commensalism</b> (Run 1)<br>[A]=0.05mM<br>[O<sub>2</sub>]=0.5mg/L              |"Stratifying game" project| | v2.3.0  |
+| 0131              | <b>Aerobic-Commensalism</b> (Run 2)<br>[A]=0.05mM<br>[O<sub>2</sub>]=0.5mg/L              |"Stratifying game" project| | v2.3.0  |
+| 0132              | <b>Aerobic-Commensalism</b> (Run 3)<br>[A]=0.05mM<br>[O<sub>2</sub>]=0.5mg/L              |"Stratifying game" project| | v2.3.0  |
+| 0133              | <b>Aerobic-Commensalism</b> (Run 1)<br>[A]=0.1mM<br>[O<sub>2</sub>]=3.75mg/L              |"Stratifying game" project| | v2.3.0  |
+| 0134              | <b>Aerobic-Commensalism</b> (Run 2)<br>[A]=0.1mM<br>[O<sub>2</sub>]=3.75mg/L              |"Stratifying game" project| | v2.3.0  |
+| 0135              | <b>Aerobic-Commensalism</b> (Run 3)<br>[A]=0.1mM<br>[O<sub>2</sub>]=3.75mg/L              |"Stratifying game" project| | v2.3.0  |
+| 0136              | <b>Aerobic-Commensalism</b> (Run 1)<br>[A]=0.1mM<br>[O<sub>2</sub>]=1.90mg/L              |"Stratifying game" project| | v2.3.0  |
+| 0137              | <b>Aerobic-Commensalism</b> (Run 2)<br>[A]=0.1mM<br>[O<sub>2</sub>]=1.90mg/L              |"Stratifying game" project| | v2.3.0  |
+| 0138              | <b>Aerobic-Commensalism</b> (Run 3)<br>[A]=0.1mM<br>[O<sub>2</sub>]=1.90mg/L              |"Stratifying game" project| | v2.3.0  |
+| 0139              | <b>Aerobic-Commensalism</b> (Run 1)<br>[A]=0.1mM<br>[O<sub>2</sub>]=14.0mg/L              |"Stratifying game" project| | v2.3.0  |
+| 0140              | <b>Aerobic-Commensalism</b> (Run 2)<br>[A]=0.1mM<br>[O<sub>2</sub>]=14.0mg/L              |"Stratifying game" project| | v2.3.0  |
+| 0141              | <b>Aerobic-Commensalism</b> (Run 3)<br>[A]=0.1mM<br>[O<sub>2</sub>]=14.0mg/L              |"Stratifying game" project| | v2.3.0  |

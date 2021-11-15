@@ -1,4 +1,4 @@
-function bac = granule_density(bac)
+function bac = granule_density(bac, constants)
     % Update the density of granule
     %
     % bac: struct containing all information regarding the bacteria

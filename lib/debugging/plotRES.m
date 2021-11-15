@@ -4,7 +4,7 @@ function plotRES(RES, compoundName, diffRegion)
     figure(11); clf;
     ax1 = axes;
     imagesc(ax1, RES');
-    max_val = max(abs(caxis()));
+    max_val = max(abs(RES(diffRegion)));
     caxis([-max_val, max_val])
     title(compoundName)
     axis square;

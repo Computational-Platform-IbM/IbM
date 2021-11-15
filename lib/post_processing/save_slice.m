@@ -14,7 +14,7 @@ function save_slice(bac, conc, bulk_concentrations, pH, invHRT, Time, grid, cons
     
     %% initialise or load previous values
     
-    results_file = [directory, '/results.mat'];
+    results_file = [directory, '/results1D.mat'];
     if Time == 0
         [bac_saved, conc_saved, pH_saved, reactor_saved] = init_save(constants, grid);
     else
@@ -22,7 +22,7 @@ function save_slice(bac, conc, bulk_concentrations, pH, invHRT, Time, grid, cons
     end
     
     %% set values
-    iSave = ceil(Time / constants.dT_save) + 1;
+    iSave = ceil((Time+0.01) / constants.dT_save);
     
     % bacterial variables
     nBacs = length(bac.x);
@@ -32,6 +32,7 @@ function save_slice(bac, conc, bulk_concentrations, pH, invHRT, Time, grid, cons
     bac_saved.radius(iSave, 1:nBacs) = bac.radius;
     bac_saved.species(iSave, 1:nBacs) = bac.species;
     bac_saved.active(iSave, 1:nBacs) = bac.active;
+    bac_saved.mu(iSave, 1:nBacs) = bac.mu;
     
     % concentration variable
     conc_saved(iSave, :, :) = conc(:, ceil(grid.nY / 2), :); % save horizontal slice through center of granule
@@ -71,6 +72,7 @@ function [bac_saved, conc_saved, pH_saved, reactor_saved] = init_save(constants,
     bac_saved.radius = zeros(nSaves, constants.max_nBac, 'single');
     bac_saved.species = zeros(nSaves, constants.max_nBac, 'uint8');
     bac_saved.active = zeros(nSaves, constants.max_nBac, 'logical');
+    bac_saved.mu = zeros(nSaves, constants.max_nBac, 'single');
     
     % concentration variable
     nCompounds = length(constants.StNames);

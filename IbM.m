@@ -29,41 +29,34 @@ function IbM(simulation_number)
     
     
     %% java import for shoving
-    javaaddpath([pwd '\lib\shovingQuadTree.jar']);
+%     javaaddpath([pwd '/lib/shovingQuadTree.jar']);
+    javaaddpath([pwd '/lib/bacteria/shovingQuadTreekDist.jar']);
     addpath(genpath('lib')); % make every subfolder with functions accessible to the code
-
-    
-    %% load preset file
-    load(simulation_file, 'grid', 'bac', 'constants', 'init_params', 'settings')
-    
     
     %% enable/disable debug disp/warning
+    warning('on', 'verbose')
     warning('off', 'DEBUG:noActionRequired');
     warning('on', 'DEBUG:actionRequired');
+    warning('error', 'MATLAB:ode45:IntegrationTolNotMet')
     
     
     %% ========== Time advancements ==========
     fprintf('> SIMULATION RUNNING >>>>>\n');
-    
-%     settings.dynamicDT = true; % in the simulation file already
-%     constants.simulation_end = 2500;
         
     tTime = tic;
-    [profiling, maxErrors, nDiffIters, bulk_history] = integTime(grid, bac, output_dir, constants, init_params, settings);
+    integTime(simulation_file, output_dir);
     totalTime = toc(tTime);
     
     fprintf('> SIMULATION FINISHED >>>>>\n');
     
 
     %% save profiling information in output directory
-    save(sprintf('%s/profilingResults.mat', output_dir), 'profiling', 'maxErrors', 'nDiffIters', 'bulk_history')
+    load(simulation_file, 'constants');
     fprintf('\n\nTotal time for simulation of %.2f hours:\n\t%.2f seconds\n', constants.simulation_end, totalTime)
 
     
     %% cleanup of root directory
     movefile(simulation_file, output_dir);
-    
-
 end
 
 
