@@ -2,8 +2,8 @@ function integTime(simulation_file, directory)
 
     %% load preset file
     load(simulation_file, 'grid', 'bac', 'constants', 'init_params', 'settings')
-    constants.debug.plotConvergence = true;
 
+    
     %% Overall settings
     if settings.parallelized
         nChunks_dir = ceil(sqrt(feature('numcores')));
@@ -68,8 +68,6 @@ function integTime(simulation_file, directory)
 
         % initialise saving file
         save_slice(bac, conc, bulk_concs, pH, invHRT, 0, grid, constants, directory);
-
-        constants.debug.plotConvergence = true;
     end
 
     % ----- DEBUG -----
@@ -97,7 +95,7 @@ function integTime(simulation_file, directory)
     norm_diff = zeros(200, 1);
     res_bacsim = zeros(200, 2);
 
-    iProf = find(profiling == 0, 1, 'first'); % keep track of index of profiling (every simulated hour == +1 index)
+    iProf = find(profiling == 0, 1, 'first'); % keep track of index of profiling (every simulated dT_bac == +1 index)
     iDiffusion = 1; % keep track of index of diffusion (per 1 dT_bac: iDiffusion == cycles of diffusion)
     iRES = 0;
 
@@ -281,7 +279,10 @@ function integTime(simulation_file, directory)
                     end
 
                     % bacteria: divide
-                    bac = bacteria_divide(bac, constants);
+                    [bac, nDivCycles] = bacteria_divide(bac, constants);
+                    if nDivCycles > 1
+                        Time = decrease_dT_bac(Time, 'Bacteria are dividing too fast');
+                    end
                     profiling(iProf, 5) = profiling(iProf, 5) + toc;
 
                     % shove bacteria
