@@ -30,6 +30,7 @@ The decrease of dT_bac is used as a tool to reduce the change in bulk concentrat
 After calculating the new bulk concentrations, the relative difference between this and the previous bulk concentrations is checked.
 If the relative difference is larger than a certain threshold (`constants.dynamicDT.maxRelDiffBulkConc`), the dT_bac is reduced.
 This is repeated untill either the minimum dT_bac is reached or the relative concentration change is within the tolerance.
+Also, the dT_bac is reduced if in the bacterial division multiple division rounds are required before all bacteria are below the division threshold.
 
 ### Increase dT for bacterial activity
 Similar to the dT, the dT_bac can be increased in smooth regions. This is determined in a similar fashion as with the dT increase.
