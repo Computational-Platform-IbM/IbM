@@ -13,7 +13,7 @@ function plotConvergence(RESvalues, iRES, constants, Time)
     figure(4); 
     plot((1:iRES)*constants.nDiffusion_per_SScheck, RESvalues(:,1:iRES)'*100, 'LineWidth', 2); 
 %     ylim([0, 3]); 
-    legend(constants.StNames{1:7}); 
+    legend(constants.StNames{1:size(RESvalues, 1)}); 
     ylabel('Maximum error [%]'); 
     xlabel('Diffusion iteration')
     title(sprintf('Convergence plot at t=%.1f', Time))
