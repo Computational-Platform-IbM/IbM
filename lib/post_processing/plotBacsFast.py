@@ -87,7 +87,7 @@ def save_plot(i: int, xlim: List[float], ylim: List[float], bac: Dict):
 
     # Calculus of mu/max(mu)
     # Recommended: 1.0 - 2.0  (inc = 'NoAlpha' -> alpha = 1; inc = 0 -> alpha = mu/max_mu)
-    inc = 1
+    inc = 'NoAlpha'
     muAlpha = muRatio(mu, s, inc)
 
     # Colours: HEX code
