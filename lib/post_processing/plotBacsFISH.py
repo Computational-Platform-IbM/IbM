@@ -122,7 +122,7 @@ def save_plot(i: int, xlim: List[float], ylim: List[float], bac: Dict):
     # plt.legend((L1,L2,L3,L4), ('AOB', 'Nitrobacter', 'Nitrospira', 'AMX'), numpoints=1, loc="upper left", frameon=False) # AOB/NOB/AMX
 
 
-    filename = f'{directory}/{i}.png'
+    filename = f'../../{directory}/{i}.png'
     plt.savefig(filename)
     plt.close()
 
@@ -132,7 +132,7 @@ def save_plot(i: int, xlim: List[float], ylim: List[float], bac: Dict):
 # %%
 def generate_gif(args: Dict):
     # load data from results file
-    with h5py.File(f'{directory}/results1D.mat', 'r') as f:
+    with h5py.File(f'../../{directory}/results1D.mat', 'r') as f:
         print('Loading results file...')
         bac = {}
         for k in f['bac_saved'].keys():
@@ -166,7 +166,7 @@ def generate_gif(args: Dict):
             filenames.append(save_plot(i, xlim, ylim, bac))
 
     # build gif
-    with imageio.get_writer(f'{directory}/bacteriaFISH.gif', mode='I', fps=4) as writer:
+    with imageio.get_writer(f'../../{directory}/bacteriaFISH.gif', mode='I', fps=4) as writer:
         for filename in tqdm(filenames, desc='Gif'):
             image = imageio.imread(filename)
             writer.append_data(image)
@@ -192,8 +192,8 @@ args = parser.parse_args()
 sim = f'{args.simulationNumber:04d}'
 directory = f'Results/{sim}'
 if args.finished:
-    simulation_file = f'{directory}/sim_{sim}.mat'
+    simulation_file = f'../../{directory}/sim_{sim}.mat'
 else:
-    simulation_file = f'sim_{sim}.mat'
+    simulation_file = f'../../sim_{sim}.mat'
 
 generate_gif(args)
