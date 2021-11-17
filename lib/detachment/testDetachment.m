@@ -1,34 +1,31 @@
 clear all
 
 % variable declaration
-kDet = 20; % 1/(micrometer h)
+kDet = 200e-6; % 1/(micrometer h)
 
 
 
 if isfile('testScenario.mat')
     load('testScenario.mat', 'grid', 'bac')
-    pBac(bac, grid);
+    pBac(bac, grid, 0);
 else
     [grid, bac] = createTestScenario();
+    pBac(bac, grid, 0);
 end
 
-% % center of gridcells
-% gx = linspace(grid.dx / 2, grid.dx*grid.nX - grid.dx/2, grid.nX);
-% gy = linspace(grid.dy / 2, grid.dy*grid.nY - grid.dy/2, grid.nY);
-% 
-% [X, Y] = meshgrid(gx,gy);
-% Z = Y ./ max(gy);
 
-% figure();
-% contourf(X,Y,Z,10);
-% xlim([0, grid.dx*grid.nX])
-% ylim([0, grid.dy*grid.nY])
-% colorbar();
 
 %% init detachment
+% grid.dx = 2;
+% grid.dy = 2;
+% grid.nX = 64;
+% grid.nY = 32;
+
 % get grid2nBacs
 [grid2bac, grid2nBacs] = determine_where_bacteria_in_grid(grid, bac);
-biofilm = grid2nBacs > 0;
+timer = tic;
+
+biofilm = convn(grid2nBacs, ones(5), 'same') > 0;
 
 % plot biofilm
 plotLogicalGrid(grid, biofilm, 'Biofilm'); % {'Biofilm', 'Visited', 'Narrow band', 'Far'}
@@ -43,7 +40,7 @@ T = zeros(grid.nX, grid.nY);
 
 T(~biofilm) = 0; % redundant, because initialised with 0
 Visited = ~biofilm;
-plotLogicalGrid(grid, Visited, 'Visited'); % {'Biofilm', 'Visited', 'Narrow band', 'Far'}
+% plotLogicalGrid(grid, Visited, 'Visited'); % {'Biofilm', 'Visited', 'Narrow band', 'Far'}
 
 
 % find narrow band
@@ -59,11 +56,11 @@ temp(end, :) = temp(2, :);
 Narrow_band = convn(temp, kernel, 'valid') > 0;
 clear temp
 
-plotLogicalGrid(grid, Narrow_band, 'Narrow band'); % {'Biofilm', 'Visited', 'Narrow band', 'Far'}
+% plotLogicalGrid(grid, Narrow_band, 'Narrow band'); % {'Biofilm', 'Visited', 'Narrow band', 'Far'}
 
 
 Far = biofilm & ~Narrow_band;
-plotLogicalGrid(grid, Far, 'Far'); % {'Biofilm', 'Visited', 'Narrow band', 'Far'}
+% plotLogicalGrid(grid, Far, 'Far'); % {'Biofilm', 'Visited', 'Narrow band', 'Far'}
 
 % set far away point to T infinity
 T(Far) = Inf;
@@ -80,19 +77,20 @@ for k = 1:length(i)
     % gridcells, but mathematically it does not make too much sense...?
     % --------END IMPORTANT --------
     
-    nFreeNb = 4;
+    nFreeNb = getFreeNeighbourCount(ii, jj, Visited, grid);
     
     T(ii, jj) = grid.dx / (Fdetach * nFreeNb);
 end
 
-plotDetachTime(grid, T);
+% plotDetachTime(grid, T, kDet);
 
 
 
 % ------------ Fast Marching --------------
-for n = 1:10
+while sum(Narrow_band, 'all')
     % take narrow-band value with the lowest T value
     [T_list, I] = sort(T(Narrow_band));
+    [i, j] = find(Narrow_band);
     i = i(I);
     j = j(I);
 
@@ -104,23 +102,48 @@ for n = 1:10
     Visited(i_point, j_point) = 1;
 
     % for all neighbours of the point (from narrow-band or far):
-    [Narrow_band, Far, T] = updateNeighbour(i_point+1, j_point, Narrow_band, Far, Visited, T, grid, kDet);
-    [Narrow_band, Far, T] = updateNeighbour(i_point-1, j_point, Narrow_band, Far, Visited, T, grid, kDet);
+    [Narrow_band, Far, T] = updateNeighbour(mod(i_point+1-1, grid.nX)+1, j_point, Narrow_band, Far, Visited, T, grid, kDet);
+    [Narrow_band, Far, T] = updateNeighbour(mod(i_point-1-1, grid.nX)+1, j_point, Narrow_band, Far, Visited, T, grid, kDet);
 
-    [Narrow_band, Far, T] = updateNeighbour(i_point, j_point+1, Narrow_band, Far, Visited, T, grid, kDet);
-    [Narrow_band, Far, T] = updateNeighbour(i_point, j_point-1, Narrow_band, Far, Visited, T, grid, kDet);
+    [Narrow_band, Far, T] = updateNeighbour(i_point, mod(j_point+1-1, grid.nY)+1, Narrow_band, Far, Visited, T, grid, kDet);
+    if j_point ~= 1
+        [Narrow_band, Far, T] = updateNeighbour(i_point, mod(j_point-1-1, grid.nY)+1, Narrow_band, Far, Visited, T, grid, kDet);
+    end
+
+%     plotLogicalGrid(grid, Visited, 'Visited'); % {'Biofilm', 'Visited', 'Narrow band', 'Far'}
+%     plotLogicalGrid(grid, Narrow_band, 'Narrow band'); % {'Biofilm', 'Visited', 'Narrow band', 'Far'}
+%     plotLogicalGrid(grid, Far, 'Far'); % {'Biofilm', 'Visited', 'Narrow band', 'Far'}
+%     plotDetachTime(grid, T, kDet);
+%     drawnow()
 
 
-
-
-
-
-
-    plotLogicalGrid(grid, Visited, 'Visited'); % {'Biofilm', 'Visited', 'Narrow band', 'Far'}
-    plotLogicalGrid(grid, Narrow_band, 'Narrow band'); % {'Biofilm', 'Visited', 'Narrow band', 'Far'}
-    plotLogicalGrid(grid, Far, 'Far'); % {'Biofilm', 'Visited', 'Narrow band', 'Far'}
-    plotDetachTime(grid, T);
 end
+toc(timer)
+
+plotLogicalGrid(grid, Visited, 'Visited'); % {'Biofilm', 'Visited', 'Narrow band', 'Far'}
+plotLogicalGrid(grid, Narrow_band, 'Narrow band'); % {'Biofilm', 'Visited', 'Narrow band', 'Far'}
+plotLogicalGrid(grid, Far, 'Far'); % {'Biofilm', 'Visited', 'Narrow band', 'Far'}
+plotDetachTime(grid, T, kDet);
+drawnow()
+
+pBac(bac, grid, T);
+
+figure(8); clf;
+% center of gridcells
+gx = linspace(grid.dx / 2, grid.dx*grid.nX - grid.dx/2, grid.nX);
+gy = linspace(grid.dy / 2, grid.dy*grid.nY - grid.dy/2, grid.nY);
+
+[X, Y] = meshgrid(gx,gy);
+
+T_smooth = convn(T, (1/9)*ones(3), 'same');
+T_smoother = convn(T_smooth, (1/9)*ones(3), 'same');
+
+contourf(X,Y,T_smoother',[0,1,2,3,4,5,6,7,8,9,10]); hold on;
+colormap(viridis());
+colorbar();
+xlim([0, grid.nX*grid.dx]);
+ylim([0, grid.nY*grid.dy]);
+axis equal
 
 
 
@@ -135,11 +158,11 @@ function [grid, bac] = createTestScenario()
     javaaddpath([pwd '/lib/bacteria/shovingQuadTreekDist.jar']);
 
     % create rectangular grid (1000 micrometer by 500 micrometer)
-    grid.dx = 4;
-    grid.dy = 4;
+    grid.dx = 8;
+    grid.dy = 8;
 
-    grid.nX = 32;
-    grid.nY = 16;
+    grid.nX = 64;
+    grid.nY = 64;
 
     % make new bac struct
     bac = struct();
@@ -148,14 +171,14 @@ function [grid, bac] = createTestScenario()
     bac.radius = zeros(20, 1);
     bac.offset = 0.001;
 
-    max_radius = 1;
+    max_radius = 5;
     kDist = 1.5;
 
     rRange = [0.3 * max_radius, 0.8 * max_radius];
-    bac = fill_rect(bac, [1, 127], [1, 20], rRange);
-    bac = fill_rect(bac, [10, 30], [20, 40], rRange);
-    bac = fill_rect(bac, [50, 70], [20, 40], rRange);
-    bac = fill_rect(bac, [90, 110], [20, 40], rRange);
+    bac = fill_rect(bac, [1, 512], [1, 100], rRange);
+    bac = fill_rect(bac, [100, 300], [100, 400], rRange);
+%     bac = fill_rect(bac, [50, 70], [100, 400], rRange);
+%     bac = fill_rect(bac, [90, 110], [100, 400], rRange);
     qt = shoving.BiomassQuadtree(0, grid.dx*grid.nX, 0, grid.dy*grid.nY);
     r = qt.pushing2D(length(bac.x), bac.x, bac.y, bac.radius, 0.1, max_radius * 2, kDist); % .jar file in /lib is from granule, thus does not have kDist implemented yet
     bac.x = r.bac_x;
@@ -179,7 +202,7 @@ function [grid, bac] = createTestScenario()
     
 
 
-    pBac(bac, grid);
+    pBac(bac, grid, 0);
     save('testScenario.mat', 'bac', 'grid')
 end
 
@@ -247,16 +270,20 @@ end
 function T_new = recalculateT(T, i, j, kDet, grid)
     % Recalculate the T value at gridcell (i, j) using the quadratic 
     % approximation of the gradient.
+    % using method of https://github.com/kreft/iDynoMiCS/blob/master/src/simulator/detachment/LevelSet.java
     
-    Tx = zeros(3,1);
-    Tx(1) = min(T(i+1, j), T(i-1, j));
-    Tx(2) = max(T(i+1, j), T(i-1, j));
+    Tx = zeros(2,1);
+    Tx(1) = min(T(mod(i+1-1, grid.nX)+1, j), T(mod(i-1-1, grid.nX)+1, j));
     Tx(3) = Inf;
     
     Ty = zeros(3,1);
-    Ty(1) = min(T(i, j+1), T(i, j-1));
-    Ty(2) = max(T(i, j+1), T(i, j-1));
+    if j == 1
+        Ty(1) = T(i, j+1);
+    else
+        Ty(1) = min(T(i, j+1), T(i, j-1));
+    end
     Ty(3) = Inf;
+
     
     if all(isinf(Tx)) && all(isinf(Ty))
         error('all neighbours have infinite time of crossing')
@@ -270,6 +297,7 @@ function T_new = recalculateT(T, i, j, kDet, grid)
     
     approxSolution = 0;
     validSolution = 0;
+    sols = zeros(length(Tx), length(Ty));
     
     for ix = 1:length(Tx)
         Tx_neighbour = Tx(ix);
@@ -288,14 +316,30 @@ function T_new = recalculateT(T, i, j, kDet, grid)
         end
     end
     
-    if validSolution == 0
+    if validSolution < 1e-6
         error('something went wrong with the root finding, pls check...')
     end
     
     T_new = validSolution;
+end
+
+function T_new = recalculateT_new(T, i, j, kDet, grid)
+    % using method from https://essay.utwente.nl/75601/1/Alblas_BA_EWI.pdf
+    Fdet = calculateLocalDetachmentRate(i, j, kDet, grid);
+    a = min(T(mod(i+1-1, grid.nX)+1, j), T(mod(i-1-1, grid.nX)+1, j));
+    if j == 1
+        b = T(i, j+1);
+    else
+        b = min(T(i, j+1), T(i, j-1));
+    end
     
+    invF = (1/Fdet);
     
-    
+    if invF > abs(a - b)
+        T_new = (a + b + sqrt(2*invF^2 - (a - b)^2))/2;
+    else
+        T_new = (invF)^2 + min(a, b);
+    end
 end
 
 function v = validSol(sol, f, t_neigh)
@@ -307,7 +351,6 @@ function v = validSol(sol, f, t_neigh)
         v = sol > t_neigh;
     end        
 end
-
 
 function root = computeRoot(Tx, Ty, Fdet, dx)
     % Solve the quadratic equation for the gradient (approximation)
@@ -344,8 +387,27 @@ function root = computeRoot(Tx, Ty, Fdet, dx)
     root = (-b+D) / (2*a);
 end
 
+function nFreeNb = getFreeNeighbourCount(i, j, Visited, grid)
+    % count the number of non-biomass neighbouring gridcells are there for
+    % gridcell (i, j)
+    
+    nFreeNb = 0;
+    if Visited(mod(i+1-1, grid.nX)+1, j)
+        nFreeNb = nFreeNb + 1;
+    end
+    if Visited(mod(i-1-1, grid.nX)+1, j)
+        nFreeNb = nFreeNb + 1;
+    end
+    if Visited(i, j+1)
+        nFreeNb = nFreeNb + 1;
+    end
+    if j>1 && Visited(i, j-1)
+        nFreeNb = nFreeNb + 1;
+    end
+end
+
 %% plotting functions
-function pBac(bac, g)
+function pBac(bac, g, T)
     % visualise inserted bacteria
         % testing function to visualise bacteria
     x = bac.x;
@@ -353,7 +415,20 @@ function pBac(bac, g)
     r = bac.radius;
     
     figure(1); clf;
-    col = [0.5, 0.5, 0.5];
+    col = [0 0 0 0.2];
+    
+    if ~isscalar(T)
+        % center of gridcells
+        gx = linspace(g.dx / 2, g.dx*g.nX - g.dx/2, g.nX);
+        gy = linspace(g.dy / 2, g.dy*g.nY - g.dy/2, g.nY);
+
+        [X, Y] = meshgrid(gx,gy);
+
+        contourf(X,Y,T',[0,1,2,3,4,5,6,7,8,9,10]); hold on;
+        colormap(viridis());
+        colorbar();
+    end
+    
     
     for i = 1:length(x)
         rectangle('Curvature', [1 1], 'Position', [x(i) - r(i), y(i) - r(i), 2 * r(i), 2 * r(i)], 'LineWidth', 0.1, 'EdgeColor', col, 'FaceColor', col);
@@ -426,20 +501,21 @@ function plotLogicalGrid(grid, L, title_string)
     
 end
 
-function plotDetachTime(grid, T)
+function plotDetachTime(grid, T, kDet)
     f = figure(6);
     
     try
         ax = gca;
         ax.Children(1).CData = T';
+        caxis([0, 1]);
         drawnow();
     catch e
         switch e.identifier
-            case 'MATLAB:noSuchMethodOrField' % has not been made before
+            case {'MATLAB:noSuchMethodOrField', 'MATLAB:noPublicFieldForClass'} % has not been made before
                 imagesc([grid.dx/2, grid.nX*grid.dx - grid.dx/2], [grid.dy/2, grid.nY*grid.dy - grid.dy/2], T'); hold on;
                 colormap(viridis());
                 colorbar();
-                caxis([0, 1e-3])
+                caxis([0, min(kDet, 10)])
                 axis equal;
                 xlim([0, grid.nX*grid.dx]);
                 ylim([0, grid.nY*grid.dy]);
