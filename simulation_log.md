@@ -102,12 +102,12 @@ For the finished column, please use :white_check_mark: (`:white_check_mark:`) wh
 | 0094              | Aerobic-Commensalism (Run 1) [A]=1mM [O2]=0.5mg/L           | Stratifying game project                        | 🕐 (Dell)  | v2.3.0  |
 | 0095              | Aerobic-Commensalism (Run 2) [A]=1mM [O2]=0.5mg/L           | Stratifying game project                        | 🕐 (Dell)  | v2.3.0  |
 | 0096              | Aerobic-Commensalism (Run 3) [A]=1mM [O2]=0.5mg/L           | Stratifying game project                        | 🕐 (Dell)  | v2.3.0  |
-| 0097              | Aerobic-Commensalism (Run 1) [A]=0.5mM [O2]=10mg/L          | Stratifying game project                        | 🕐 (Dell)  | v2.3.0  |
-| 0098              | Aerobic-Commensalism (Run 2) [A]=0.5mM [O2]=10mg/L          | Stratifying game project                        | 🕐 (Dell)  | v2.3.0  |
-| 0099              | Aerobic-Commensalism (Run 3) [A]=0.5mM [O2]=10mg/L          | Stratifying game project                        | 🕐 (Dell)  | v2.3.0  |
-| 0100              | Aerobic-Commensalism (Run 1) [A]=0.5mM [O2]=6mg/L           | Stratifying game project                        | 🕐 (Dell)  | v2.3.0  |
-| 0101              | Aerobic-Commensalism (Run 2) [A]=0.5mM [O2]=6mg/L           | Stratifying game project                        | 🕐 (Dell)  | v2.3.0  |
-| 0102              | Aerobic-Commensalism (Run 3) [A]=0.5mM [O2]=6mg/L           | Stratifying game project                        | 🕐 (Dell)  | v2.3.0  |
+| 0097              | Aerobic-Commensalism (Run 1) [A]=0.5mM [O2]=10mg/L          | Stratifying game project                        |           | v2.3.0  |
+| 0098              | Aerobic-Commensalism (Run 2) [A]=0.5mM [O2]=10mg/L          | Stratifying game project                        |           | v2.3.0  |
+| 0099              | Aerobic-Commensalism (Run 3) [A]=0.5mM [O2]=10mg/L          | Stratifying game project                        |           | v2.3.0  |
+| 0100              | Aerobic-Commensalism (Run 1) [A]=0.5mM [O2]=6mg/L           | Stratifying game project                        |           | v2.3.0  |
+| 0101              | Aerobic-Commensalism (Run 2) [A]=0.5mM [O2]=6mg/L           | Stratifying game project                        |           | v2.3.0  |
+| 0102              | Aerobic-Commensalism (Run 3) [A]=0.5mM [O2]=6mg/L           | Stratifying game project                        |           | v2.3.0  |
 | 0103              | Aerobic-Commensalism (Run 1) [A]=0.5mM [O2]=1mg/L           | Stratifying game project                        | ✅         | v2.3.0  |
 | 0104              | Aerobic-Commensalism (Run 2) [A]=0.5mM [O2]=1mg/L           | Stratifying game project                        | ✅         | v2.3.0  |
 | 0105              | Aerobic-Commensalism (Run 3) [A]=0.5mM [O2]=1mg/L           | Stratifying game project                        | ✅         | v2.3.0  |
