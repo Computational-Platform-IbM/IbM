@@ -16,10 +16,10 @@ end
 
 
 %% init detachment
-grid.dx = 4;
-grid.dy = 4;
-grid.nX = 128;
-grid.nY = 128;
+% grid.dx = 4;
+% grid.dy = 4;
+% grid.nX = 128;
+% grid.nY = 128;
 
 % get grid2nBacs
 [grid2bac, grid2nBacs] = determine_where_bacteria_in_grid(grid, bac);
@@ -33,12 +33,9 @@ plotLogicalGrid(grid, biofilm, 'Biofilm'); % {'Biofilm', 'Visited', 'Narrow band
 
 
 % create three matrices with all grid cells
-Visited = zeros(grid.nX, grid.nY, 'logical');
-Narrow_band = zeros(grid.nX, grid.nY, 'logical');
-Far = zeros(grid.nX, grid.nY, 'logical');
 T = zeros(grid.nX, grid.nY);
 
-T(~biofilm) = 0; % redundant, because initialised with 0
+% T(~biofilm) = 0; % redundant, because initialised with 0
 Visited = ~biofilm;
 % plotLogicalGrid(grid, Visited, 'Visited'); % {'Biofilm', 'Visited', 'Narrow band', 'Far'}
 
@@ -264,13 +261,7 @@ function [Narrow_band, Far, T] = updateNeighbour(i, j, Narrow_band, Far, Visited
     end % if none of the above, then already in narrow band
     
     % recalculate T value
-    nT = recalculateT(T, i, j, kDet, grid, Visited);
-    
-    if nT - T(i,j) > 1e-12
-        warning('hallo?')
-    end
-    
-    T(i, j) = nT;
+    T(i, j) = recalculateT(T, i, j, kDet, grid, Visited);
 end
 
 function T_new = recalculateT(T, i, j, kDet, grid, Visited)
@@ -307,7 +298,7 @@ function T_new = recalculateT(T, i, j, kDet, grid, Visited)
         Ty = Inf;
     end
     
-    if all(isinf(Tx)) && all(isinf(Ty))
+    if isinf(Tx) && isinf(Ty)
         error('all neighbours have infinite time of crossing')
     end
     
@@ -317,73 +308,7 @@ function T_new = recalculateT(T, i, j, kDet, grid, Visited)
         error('Detachment speed equals 0, thus infinite time of crossing')
     end
     
-    newMethodSol = computeRoot(Tx, Ty, Fdet, grid.dx);
-    
-    
-    
-    approxSolution = 0;
-    validSolution = 0;
-    sols = zeros(length(Tx), length(Ty));
-    
-    for ix = 1%:length(Tx)
-        Tx_neighbour = Tx(ix);
-        for iy = 1%:length(Ty)
-            Ty_neighbour = Ty(iy);
-
-            temp = computeRoot(Tx_neighbour, Ty_neighbour, Fdet, grid.dx);
-            sols(ix, iy) = temp;
-            
-            if isfinite(temp)
-                approxSolution = max(temp, approxSolution);
-                if validSol(temp, Tx_neighbour, Tx(1)) || validSol(temp, Ty_neighbour, Ty(1))
-                    validSolution = max(temp, validSolution);
-                else
-                    warning('no valid solution... ?')
-                end
-            end
-        end
-    end
-    
-    if validSolution < 1e-6
-        error('something went wrong with the root finding, pls check...')
-    end
-    
-    
-    T_new = newMethodSol;
-    
-    if T_new ~= validSolution
-        warning('not the same answers, which is correct?')
-    end
-    
-end
-
-function T_new = recalculateT_new(T, i, j, kDet, grid)
-    % using method from https://essay.utwente.nl/75601/1/Alblas_BA_EWI.pdf
-    Fdet = calculateLocalDetachmentRate(i, j, kDet, grid);
-    a = min(T(mod(i+1-1, grid.nX)+1, j), T(mod(i-1-1, grid.nX)+1, j));
-    if j == 1
-        b = T(i, j+1);
-    else
-        b = min(T(i, j+1), T(i, j-1));
-    end
-    
-    invF = (1/Fdet);
-    
-    if invF > abs(a - b)
-        T_new = (a + b + sqrt(2*invF^2 - (a - b)^2))/2;
-    else
-        T_new = (invF)^2 + min(a, b);
-    end
-end
-
-function v = validSol(sol, f, t_neigh)
-    % check whether a given solution is valid.
-    
-    if isinf(f)
-        v = sol < t_neigh;
-    else
-        v = sol > t_neigh;
-    end        
+    T_new = computeRoot(Tx, Ty, Fdet, grid.dx);
 end
 
 function root = computeRoot(Tx, Ty, Fdet, dx)
