@@ -16,16 +16,16 @@ end
 
 
 %% init detachment
-% grid.dx = 2;
-% grid.dy = 2;
-% grid.nX = 64;
-% grid.nY = 32;
+grid.dx = 4;
+grid.dy = 4;
+grid.nX = 128;
+grid.nY = 128;
 
 % get grid2nBacs
 [grid2bac, grid2nBacs] = determine_where_bacteria_in_grid(grid, bac);
 timer = tic;
 
-biofilm = convn(grid2nBacs, ones(5), 'same') > 0;
+biofilm = convn(grid2nBacs, ones(3), 'same') > 0;
 
 % plot biofilm
 plotLogicalGrid(grid, biofilm, 'Biofilm'); % {'Biofilm', 'Visited', 'Narrow band', 'Far'}
@@ -111,18 +111,18 @@ while sum(Narrow_band, 'all')
     end
 
 %     plotLogicalGrid(grid, Visited, 'Visited'); % {'Biofilm', 'Visited', 'Narrow band', 'Far'}
-%     plotLogicalGrid(grid, Narrow_band, 'Narrow band'); % {'Biofilm', 'Visited', 'Narrow band', 'Far'}
+    plotLogicalGrid(grid, Narrow_band, 'Narrow band'); % {'Biofilm', 'Visited', 'Narrow band', 'Far'}
 %     plotLogicalGrid(grid, Far, 'Far'); % {'Biofilm', 'Visited', 'Narrow band', 'Far'}
 %     plotDetachTime(grid, T, kDet);
-%     drawnow()
+    drawnow()
 
 
 end
 toc(timer)
 
-plotLogicalGrid(grid, Visited, 'Visited'); % {'Biofilm', 'Visited', 'Narrow band', 'Far'}
-plotLogicalGrid(grid, Narrow_band, 'Narrow band'); % {'Biofilm', 'Visited', 'Narrow band', 'Far'}
-plotLogicalGrid(grid, Far, 'Far'); % {'Biofilm', 'Visited', 'Narrow band', 'Far'}
+% plotLogicalGrid(grid, Visited, 'Visited'); % {'Biofilm', 'Visited', 'Narrow band', 'Far'}
+% plotLogicalGrid(grid, Narrow_band, 'Narrow band'); % {'Biofilm', 'Visited', 'Narrow band', 'Far'}
+% plotLogicalGrid(grid, Far, 'Far'); % {'Biofilm', 'Visited', 'Narrow band', 'Far'}
 plotDetachTime(grid, T, kDet);
 drawnow()
 
@@ -171,10 +171,10 @@ function [grid, bac] = createTestScenario()
     bac.radius = zeros(20, 1);
     bac.offset = 0.001;
 
-    max_radius = 5;
-    kDist = 1.5;
+    max_radius = 2;
+    kDist = 1.3;
 
-    rRange = [0.3 * max_radius, 0.8 * max_radius];
+    rRange = [0.5 * max_radius, max_radius];
     bac = fill_rect(bac, [1, 512], [1, 100], rRange);
     bac = fill_rect(bac, [100, 300], [100, 400], rRange);
 %     bac = fill_rect(bac, [50, 70], [100, 400], rRange);
@@ -264,26 +264,48 @@ function [Narrow_band, Far, T] = updateNeighbour(i, j, Narrow_band, Far, Visited
     end % if none of the above, then already in narrow band
     
     % recalculate T value
-    T(i, j) = recalculateT(T, i, j, kDet, grid);
+    nT = recalculateT(T, i, j, kDet, grid, Visited);
+    
+    if nT - T(i,j) > 1e-12
+        warning('hallo?')
+    end
+    
+    T(i, j) = nT;
 end
 
-function T_new = recalculateT(T, i, j, kDet, grid)
+function T_new = recalculateT(T, i, j, kDet, grid, Visited)
     % Recalculate the T value at gridcell (i, j) using the quadratic 
     % approximation of the gradient.
     % using method of https://github.com/kreft/iDynoMiCS/blob/master/src/simulator/detachment/LevelSet.java
     
-    Tx = zeros(2,1);
-    Tx(1) = min(T(mod(i+1-1, grid.nX)+1, j), T(mod(i-1-1, grid.nX)+1, j));
-    Tx(3) = Inf;
-    
-    Ty = zeros(3,1);
-    if j == 1
-        Ty(1) = T(i, j+1);
+    right_visited = Visited(mod(i+1-1, grid.nX)+1, j); % x + 1 (right)
+    left_visited = Visited(mod(i-1-1, grid.nX)+1, j); % x - 1 (left)
+    if  left_visited
+        if right_visited
+            Tx = min(T(mod(i+1-1, grid.nX)+1, j), T(mod(i-1-1, grid.nX)+1, j));
+        else
+            Tx = T(mod(i-1-1, grid.nX)+1, j);
+        end
+    elseif right_visited
+        Tx = T(mod(i+1-1, grid.nX)+1, j);
     else
-        Ty(1) = min(T(i, j+1), T(i, j-1));
+        Tx = Inf;
     end
-    Ty(3) = Inf;
-
+    
+    top_visited = Visited(i, j+1); % j + 1 (top)
+    bottom_visited = j ~= 1 && Visited(i, j-1); % j - 1 (bottom)
+    
+    if top_visited
+        if bottom_visited
+            Ty = min(T(i, j+1), T(i, j-1));
+        else
+            Ty = T(i, j+1);
+        end
+    elseif bottom_visited
+        Ty = T(i, j-1);
+    else
+        Ty = Inf;
+    end
     
     if all(isinf(Tx)) && all(isinf(Ty))
         error('all neighbours have infinite time of crossing')
@@ -295,13 +317,17 @@ function T_new = recalculateT(T, i, j, kDet, grid)
         error('Detachment speed equals 0, thus infinite time of crossing')
     end
     
+    newMethodSol = computeRoot(Tx, Ty, Fdet, grid.dx);
+    
+    
+    
     approxSolution = 0;
     validSolution = 0;
     sols = zeros(length(Tx), length(Ty));
     
-    for ix = 1:length(Tx)
+    for ix = 1%:length(Tx)
         Tx_neighbour = Tx(ix);
-        for iy = 1:length(Ty)
+        for iy = 1%:length(Ty)
             Ty_neighbour = Ty(iy);
 
             temp = computeRoot(Tx_neighbour, Ty_neighbour, Fdet, grid.dx);
@@ -311,6 +337,8 @@ function T_new = recalculateT(T, i, j, kDet, grid)
                 approxSolution = max(temp, approxSolution);
                 if validSol(temp, Tx_neighbour, Tx(1)) || validSol(temp, Ty_neighbour, Ty(1))
                     validSolution = max(temp, validSolution);
+                else
+                    warning('no valid solution... ?')
                 end
             end
         end
@@ -320,7 +348,13 @@ function T_new = recalculateT(T, i, j, kDet, grid)
         error('something went wrong with the root finding, pls check...')
     end
     
-    T_new = validSolution;
+    
+    T_new = newMethodSol;
+    
+    if T_new ~= validSolution
+        warning('not the same answers, which is correct?')
+    end
+    
 end
 
 function T_new = recalculateT_new(T, i, j, kDet, grid)
@@ -383,6 +417,10 @@ function root = computeRoot(Tx, Ty, Fdet, dx)
     % now get the 2 solutions
     D = sqrt(b^2 - 4*a*c);
     
+    if D < 0
+        error('hallo, dat kan niet he!')
+    end
+    
     % positive solution is only valid
     root = (-b+D) / (2*a);
 end
@@ -431,7 +469,7 @@ function pBac(bac, g, T)
     
     
     for i = 1:length(x)
-        rectangle('Curvature', [1 1], 'Position', [x(i) - r(i), y(i) - r(i), 2 * r(i), 2 * r(i)], 'LineWidth', 0.1, 'EdgeColor', col, 'FaceColor', col);
+        rectangle('Curvature', [1 1], 'Position', [x(i) - r(i), y(i) - r(i), 2 * r(i), 2 * r(i)], 'LineWidth', 0.1, 'EdgeColor', col*1.5, 'FaceColor', col);
     end
     
     axis equal;
