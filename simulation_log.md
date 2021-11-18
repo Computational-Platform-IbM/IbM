@@ -76,8 +76,8 @@ For the finished column, please use :white_check_mark: (`:white_check_mark:`) wh
 | 0068              | Anaerobic-Competition (Run 2) [A]=0.1mM [O2]=0mg/L Ki=1mM   | Stratifying game project                        | 🕐 (C:PC)  | v2.3.0  |
 | 0069              | Anaerobic-Competition (Run 3) [A]=0.1mM [O2]=0mg/L Ki=1mM   | Stratifying game project                        | 🕐 (C:PC)  | v2.3.0  |
 | 0070              | Anaerobic-Coprotection (Run 1) [A]=0.01mM [O2]=0mg/L Ki=1mM | Stratifying game project                        | 🕐 (C:PC)  | v2.3.0  |
-| 0071              | Anaerobic-Coprotection (Run 2) [A]=0.01mM [O2]=0mg/L Ki=1mM | Stratifying game project                        | 🕐 (Dell)  | v2.3.0  |
-| 0072              | Anaerobic-Coprotection (Run 3) [A]=0.01mM [O2]=0mg/L Ki=1mM | Stratifying game project                        | 🕐 (Dell)  | v2.3.0  |
+| 0071              | Anaerobic-Coprotection (Run 2) [A]=0.01mM [O2]=0mg/L Ki=1mM | Stratifying game project                        | ✅         | v2.3.0  |
+| 0072              | Anaerobic-Coprotection (Run 3) [A]=0.01mM [O2]=0mg/L Ki=1mM | Stratifying game project                        | ✅         | v2.3.0  |
 | 0073              | Aerobic-Neutralism (Run 1) [A]=[B]=[C]=1/3mM [O2]=10mg/L    | Stratifying game project                        |           | v2.3.0  |
 | 0074              | Aerobic-Neutralism (Run 2) [A]=[B]=[C]=1/3mM [O2]=10mg/L    | Stratifying game project                        |           | v2.3.0  |
 | 0075              | Aerobic-Neutralism (Run 3) [A]=[B]=[C]=1/3mM [O2]=10mg/L    | Stratifying game project                        |           | v2.3.0  |
