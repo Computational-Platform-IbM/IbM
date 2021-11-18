@@ -1,6 +1,14 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]
+### Added
+- Detachment implemented with similar algorithm as in iDynomics
+- 
+### Changed
+### Fixed
+### Removed
+
 ## [2.3.0] - 2021-11-15
 ### Added
 - Dynamic dT for diffusion
