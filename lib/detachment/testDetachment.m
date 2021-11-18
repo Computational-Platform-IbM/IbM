@@ -22,7 +22,7 @@ end
 % grid.nY = 128;
 
 % get grid2nBacs
-[grid2bac, grid2nBacs] = determine_where_bacteria_in_grid(grid, bac);
+[~, grid2nBacs] = determine_where_bacteria_in_grid(grid, bac);
 timer = tic;
 
 % ----- IMPORTANT ------
@@ -80,6 +80,9 @@ for k = 1:length(i)
     % --------END IMPORTANT --------
     
     nFreeNb = getFreeNeighbourCount(ii, jj, Visited, grid);
+    if nFreeNb == 4
+        warning('How can we have 4 neighbours without biomass?')
+    end
     
     T(ii, jj) = grid.dx / (Fdetach * nFreeNb);
 end
@@ -91,29 +94,73 @@ end
 % use of heapstack for better performance in narrow_band
 % ----- END IMPORTANT ----
 
+% initialise stacks (not a real minheap, but we are not going to get closer
+% than this with MATLAB... <sadface>
+nStack = sum(Narrow_band, 'all'); % number of points in T_stack
+T_stack = zeros(nStack,1);
+index_stack = zeros(nStack, 2);
+T_stack(1:nStack,1) = T(Narrow_band);
+[i, j] = find(Narrow_band);
+index_stack(1:nStack, :) = [i, j];
 
 % ------------ Fast Marching --------------
-while sum(Narrow_band, 'all')
+while nStack
     % take narrow-band value with the lowest T value
-    [T_list, I] = sort(T(Narrow_band));
-    [i, j] = find(Narrow_band);
-    i = i(I);
-    j = j(I);
+    [T_stack(1:nStack), I] = sort(T_stack(1:nStack));
+    index_stack = index_stack(I, :);
 
-    i_point = i(1);
-    j_point = j(1); 
+    i_point = index_stack(1,1);
+    j_point = index_stack(1,2); 
 
-    % add point to visited
+    % remove from Narrow_band, T_stack and index_stack
     Narrow_band(i_point, j_point) = 0;
+    T_stack(1) = [];
+    index_stack(1,:) = [];
+    nStack = nStack - 1;
+    
+    % add point to visited
     Visited(i_point, j_point) = 1;
 
-    % for all neighbours of the point (from narrow-band or far):
-    [Narrow_band, Far, T] = updateNeighbour(mod(i_point+1-1, grid.nX)+1, j_point, Narrow_band, Far, Visited, T, grid, kDet);
-    [Narrow_band, Far, T] = updateNeighbour(mod(i_point-1-1, grid.nX)+1, j_point, Narrow_band, Far, Visited, T, grid, kDet);
-
-    [Narrow_band, Far, T] = updateNeighbour(i_point, mod(j_point+1-1, grid.nY)+1, Narrow_band, Far, Visited, T, grid, kDet);
-    if j_point ~= 1
-        [Narrow_band, Far, T] = updateNeighbour(i_point, mod(j_point-1-1, grid.nY)+1, Narrow_band, Far, Visited, T, grid, kDet);
+    offSet = [0, 0, +1, -1;  % i offset
+              +1, -1, 0, 0]; % j offset
+    
+    % update neighbours with new values and correct classifications
+    for nb = 1:length(offSet)
+        if j_point == 1 && offSet(2, nb) < 0 % break if on bottom (only in biofilm case this is relevant)
+            continue
+        end
+        
+        i_nb = mod(i_point + offSet(1, nb) - 1, grid.nX) + 1; % periodic boundary for now
+        j_nb = j_point + offSet(2, nb);
+        
+        if Visited(i_nb, j_nb) % if neighbour was already visited, then continue to next neighbour
+            continue
+        end
+        
+        % for all neighbours of the point (from narrow-band or far)
+        if Narrow_band(i_nb, j_nb)
+            % get index in stack
+            old_index = find(T_stack == T(i_nb, j_nb));
+        else
+            old_index = 0;
+        end
+        
+        % recalculate T value
+        T_val = recalculateT(T, i_nb, j_nb, kDet, grid, Visited);
+        
+        
+        % if it was already in stack, then update value, otherwise add it
+        % to the stack        
+        if Far(i_nb, j_nb) % remove from far and add to narrow band and add to stack
+            Far(i_nb, j_nb) = 0;
+            Narrow_band(i_nb, j_nb) = 1;
+            T_stack(nStack + 1) = T_val;
+            index_stack(nStack+1, :) = [i_nb, j_nb];
+            nStack = nStack + 1;
+        else % update stack
+            T_stack(old_index) = T_val;
+        end
+        T(i_nb, j_nb) = T_val;
     end
 
     
@@ -139,27 +186,27 @@ toc(timer)
 
 
 
-% ----- ANOTHER DEBUG PLOT --------
-pBac(bac, grid, T);
-
-figure(8); clf;
-% center of gridcells
-gx = linspace(grid.dx / 2, grid.dx*grid.nX - grid.dx/2, grid.nX);
-gy = linspace(grid.dy / 2, grid.dy*grid.nY - grid.dy/2, grid.nY);
-
-[X, Y] = meshgrid(gx,gy);
-
-% smooth the graph a bit...
-T_smooth = convn(T, (1/9)*ones(3), 'same');
-T_smoother = convn(T_smooth, (1/9)*ones(3), 'same');
-
-contourf(X,Y,T_smoother',[0,1,2,3,4,5,6,7,8,9,10]); hold on;
-colormap(viridis());
-colorbar();
-xlim([0, grid.nX*grid.dx]);
-ylim([0, grid.nY*grid.dy]);
-axis equal
-% ------ END DEBUG PLOT ------
+% % ----- ANOTHER DEBUG PLOT --------
+% pBac(bac, grid, T);
+% 
+% figure(8); clf;
+% % center of gridcells
+% gx = linspace(grid.dx / 2, grid.dx*grid.nX - grid.dx/2, grid.nX);
+% gy = linspace(grid.dy / 2, grid.dy*grid.nY - grid.dy/2, grid.nY);
+% 
+% [X, Y] = meshgrid(gx,gy);
+% 
+% % smooth the graph a bit...
+% T_smooth = convn(T, (1/9)*ones(3), 'same');
+% T_smoother = convn(T_smooth, (1/9)*ones(3), 'same');
+% 
+% contourf(X,Y,T_smoother',[0,1,2,3,4,5,6,7,8,9,10]); hold on;
+% colormap(viridis());
+% colorbar();
+% xlim([0, grid.nX*grid.dx]);
+% ylim([0, grid.nY*grid.dy]);
+% axis equal
+% % ------ END DEBUG PLOT ------
 
 
 
@@ -264,22 +311,6 @@ function Fdet = calculateLocalDetachmentRate(~, j, kDet, grid)
     
     % calculate Fdet
     Fdet = kDet * d^2;
-end
-
-function [Narrow_band, Far, T] = updateNeighbour(i, j, Narrow_band, Far, Visited, T, grid, kDet)
-    % update status of grid cell with regards to detachment and recalculate
-    % the Time-of-crossing using the quadratic approximation of the
-    % gradient.
-    
-    if Visited(i, j)
-        return
-    elseif Far(i, j) % remove from far and add to narrow band
-        Far(i, j) = 0;
-        Narrow_band(i, j) = 1;
-    end % if none of the above, then already in narrow band
-    
-    % recalculate T value
-    T(i, j) = recalculateT(T, i, j, kDet, grid, Visited);
 end
 
 function T_new = recalculateT(T, i, j, kDet, grid, Visited)
