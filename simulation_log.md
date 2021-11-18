@@ -76,32 +76,32 @@ For the finished column, please use :white_check_mark: (`:white_check_mark:`) wh
 | 0068              | Anaerobic-Competition (Run 2) [A]=0.1mM [O2]=0mg/L Ki=1mM   | Stratifying game project                        | 🕐 (C:PC)  | v2.3.0  |
 | 0069              | Anaerobic-Competition (Run 3) [A]=0.1mM [O2]=0mg/L Ki=1mM   | Stratifying game project                        | 🕐 (C:PC)  | v2.3.0  |
 | 0070              | Anaerobic-Coprotection (Run 1) [A]=0.01mM [O2]=0mg/L Ki=1mM | Stratifying game project                        | 🕐 (C:PC)  | v2.3.0  |
-| 0071              | Anaerobic-Coprotection (Run 2) [A]=0.01mM [O2]=0mg/L Ki=1mM | Stratifying game project                        |           | v2.3.0  |
-| 0072              | Anaerobic-Coprotection (Run 3) [A]=0.01mM [O2]=0mg/L Ki=1mM | Stratifying game project                        |           | v2.3.0  |
-| 0073              | Aerobic-Neutralism (Run 1) [A]=[B]=[C]=1/3mM [O2]=10mg/L    | Stratifying game project                        | 🕐 (HP)    | v2.3.0  |
-| 0074              | Aerobic-Neutralism (Run 2) [A]=[B]=[C]=1/3mM [O2]=10mg/L    | Stratifying game project                        | 🕐 (HP)    | v2.3.0  |
-| 0075              | Aerobic-Neutralism (Run 3) [A]=[B]=[C]=1/3mM [O2]=10mg/L    | Stratifying game project                        | 🕐 (HP)    | v2.3.0  |
-| 0076              | Aerobic-Neutralism (Run 1) [A]=[B]=[C]=1/3mM [O2]=6mg/L     | Stratifying game project                        | 🕐 (HP)    | v2.3.0  |
-| 0077              | Aerobic-Neutralism (Run 2) [A]=[B]=[C]=1/3mM [O2]=6mg/L     | Stratifying game project                        | 🕐 (HP)    | v2.3.0  |
-| 0078              | Aerobic-Neutralism (Run 3) [A]=[B]=[C]=1/3mM [O2]=6mg/L     | Stratifying game project                        | 🕐 (HP)    | v2.3.0  |
-| 0079              | Aerobic-Neutralism (Run 1) [A]=[B]=[C]=1/3mM [O2]=1mg/L     | Stratifying game project                        | 🕐 (HP)    | v2.3.0  |
-| 0080              | Aerobic-Neutralism (Run 2) [A]=[B]=[C]=1/3mM [O2]=1mg/L     | Stratifying game project                        | 🕐 (HP)    | v2.3.0  |
-| 0081              | Aerobic-Neutralism (Run 3) [A]=[B]=[C]=1/3mM [O2]=1mg/L     | Stratifying game project                        | 🕐 (HP)    | v2.3.0  |
-| 0082              | Aerobic-Neutralism (Run 1) [A]=[B]=[C]=1/3mM [O2]=0.5mg/L   | Stratifying game project                        | 🕐 (HP)    | v2.3.0  |
-| 0083              | Aerobic-Neutralism (Run 2) [A]=[B]=[C]=1/3mM [O2]=0.5mg/L   | Stratifying game project                        | 🕐 (HP)    | v2.3.0  |
-| 0084              | Aerobic-Neutralism (Run 3) [A]=[B]=[C]=1/3mM [O2]=0.5mg/L   | Stratifying game project                        | 🕐 (HP)    | v2.3.0  |
+| 0071              | Anaerobic-Coprotection (Run 2) [A]=0.01mM [O2]=0mg/L Ki=1mM | Stratifying game project                        | 🕐 (Dell)  | v2.3.0  |
+| 0072              | Anaerobic-Coprotection (Run 3) [A]=0.01mM [O2]=0mg/L Ki=1mM | Stratifying game project                        | 🕐 (Dell)  | v2.3.0  |
+| 0073              | Aerobic-Neutralism (Run 1) [A]=[B]=[C]=1/3mM [O2]=10mg/L    | Stratifying game project                        |           | v2.3.0  |
+| 0074              | Aerobic-Neutralism (Run 2) [A]=[B]=[C]=1/3mM [O2]=10mg/L    | Stratifying game project                        |           | v2.3.0  |
+| 0075              | Aerobic-Neutralism (Run 3) [A]=[B]=[C]=1/3mM [O2]=10mg/L    | Stratifying game project                        |           | v2.3.0  |
+| 0076              | Aerobic-Neutralism (Run 1) [A]=[B]=[C]=1/3mM [O2]=6mg/L     | Stratifying game project                        |           | v2.3.0  |
+| 0077              | Aerobic-Neutralism (Run 2) [A]=[B]=[C]=1/3mM [O2]=6mg/L     | Stratifying game project                        |           | v2.3.0  |
+| 0078              | Aerobic-Neutralism (Run 3) [A]=[B]=[C]=1/3mM [O2]=6mg/L     | Stratifying game project                        |           | v2.3.0  |
+| 0079              | Aerobic-Neutralism (Run 1) [A]=[B]=[C]=1/3mM [O2]=1mg/L     | Stratifying game project                        |           | v2.3.0  |
+| 0080              | Aerobic-Neutralism (Run 2) [A]=[B]=[C]=1/3mM [O2]=1mg/L     | Stratifying game project                        | ✅         | v2.3.0  |
+| 0081              | Aerobic-Neutralism (Run 3) [A]=[B]=[C]=1/3mM [O2]=1mg/L     | Stratifying game project                        | ✅         | v2.3.0  |
+| 0082              | Aerobic-Neutralism (Run 1) [A]=[B]=[C]=1/3mM [O2]=0.5mg/L   | Stratifying game project                        | ✅         | v2.3.0  |
+| 0083              | Aerobic-Neutralism (Run 2) [A]=[B]=[C]=1/3mM [O2]=0.5mg/L   | Stratifying game project                        | ✅         | v2.3.0  |
+| 0084              | Aerobic-Neutralism (Run 3) [A]=[B]=[C]=1/3mM [O2]=0.5mg/L   | Stratifying game project                        | ✅         | v2.3.0  |
 | 0085              | Aerobic-Commensalism (Run 1) [A]=1mM [O2]=10mg/L            | Stratifying game project                        |           | v2.3.0  |
 | 0086              | Aerobic-Commensalism (Run 2) [A]=1mM [O2]=10mg/L            | Stratifying game project                        |           | v2.3.0  |
 | 0087              | Aerobic-Commensalism (Run 3) [A]=1mM [O2]=10mg/L            | Stratifying game project                        |           | v2.3.0  |
 | 0088              | Aerobic-Commensalism (Run 1) [A]=1mM [O2]=6mg/L             | Stratifying game project                        |           | v2.3.0  |
 | 0089              | Aerobic-Commensalism (Run 2) [A]=1mM [O2]=6mg/L             | Stratifying game project                        |           | v2.3.0  |
 | 0090              | Aerobic-Commensalism (Run 3) [A]=1mM [O2]=6mg/L             | Stratifying game project                        |           | v2.3.0  |
-| 0091              | Aerobic-Commensalism (Run 1) [A]=1mM [O2]=1mg/L             | Stratifying game project                        | 🕐 (Dell)  | v2.3.0  |
-| 0092              | Aerobic-Commensalism (Run 2) [A]=1mM [O2]=1mg/L             | Stratifying game project                        | 🕐 (Dell)  | v2.3.0  |
-| 0093              | Aerobic-Commensalism (Run 3) [A]=1mM [O2]=1mg/L             | Stratifying game project                        | 🕐 (Dell)  | v2.3.0  |
-| 0094              | Aerobic-Commensalism (Run 1) [A]=1mM [O2]=0.5mg/L           | Stratifying game project                        | 🕐 (Dell)  | v2.3.0  |
-| 0095              | Aerobic-Commensalism (Run 2) [A]=1mM [O2]=0.5mg/L           | Stratifying game project                        | 🕐 (Dell)  | v2.3.0  |
-| 0096              | Aerobic-Commensalism (Run 3) [A]=1mM [O2]=0.5mg/L           | Stratifying game project                        | 🕐 (Dell)  | v2.3.0  |
+| 0091              | Aerobic-Commensalism (Run 1) [A]=1mM [O2]=1mg/L             | Stratifying game project                        |           | v2.3.0  |
+| 0092              | Aerobic-Commensalism (Run 2) [A]=1mM [O2]=1mg/L             | Stratifying game project                        |           | v2.3.0  |
+| 0093              | Aerobic-Commensalism (Run 3) [A]=1mM [O2]=1mg/L             | Stratifying game project                        |           | v2.3.0  |
+| 0094              | Aerobic-Commensalism (Run 1) [A]=1mM [O2]=0.5mg/L           | Stratifying game project                        | ✅         | v2.3.0  |
+| 0095              | Aerobic-Commensalism (Run 2) [A]=1mM [O2]=0.5mg/L           | Stratifying game project                        | ✅         | v2.3.0  |
+| 0096              | Aerobic-Commensalism (Run 3) [A]=1mM [O2]=0.5mg/L           | Stratifying game project                        | ✅         | v2.3.0  |
 | 0097              | Aerobic-Commensalism (Run 1) [A]=0.5mM [O2]=10mg/L          | Stratifying game project                        |           | v2.3.0  |
 | 0098              | Aerobic-Commensalism (Run 2) [A]=0.5mM [O2]=10mg/L          | Stratifying game project                        |           | v2.3.0  |
 | 0099              | Aerobic-Commensalism (Run 3) [A]=0.5mM [O2]=10mg/L          | Stratifying game project                        |           | v2.3.0  |
