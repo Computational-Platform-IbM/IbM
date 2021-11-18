@@ -7,10 +7,10 @@ kDet = 200e-6; % 1/(micrometer h)
 
 if isfile('testScenario.mat')
     load('testScenario.mat', 'grid', 'bac')
-    pBac(bac, grid, 0);
+%     pBac(bac, grid, 0);
 else
     [grid, bac] = createTestScenario();
-    pBac(bac, grid, 0);
+%     pBac(bac, grid, 0);
 end
 
 
@@ -25,10 +25,15 @@ end
 [grid2bac, grid2nBacs] = determine_where_bacteria_in_grid(grid, bac);
 timer = tic;
 
+% ----- IMPORTANT ------
+% use diffregion here for the real version
 biofilm = convn(grid2nBacs, ones(3), 'same') > 0;
+% ----END IMPORTANT ----
+
+
 
 % plot biofilm
-plotLogicalGrid(grid, biofilm, 'Biofilm'); % {'Biofilm', 'Visited', 'Narrow band', 'Far'}
+% plotLogicalGrid(grid, biofilm, 'Biofilm'); % {'Biofilm', 'Visited', 'Narrow band', 'Far'}
 
 
 
@@ -82,6 +87,10 @@ end
 % plotDetachTime(grid, T, kDet);
 
 
+% ------- IMPORTANT ------
+% use of heapstack for better performance in narrow_band
+% ----- END IMPORTANT ----
+
 
 % ------------ Fast Marching --------------
 while sum(Narrow_band, 'all')
@@ -107,22 +116,30 @@ while sum(Narrow_band, 'all')
         [Narrow_band, Far, T] = updateNeighbour(i_point, mod(j_point-1-1, grid.nY)+1, Narrow_band, Far, Visited, T, grid, kDet);
     end
 
+    
+% ------- DEBUG PLOTS -------
 %     plotLogicalGrid(grid, Visited, 'Visited'); % {'Biofilm', 'Visited', 'Narrow band', 'Far'}
-    plotLogicalGrid(grid, Narrow_band, 'Narrow band'); % {'Biofilm', 'Visited', 'Narrow band', 'Far'}
+%     plotLogicalGrid(grid, Narrow_band, 'Narrow band'); % {'Biofilm', 'Visited', 'Narrow band', 'Far'}
 %     plotLogicalGrid(grid, Far, 'Far'); % {'Biofilm', 'Visited', 'Narrow band', 'Far'}
 %     plotDetachTime(grid, T, kDet);
-    drawnow()
+%     drawnow()
+% ----- END DEBUG PLOTS -----
 
 
 end
 toc(timer)
 
-% plotLogicalGrid(grid, Visited, 'Visited'); % {'Biofilm', 'Visited', 'Narrow band', 'Far'}
-% plotLogicalGrid(grid, Narrow_band, 'Narrow band'); % {'Biofilm', 'Visited', 'Narrow band', 'Far'}
-% plotLogicalGrid(grid, Far, 'Far'); % {'Biofilm', 'Visited', 'Narrow band', 'Far'}
-plotDetachTime(grid, T, kDet);
-drawnow()
+% ------- DEBUG PLOTS -------
+%     plotLogicalGrid(grid, Visited, 'Visited'); % {'Biofilm', 'Visited', 'Narrow band', 'Far'}
+%     plotLogicalGrid(grid, Narrow_band, 'Narrow band'); % {'Biofilm', 'Visited', 'Narrow band', 'Far'}
+%     plotLogicalGrid(grid, Far, 'Far'); % {'Biofilm', 'Visited', 'Narrow band', 'Far'}
+%     plotDetachTime(grid, T, kDet);
+%     drawnow()
+% ----- END DEBUG PLOTS -----
 
+
+
+% ----- ANOTHER DEBUG PLOT --------
 pBac(bac, grid, T);
 
 figure(8); clf;
@@ -132,6 +149,7 @@ gy = linspace(grid.dy / 2, grid.dy*grid.nY - grid.dy/2, grid.nY);
 
 [X, Y] = meshgrid(gx,gy);
 
+% smooth the graph a bit...
 T_smooth = convn(T, (1/9)*ones(3), 'same');
 T_smoother = convn(T_smooth, (1/9)*ones(3), 'same');
 
@@ -141,7 +159,7 @@ colorbar();
 xlim([0, grid.nX*grid.dx]);
 ylim([0, grid.nY*grid.dy]);
 axis equal
-
+% ------ END DEBUG PLOT ------
 
 
 
@@ -343,7 +361,7 @@ function root = computeRoot(Tx, Ty, Fdet, dx)
     D = sqrt(b^2 - 4*a*c);
     
     if D < 0
-        error('hallo, dat kan niet he!')
+        error('ValueError:Should always be above 0...')
     end
     
     % positive solution is only valid
@@ -387,7 +405,7 @@ function pBac(bac, g, T)
 
         [X, Y] = meshgrid(gx,gy);
 
-        contourf(X,Y,T',[0,1,2,3,4,5,6,7,8,9,10]); hold on;
+        contourf(X,Y,T',0:10); hold on;
         colormap(viridis());
         colorbar();
     end
@@ -470,7 +488,7 @@ function plotDetachTime(grid, T, kDet)
     try
         ax = gca;
         ax.Children(1).CData = T';
-        caxis([0, 1]);
+        caxis([0, 12]);
         drawnow();
     catch e
         switch e.identifier
@@ -478,7 +496,7 @@ function plotDetachTime(grid, T, kDet)
                 imagesc([grid.dx/2, grid.nX*grid.dx - grid.dx/2], [grid.dy/2, grid.nY*grid.dy - grid.dy/2], T'); hold on;
                 colormap(viridis());
                 colorbar();
-                caxis([0, min(kDet, 10)])
+                caxis([0, 12])
                 axis equal;
                 xlim([0, grid.nX*grid.dx]);
                 ylim([0, grid.nY*grid.dy]);
