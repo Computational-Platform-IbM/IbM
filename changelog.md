@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 ### Added
 - Detachment implemented with similar algorithm as in iDynomics
+- Function to plot detachment time per grid cell
+- Function to plot bacteria with overlay of detachment times
 - 
 ### Changed
 ### Fixed
