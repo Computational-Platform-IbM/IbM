@@ -81,9 +81,9 @@ For the finished column, please use :white_check_mark: (`:white_check_mark:`) wh
 | 0073              | Aerobic-Neutralism (Run 1) [A]=[B]=[C]=1/3mM [O2]=10mg/L    | Stratifying game project                        | 🕐 (Dell)  | v2.3.0  |
 | 0074              | Aerobic-Neutralism (Run 2) [A]=[B]=[C]=1/3mM [O2]=10mg/L    | Stratifying game project                        | 🕐 (Dell)  | v2.3.0  |
 | 0075              | Aerobic-Neutralism (Run 3) [A]=[B]=[C]=1/3mM [O2]=10mg/L    | Stratifying game project                        | 🕐 (Dell)  | v2.3.0  |
-| 0076              | Aerobic-Neutralism (Run 1) [A]=[B]=[C]=1/3mM [O2]=6mg/L     | Stratifying game project                        | 🕐 (HP)    | v2.3.0  |
-| 0077              | Aerobic-Neutralism (Run 2) [A]=[B]=[C]=1/3mM [O2]=6mg/L     | Stratifying game project                        | 🕐 (HP)    | v2.3.0  |
-| 0078              | Aerobic-Neutralism (Run 3) [A]=[B]=[C]=1/3mM [O2]=6mg/L     | Stratifying game project                        | 🕐 (HP)    | v2.3.0  |
+| 0076              | Aerobic-Neutralism (Run 1) [A]=[B]=[C]=1/3mM [O2]=6mg/L     | Stratifying game project                        | ✅         | v2.3.0  |
+| 0077              | Aerobic-Neutralism (Run 2) [A]=[B]=[C]=1/3mM [O2]=6mg/L     | Stratifying game project                        | ✅         | v2.3.0  |
+| 0078              | Aerobic-Neutralism (Run 3) [A]=[B]=[C]=1/3mM [O2]=6mg/L     | Stratifying game project                        | ✅         | v2.3.0  |
 | 0079              | Aerobic-Neutralism (Run 1) [A]=[B]=[C]=1/3mM [O2]=1mg/L     | Stratifying game project                        | ✅         | v2.3.0  |
 | 0080              | Aerobic-Neutralism (Run 2) [A]=[B]=[C]=1/3mM [O2]=1mg/L     | Stratifying game project                        | ✅         | v2.3.0  |
 | 0081              | Aerobic-Neutralism (Run 3) [A]=[B]=[C]=1/3mM [O2]=1mg/L     | Stratifying game project                        | ✅         | v2.3.0  |
@@ -105,9 +105,9 @@ For the finished column, please use :white_check_mark: (`:white_check_mark:`) wh
 | 0097              | Aerobic-Commensalism (Run 1) [A]=0.5mM [O2]=10mg/L          | Stratifying game project                        |           | v2.3.0  |
 | 0098              | Aerobic-Commensalism (Run 2) [A]=0.5mM [O2]=10mg/L          | Stratifying game project                        |           | v2.3.0  |
 | 0099              | Aerobic-Commensalism (Run 3) [A]=0.5mM [O2]=10mg/L          | Stratifying game project                        |           | v2.3.0  |
-| 0100              | Aerobic-Commensalism (Run 1) [A]=0.5mM [O2]=6mg/L           | Stratifying game project                        |           | v2.3.0  |
-| 0101              | Aerobic-Commensalism (Run 2) [A]=0.5mM [O2]=6mg/L           | Stratifying game project                        |           | v2.3.0  |
-| 0102              | Aerobic-Commensalism (Run 3) [A]=0.5mM [O2]=6mg/L           | Stratifying game project                        |           | v2.3.0  |
+| 0100              | Aerobic-Commensalism (Run 1) [A]=0.5mM [O2]=6mg/L           | Stratifying game project                        | 🕐 (HP)    | v2.3.0  |
+| 0101              | Aerobic-Commensalism (Run 2) [A]=0.5mM [O2]=6mg/L           | Stratifying game project                        | 🕐 (HP)    | v2.3.0  |
+| 0102              | Aerobic-Commensalism (Run 3) [A]=0.5mM [O2]=6mg/L           | Stratifying game project                        | 🕐 (HP)    | v2.3.0  |
 | 0103              | Aerobic-Commensalism (Run 1) [A]=0.5mM [O2]=1mg/L           | Stratifying game project                        | ✅         | v2.3.0  |
 | 0104              | Aerobic-Commensalism (Run 2) [A]=0.5mM [O2]=1mg/L           | Stratifying game project                        | ✅         | v2.3.0  |
 | 0105              | Aerobic-Commensalism (Run 3) [A]=0.5mM [O2]=1mg/L           | Stratifying game project                        | ✅         | v2.3.0  |
