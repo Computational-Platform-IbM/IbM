@@ -2,6 +2,10 @@ function integTime(simulation_file, directory)
 
     %% load preset file
     load(simulation_file, 'grid', 'bac', 'constants', 'init_params', 'settings')
+    
+    % ----- QUICK FIX ------
+    constants.dT_bac = 1;
+    % --- END QUICK FIX ------
 
     
     %% Overall settings
@@ -293,7 +297,7 @@ function integTime(simulation_file, directory)
 
                     % bacteria: detachment {for now only rough detachment is implemented}
                     tic;
-                    bac = bacteria_detachment(bac, grid, constants);
+                    bac = bacteria_detachment(bac, grid, constants, settings, Time.dT_bac);
                     profiling(iProf, 7) = profiling(iProf, 7) + toc;
 
                     % display number of bacteria in system
@@ -436,6 +440,7 @@ Figure reservations:
 10) Reaction profiles (2D)
 11) RES value (or residual of diffusion) profile (2D)
 12) BacSim error (approximation of dC/dt)
+13) Detach Time
 %}
 
 % IMPORTANT FOR PLOTTING!!!
