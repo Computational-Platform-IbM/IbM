@@ -142,7 +142,7 @@ constants.dynamicDT.iterThresholdIncrease = 25;
 constants.dynamicDT.initRESThresholdIncrease = 20/100;
 
 constants.dynamicDT.nItersCycle = 500; % in diffusion to steady state, after how many diffusion iterations should bulk conc be recalculated
-constants.dynamicDT.tolerance_no_convergence = 1e-4; % maximum difference between RES values between diffusion iterations to be considered not converging
+constants.dynamicDT.tolerance_no_convergence = 1e-6; % maximum difference between RES values between diffusion iterations to be considered not converging
 constants.dynamicDT.maxRelDiffBulkConc = 0.02; % maximum relative difference between bulk concentration values
 
 
