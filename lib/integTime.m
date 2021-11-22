@@ -4,7 +4,10 @@ function integTime(simulation_file, directory)
     load(simulation_file, 'grid', 'bac', 'constants', 'init_params', 'settings')
     
     % ----- QUICK FIX ------
+    constants.simulation_end = 5000;
     constants.dT_bac = 1;
+    settings.detachment = 'mechanistic';
+    constants.kDet = 1; % [1/(m.h)]
     % --- END QUICK FIX ------
 
     
@@ -76,6 +79,7 @@ function integTime(simulation_file, directory)
 
     % ----- DEBUG -----
     constants.Tol_a = 1e-16;
+    constants.debug.plotConvergence = true;
     % ----- END DEBUG -----
 
     % ----- DEBUG -----
@@ -91,7 +95,7 @@ function integTime(simulation_file, directory)
     constants.dynamicDT.initRESThresholdIncrease = 20/100;
 
     constants.dynamicDT.nItersCycle = 500; % in diffusion to steady state, after how many diffusion iterations should bulk conc be recalculated
-    constants.dynamicDT.tolerance_no_convergence = 1e-4; % maximum difference between RES values between diffusion iterations to be considered not converging
+    constants.dynamicDT.tolerance_no_convergence = 1e-6; % maximum difference between RES values between diffusion iterations to be considered not converging
     constants.dynamicDT.maxRelDiffBulkConc = 0.02; % maximum relative difference between bulk concentration values
     % ----- END DEBUG -----
 

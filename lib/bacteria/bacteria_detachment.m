@@ -26,7 +26,7 @@ function bac = bacteria_detachment(bac, grid, constants, settings, timestep)
             % update/generate grid2nBacs struct (after division previous is
             % not valid anymore)
             [grid2bac, grid2nBacs] = determine_where_bacteria_in_grid(grid, bac);
-            T = calcTimeOfDetach(bac, grid, grid2nBacs);
+            T = calcTimeOfDetach(bac, grid, grid2nBacs, constants);
             
             ratio = timestep ./ T;
             

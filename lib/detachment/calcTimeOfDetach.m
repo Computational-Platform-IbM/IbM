@@ -1,4 +1,4 @@
-function T = calcTimeOfDetach(bac, grid, grid2nBacs)
+function T = calcTimeOfDetach(bac, grid, grid2nBacs, constants)
     % Calculate the time of detachment for each gridcell in the simulation
     % domain
     %
@@ -9,6 +9,9 @@ function T = calcTimeOfDetach(bac, grid, grid2nBacs)
     %
     % -> T: matrix with per gridcell the time of detachment
 
+    % extract variables
+    kDet = constants.kDet;
+    
     % calculate center of the granule
     xcenter = mean(bac.x);
     ycenter = mean(bac.y);
@@ -32,7 +35,7 @@ function T = calcTimeOfDetach(bac, grid, grid2nBacs)
     kernel([1, 3],2) = -1/4;
     kernel(2,[1, 3]) = -1/4;
     kernel(2,2) = 1;
-    Narrow_band = convn(biofilm, kernel, 'valid') > 0;
+    Narrow_band = convn(biofilm, kernel, 'same') > 0;
 
     Far = biofilm & ~Narrow_band;
 
