@@ -1,6 +1,16 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]
+### Added
+- Detachment implemented with similar algorithm as in iDynomics
+- Function to plot detachment time per grid cell
+- Function to plot bacteria with overlay of detachment times
+- 
+### Changed
+### Fixed
+### Removed
+
 ## [2.3.0] - 2021-11-15
 ### Added
 - Dynamic dT for diffusion

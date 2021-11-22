@@ -6,10 +6,10 @@ Manually setting the structs for bac, grid, constants
 clearvars -except R;
 clc;
 addpath(genpath('lib'));
-javaaddpath([pwd '\lib\shovingQuadTree.jar']);
+javaaddpath([pwd '\lib\bacteria\shovingQuadTreekDist.jar']);
 
 if ~exist('R', 'var')
-    R = loadModelXlsx('AOBNOBAMX.xlsx');
+    R = loadModelXlsx('./planning/Excels/Templates/AOBNOBAMX_template.xlsx');
 %     R = loadModelXlsx('Testing.xlsx');
     clc;
 end
@@ -18,8 +18,6 @@ warning('on', 'DEBUG:noActionRequired');
 warning('on', 'DEBUG:actionRequired');
 
 %% Manually creating the structs required for integTime (i.e. loadExcel mimic)
-rng(2021);
-
 grid = struct;
 grid.dx = R.Sxy.dx;
 grid.dy = R.Sxy.dy;
@@ -28,11 +26,11 @@ grid.nY = R.Sxy.ny;
 grid.blayer_thickness = R.Sxy.T_blayer;
 
 bac = struct;
-bac.x = R.bac.atrib(:,1);
-bac.y = R.bac.atrib(:,2);
-n = length(bac.x);
-% n = 5000; radius = R.Sxy.dx * 19; % arbitrary %500 bacs => 4, 5000 bacs => 19
-% [bac.x, bac.y] = rand_circle(n, grid.nX/2*grid.dx, grid.nY/2*grid.dy, radius);
+% bac.x = R.bac.atrib(:,1);
+% bac.y = R.bac.atrib(:,2);
+% n = length(bac.x);
+n = 500; radius = R.Sxy.dx * 4; % arbitrary %500 bacs => 4, 5000 bacs => 19
+[bac.x, bac.y] = rand_circle(n, grid.nX/2*grid.dx, grid.nY/2*grid.dy, radius);
 bac.species = randi(4, size(bac.x)); % random for now
 % bac.species = R.bac.atrib(:,5);
 bac.molarMass = R.bac.atrib(1,3) * ones(n, 1);
@@ -61,12 +59,12 @@ constants.Vg = (grid.dx ^ 3) * 1000; % L
 constants.StNames = R.St.StNames(1:8);
 constants.speciesNames = {'AOB', 'NOB (Nitrob.)', 'NOB (Nitrosp.)', 'AMX'};
 constants.react_v = R.pTh.react_v;
-constants.Ks = R.pTh.Ks(:, 1:3);
-constants.Ki = R.pTh.Ks(:, 4:6);
+constants.Ks = R.pTh.Ks;
+constants.Ki = R.pTh.Ki;
 constants.MatrixMet = R.rm.MatrixMet;
 constants.MatrixDecay = R.rm.MatrixDecay_mod;
 constants.influent_concentrations = R.Inf.St;
-constants.pOp.NH3sp = R.pOp.NH3sp; % Setpoint of NH3 in reactor
+constants.pOp.NH3sp = R.pOp.SP; % Setpoint of NH3 in reactor
 constants.constantN = R.flagN;
 constants.kDist = 1.5;                                    % Extra distance between bacteria, when kDist > 1.
 constants.max_granule_radius = 1000*10^(-6);  % C: see excel          % [m] Maximum radius of granule. To compute the detachment of bacteria when bac_norm > r_max
@@ -106,11 +104,11 @@ constants.debug.plotProfiling = false; %
 
 settings = struct;
 settings.parallelized = false;
-settings.structure_model = true;
+settings.structure_model = false;
 if settings.structure_model
     settings.type = 'Neut'; % {'Neut': Neutralism, 'Comp': Competition, 'Comm': Commensalism, 'Copr': Co-protection}
 end
-settings.pHincluded = false; % true -> pH resolution included; false -> pH resolution not included
+settings.pHincluded = true; % true -> pH resolution included; false -> pH resolution not included
 
 init_params = struct;
 init_params.init_bulk_conc = R.Sxy.Sbc_Dir;

@@ -60,6 +60,7 @@ function [bulk_concentrations, invHRT] = calculate_bulk_concentrations(constants
     
         if any(bulk_concentrations < 0) %<E: Negative concentration from control pH of reactor. />
             warning('DEBUG:actionRequired', 'debug: negative bulk concentration encountered after pH control... correction required?')
+            bulk_concentrations = bulk_concentrations .* (bulk_concentrations > 0);
         end
     end
     
