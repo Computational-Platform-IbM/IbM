@@ -1,17 +1,20 @@
 clear all
 
 % variable declaration
-kDet = 200e-6; % 1/(micrometer h)
+kDet = 5; % 1/(meter h)
 
+load('./Results/0002/sim_0002.mat')
+load('./Results/0002/backup.mat')
+% load('sim_0001.mat')
+% bac.mu = ones(size(bac.x));
 
-
-if isfile('testScenario.mat')
-    load('testScenario.mat', 'grid', 'bac')
+% if isfile('testScenario.mat')
+%     load('testScenario.mat', 'grid', 'bac')
 %     pBac(bac, grid, 0);
-else
-    [grid, bac] = createTestScenario();
-%     pBac(bac, grid, 0);
-end
+% else
+%     [grid, bac] = createTestScenario();
+% %     pBac(bac, grid, 0);
+% end
 
 
 
@@ -22,12 +25,16 @@ end
 % grid.nY = 128;
 
 % get grid2nBacs
-[~, grid2nBacs] = determine_where_bacteria_in_grid(grid, bac);
+[grid2bac, grid2nBacs] = determine_where_bacteria_in_grid(grid, bac);
+
+% [diffusion_region, focus_region] = determine_diffusion_region(grid2bac, grid2nBacs, bac, grid);
+% xRange = focus_region.x0:focus_region.x1;
+% yRange = focus_region.y0:focus_region.y1;
 timer = tic;
 
 % ----- IMPORTANT ------
-% use diffregion here for the real version
-biofilm = convn(grid2nBacs, ones(3), 'same') > 0;
+% use diffregion here for the real version?
+biofilm = grid2nBacs > 0;
 % ----END IMPORTANT ----
 
 
@@ -38,7 +45,7 @@ biofilm = convn(grid2nBacs, ones(3), 'same') > 0;
 
 
 % create three matrices with all grid cells
-T = zeros(grid.nX, grid.nY);
+T = zeros(size(biofilm));
 
 % T(~biofilm) = 0; % redundant, because initialised with 0
 Visited = ~biofilm;
@@ -79,20 +86,16 @@ for k = 1:length(i)
     % gridcells, but mathematically it does not make too much sense...?
     % --------END IMPORTANT --------
     
-    nFreeNb = getFreeNeighbourCount(ii, jj, Visited, grid);
-    if nFreeNb == 4
-        warning('How can we have 4 neighbours without biomass?')
-    end
+    nFreeNb = getFreeNeighbourCount(ii, jj, Visited, grid) * 2;
+%     if nFreeNb == 4
+%         warning('How can we have 4 neighbours without biomass?')
+%     end
     
     T(ii, jj) = grid.dx / (Fdetach * nFreeNb);
 end
 
 % plotDetachTime(grid, T, kDet);
 
-
-% ------- IMPORTANT ------
-% use of heapstack for better performance in narrow_band
-% ----- END IMPORTANT ----
 
 % initialise stacks (not a real minheap, but we are not going to get closer
 % than this with MATLAB... <sadface>
@@ -186,9 +189,10 @@ toc(timer)
 
 
 
-% % ----- ANOTHER DEBUG PLOT --------
+
+% ----- ANOTHER DEBUG PLOT --------
 % pBac(bac, grid, T);
-% 
+
 % figure(8); clf;
 % % center of gridcells
 % gx = linspace(grid.dx / 2, grid.dx*grid.nX - grid.dx/2, grid.nX);
@@ -206,7 +210,54 @@ toc(timer)
 % xlim([0, grid.nX*grid.dx]);
 % ylim([0, grid.nY*grid.dy]);
 % axis equal
-% % ------ END DEBUG PLOT ------
+% ------ END DEBUG PLOT ------
+
+
+tic;
+ratio = 1 ./ T;
+
+% decrease mass of bacteria
+[i, j] = find(ratio > 0 & ratio < 1);
+for k=1:length(i)
+    ii = i(k);
+    jj = j(k);
+    r = ratio(ii,jj);
+    iBacs = nonzeros(grid2bac(ii, jj, :));
+    for n = 1:length(iBacs)
+        iBac = iBacs(n);        
+        bac.molarMass(iBac) = bac.molarMass(iBac) * (1 - r);
+    end    
+end
+
+% remove bacteria with T < timestep
+[i, j] = find(ratio >= 1 & ratio < Inf);
+bac_detach = zeros(length(i)*size(grid2bac, 3), 1, 'uint32');
+nDetach = 0;
+for k = 1:length(i)
+    ii = i(k);
+    jj = j(k);
+    iBacs = nonzeros(grid2bac(ii, jj, :));
+    n_temp = length(iBacs);
+    bac_detach(nDetach + 1:nDetach + n_temp) = iBacs;
+    nDetach = nDetach + n_temp;
+end
+bac_detach = bac_detach(1:nDetach);
+
+
+
+bac.x(bac_detach) = [];
+bac.y(bac_detach) = [];
+bac.radius(bac_detach) = [];
+bac.species(bac_detach) = [];
+bac.molarMass(bac_detach) = [];
+bac.active(bac_detach) = [];
+bac.mu(bac_detach) = [];
+
+mask_tooSmall = bac.molarMass * constants.bac_MW < constants.min_bac_mass_grams & bac.active;
+nCellsTooSmall = sum(mask_tooSmall);
+disp(nCellsTooSmall)
+
+toc
 
 
 
@@ -302,15 +353,27 @@ function bac = fill_rect(bac, xRange, yRange, rRange)
     end
 end
 
-function Fdet = calculateLocalDetachmentRate(~, j, kDet, grid)
+function Fdet = calculateLocalDetachmentRate(i, j, kDet, grid)
     % Calculate the local detachment speed: Fdet = kDet * d^2.
     % Using height in biofilm as measure for now.
     
     % calculate height/distance
-    d = (j - 0.5)*grid.dy;
+%     d = (j - 0.5)*grid.dy;
+    x = (i - 0.5)*grid.dx;
+    y = (j - 0.5)*grid.dy;
+    
+    xc = (grid.nX*grid.dx)/2;
+    yc = (grid.nY*grid.dy)/2;
+    
+    d = sqrt((x - xc)^2 + (y - yc)^2);
+    
     
     % calculate Fdet
     Fdet = kDet * d^2;
+    
+    if d == 0
+        Fdet = Inf;
+    end
 end
 
 function T_new = recalculateT(T, i, j, kDet, grid, Visited)
