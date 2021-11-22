@@ -33,7 +33,7 @@ load('./Results/0002/backup.mat')
 timer = tic;
 
 % ----- IMPORTANT ------
-% use diffregion here for the real version
+% use diffregion here for the real version?
 biofilm = grid2nBacs > 0;
 % ----END IMPORTANT ----
 
@@ -186,6 +186,7 @@ toc(timer)
 %     plotDetachTime(grid, T, kDet);
 %     drawnow()
 % ----- END DEBUG PLOTS -----
+
 
 
 
