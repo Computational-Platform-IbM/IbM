@@ -4,10 +4,10 @@ function integTime(simulation_file, directory)
     load(simulation_file, 'grid', 'bac', 'constants', 'init_params', 'settings')
     
     % ----- QUICK FIX ------
-    constants.simulation_end = 5000;
-    constants.dT_bac = 1;
-    settings.detachment = 'mechanistic';
-    constants.kDet = 1; % [1/(m.h)]
+%     constants.simulation_end = 5000;
+%     constants.dT_bac = 1;
+%     settings.detachment = 'mechanistic';
+%     constants.kDet = 1; % [1/(m.h)]
     % --- END QUICK FIX ------
 
     
@@ -63,15 +63,15 @@ function integTime(simulation_file, directory)
         end
 
         Time.bac = Time.dT_bac; % include dT_bac and dT_divide in one variable
-        Time.history = zeros(ceil(constants.simulation_end / constants.dT_bac) * 10, 1); % save time at each Steady-state cycle
+        Time.history = zeros(ceil(constants.simulation_end / constants.dT_bac) * 5, 1); % save time at each Steady-state cycle
 
-        profiling = zeros(ceil(constants.simulation_end / constants.dT_bac) * 10, 11);
-        maxErrors = zeros(ceil(constants.simulation_end / constants.dT_bac) * 10, 1); % store max error per dT_bac
-        normOverTime = zeros(ceil(constants.simulation_end / constants.dT_bac) * 10, 1); % store norm of concentration differance per dT_bac
-        nDiffIters = zeros(ceil(constants.simulation_end / constants.dT_bac) * 10, 1); % store number of diffusion iterations per steady state
-        bulk_history = zeros(size(bulk_concs, 1), ceil(constants.simulation_end / constants.dT_bac) * 10);
+        profiling = zeros(ceil(constants.simulation_end / constants.dT_bac) * 5, 11);
+        maxErrors = zeros(ceil(constants.simulation_end / constants.dT_bac) * 5, 1); % store max error per dT_bac
+        normOverTime = zeros(ceil(constants.simulation_end / constants.dT_bac) * 5, 1); % store norm of concentration differance per dT_bac
+        nDiffIters = zeros(ceil(constants.simulation_end / constants.dT_bac) * 5, 1); % store number of diffusion iterations per steady state
+        bulk_history = zeros(size(bulk_concs, 1), ceil(constants.simulation_end / constants.dT_bac) * 5);
         bulk_history(:, 1) = bulk_concs; % is added after += 1 of iProf, thus give first value already
-        maxInitRES = zeros(ceil(constants.simulation_end / constants.dT_bac) * 10, 1);
+        maxInitRES = zeros(ceil(constants.simulation_end / constants.dT_bac) * 5, 1);
 
         % initialise saving file
         save_slice(bac, conc, bulk_concs, pH, invHRT, 0, grid, constants, directory);
@@ -79,7 +79,7 @@ function integTime(simulation_file, directory)
 
     % ----- DEBUG -----
     constants.Tol_a = 1e-16;
-    constants.debug.plotConvergence = true;
+    constants.debug.plotConvergence = false;
     % ----- END DEBUG -----
 
     % ----- DEBUG -----
@@ -171,11 +171,13 @@ function integTime(simulation_file, directory)
             conc = set_concentrations(conc, bulk_concs, ~diffusion_region);
 
             % ----- DEBUG -----
-            plotConvergence(RESvalues, iRES, constants, Time.current)
-            plotNormDiff(norm_diff, iRES, constants, Time.current)
-            plotBacSimError(res_bacsim, iRES, constants, Time.current)
-            drawnow()
-            fprintf('max RES value at the moment: %.2f %%\n\n', max(RESvalues(:,iRES))*100)
+            if constants.debug.plotConvergence
+                plotConvergence(RESvalues, iRES, constants, Time.current)
+                plotNormDiff(norm_diff, iRES, constants, Time.current)
+                plotBacSimError(res_bacsim, iRES, constants, Time.current)
+                drawnow()
+            end
+            fprintf('Bulk concentrations recalculated,\nmax RES value at the moment: %.2f %%\n\n', max(RESvalues(:,iRES))*100)
             % ----- END DEBUG -----
             
             % recompute reaction matrix
