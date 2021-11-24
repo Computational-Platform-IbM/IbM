@@ -7,6 +7,8 @@ function bac = bacteria_detachment(bac, grid, constants, settings, timestep)
     % -> bac: see above
     
     switch settings.detachment
+        case 'none'
+            return
         case 'naive'
             bac_distance_from_center = sqrt((bac.x - grid.dx * grid.nX/2).*(bac.x - grid.dx * grid.nX/2) + (bac.y - grid.dy * grid.nY/2).*(bac.y - grid.dy * grid.nY/2));
             bac_detach = bac_distance_from_center > constants.max_granule_radius;
@@ -31,7 +33,7 @@ function bac = bacteria_detachment(bac, grid, constants, settings, timestep)
             ratio = timestep ./ T;
             
             % decrease mass of bacteria (radius will be updated when
-            % needed)
+            % needed) -> Erosion
             [i, j] = find(ratio > 0 & ratio < 1);
             for k=1:length(i)
                 ii = i(k);
@@ -44,7 +46,7 @@ function bac = bacteria_detachment(bac, grid, constants, settings, timestep)
                 end    
             end
 
-            % remove bacteria with T < timestep
+            % remove bacteria with T < timestep -> Detachment
             [i, j] = find(ratio >= 1 & ratio < Inf);
             bac_detach = zeros(length(i)*size(grid2bac, 3), 1, 'uint32');
             nDetach = 0;
