@@ -11,3 +11,4 @@ IbM_V2/testingRMatrix.mat
 *tmp/*
 *.vscode/*
 !planning/*.mat
+*testing*
