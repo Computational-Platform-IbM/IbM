@@ -63,15 +63,15 @@ function integTime(simulation_file, directory)
         end
 
         Time.bac = Time.dT_bac; % include dT_bac and dT_divide in one variable
-        Time.history = zeros(ceil(constants.simulation_end / constants.dT_bac) * 5, 1); % save time at each Steady-state cycle
+        Time.history = zeros(ceil(constants.simulation_end / constants.dT_bac) * 10, 1); % save time at each Steady-state cycle
 
-        profiling = zeros(ceil(constants.simulation_end / constants.dT_bac) * 5, 11);
-        maxErrors = zeros(ceil(constants.simulation_end / constants.dT_bac) * 5, 1); % store max error per dT_bac
-        normOverTime = zeros(ceil(constants.simulation_end / constants.dT_bac) * 5, 1); % store norm of concentration differance per dT_bac
-        nDiffIters = zeros(ceil(constants.simulation_end / constants.dT_bac) * 5, 1); % store number of diffusion iterations per steady state
-        bulk_history = zeros(size(bulk_concs, 1), ceil(constants.simulation_end / constants.dT_bac) * 5);
+        profiling = zeros(ceil(constants.simulation_end / constants.dT_bac) * 10, 11);
+        maxErrors = zeros(ceil(constants.simulation_end / constants.dT_bac) * 10, 1); % store max error per dT_bac
+        normOverTime = zeros(ceil(constants.simulation_end / constants.dT_bac) * 10, 1); % store norm of concentration differance per dT_bac
+        nDiffIters = zeros(ceil(constants.simulation_end / constants.dT_bac) * 10, 1); % store number of diffusion iterations per steady state
+        bulk_history = zeros(size(bulk_concs, 1), ceil(constants.simulation_end / constants.dT_bac) * 10);
         bulk_history(:, 1) = bulk_concs; % is added after += 1 of iProf, thus give first value already
-        maxInitRES = zeros(ceil(constants.simulation_end / constants.dT_bac) * 5, 1);
+        maxInitRES = zeros(ceil(constants.simulation_end / constants.dT_bac) * 10, 1);
 
         % initialise saving file
         save_slice(bac, conc, bulk_concs, pH, invHRT, 0, grid, constants, directory);
