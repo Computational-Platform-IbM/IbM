@@ -9,13 +9,7 @@ function bac = bacteria_die(bac, constants)
     mask_tooSmall = bac.molarMass * constants.bac_MW < constants.min_bac_mass_grams;
     nCellsTooSmall = sum(mask_tooSmall);
 
-    if nCellsTooSmall % <TODO: check if these are all struct-elements />
-        bac.x(mask_tooSmall) = [];
-        bac.y(mask_tooSmall) = [];
-        bac.radius(mask_tooSmall) = [];
-        bac.species(mask_tooSmall) = [];
-        bac.molarMass(mask_tooSmall) = [];
-        bac.active(mask_tooSmall) = [];
-        bac.mu(mask_tooSmall) = [];
+    if nCellsTooSmall
+        bac = killBacs(bac, mask_tooSmall);
     end
 end

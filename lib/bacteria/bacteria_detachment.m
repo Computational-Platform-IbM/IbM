@@ -61,17 +61,20 @@ function bac = bacteria_detachment(bac, grid, constants, settings, timestep)
             bac_detach = bac_detach(1:nDetach);
             nCellsDetach = sum(bac_detach);
 
-
-
-            bac.x(bac_detach) = [];
-            bac.y(bac_detach) = [];
-            bac.radius(bac_detach) = [];
-            bac.species(bac_detach) = [];
-            bac.molarMass(bac_detach) = [];
-            bac.active(bac_detach) = [];
-            bac.mu(bac_detach) = [];            
+            if nCellsDetach
+                bac = killBacs(bac, bac_detach);
+            end
             
-            
+            mask_tooSmall = bac.molarMass * constants.bac_MW < constants.min_bac_mass_grams;
+            % cells on the inside of the granule that are too small, have already been made inactive before
+            mask_outsideCellRemoval = mask_tooSmall & bac.active; 
+            nCellsRemoved = sum(mask_outsideCellRemoval);
+
+            if nCellsRemoved
+                bac = killBacs(bac, mask_outsideCellRemoval);
+                nCellsDetach = nCellsDetach + nCellsRemoved;
+            end
+
             
         otherwise
             error('Detachment of %s is unknown.', settings.detachment)
