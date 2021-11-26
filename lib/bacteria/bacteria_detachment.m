@@ -15,13 +15,7 @@ function bac = bacteria_detachment(bac, grid, constants, settings, timestep)
             nCellsDetach = sum(bac_detach);
 
             if nCellsDetach % <TODO: check if these are all struct-elements />
-                bac.x(bac_detach) = [];
-                bac.y(bac_detach) = [];
-                bac.radius(bac_detach) = [];
-                bac.species(bac_detach) = [];
-                bac.molarMass(bac_detach) = [];
-                bac.active(bac_detach) = [];
-                bac.mu(bac_detach) = [];
+                bac = killBacs(bac, bac_detach);
             end
             
         case 'mechanistic'
