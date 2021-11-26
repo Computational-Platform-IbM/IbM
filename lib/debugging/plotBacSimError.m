@@ -4,12 +4,12 @@ function plotBacSimError(res_bacsim, iRES, constants, Time)
     % divided by dT
     
     figure(12); clf;
-    plot((1:iRES-1)*constants.nDiffusion_per_SScheck, res_bacsim(2:iRES, 1), 'LineWidth', 2); hold on;
+    plot((1:iRES)*constants.nDiffusion_per_SScheck, res_bacsim(1:iRES, 1), 'LineWidth', 2); hold on;
     yline(1, '--', 'Threshold', 'HandleVisibility','off'); 
     ylabel('bacsim residual');
     ylim([0, 10]);
     yyaxis right
-    plot((1:iRES-1)*constants.nDiffusion_per_SScheck, res_bacsim(2:iRES, 2), 'LineWidth', 2); hold off;
+    plot((1:iRES)*constants.nDiffusion_per_SScheck, res_bacsim(1:iRES, 2), 'LineWidth', 2); hold off;
     ylabel('norm / dT');
     ylim([0, 100])
     legend('bacsim res', 'norm/dT');
