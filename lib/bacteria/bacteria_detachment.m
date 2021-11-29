@@ -60,8 +60,9 @@ function bac = bacteria_detachment(bac, grid, constants, settings, timestep)
             end
             
             % remove bacteria that are way too small (only on outside, due to erosion)
-            mask_tooSmall = bac.molarMass * constants.bac_MW < constants.min_bac_mass_grams / 2; % factor 2 smaller than inactive bacteria should only be reached with erosion
+            % factor 2 smaller than inactive bacteria should only be reached with erosion,
             % cells on the inside of the granule that are too small, have already been made inactive before
+            mask_tooSmall = bac.molarMass * constants.bac_MW < constants.min_bac_mass_grams / 2;             
             mask_outsideCellRemoval = mask_tooSmall & bac.active; 
             nCellsRemoved = sum(mask_outsideCellRemoval);
 

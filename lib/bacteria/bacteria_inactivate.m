@@ -7,9 +7,11 @@ function bac = bacteria_inactivate(bac, constants)
     % -> bac: see above
 
     mask_tooSmall = bac.molarMass * constants.bac_MW < constants.min_bac_mass_grams;
-
-    bac.active(mask_tooSmall) = 0;
-    bac.active(~mask_tooSmall) = 1;
+    mask_growthRate = bac.mu < 0;
+    mask_combined = mask_tooSmall & mask_growthRate;
+    
+    bac.active(mask_combined) = 0;
+    bac.active(~mask_combined) = 1;
     
     %{ 
     Reactivation is implicitely done already by inactive bacteria being able to grow.
