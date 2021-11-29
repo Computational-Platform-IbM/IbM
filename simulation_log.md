@@ -54,12 +54,12 @@ For the finished column, please use :white_check_mark: (`:white_check_mark:`) wh
 | 0046              | Anaerobic-Coprotection (Run 1) [A]=0.05mM [O2]=0mg/L Ki=5mM                               | Stratifying game project                        | 🕐 (C:PC)  | v2.3.0                 |
 | 0047              | Anaerobic-Coprotection (Run 2) [A]=0.05mM [O2]=0mg/L Ki=5mM                               | Stratifying game project                        |           | v2.3.0                 |
 | 0048              | Anaerobic-Coprotection (Run 3) [A]=0.05mM [O2]=0mg/L Ki=5mM                               | Stratifying game project                        |           | v2.3.0                 |
-| 0049              | Anaerobic-Coprotection (Run 1) [A]=1mM [O2]=0mg/L Ki=2mM                                  | Stratifying game project                        |           | v2.3.0                 |
-| 0050              | Anaerobic-Coprotection (Run 2) [A]=1mM [O2]=0mg/L Ki=2mM                                  | Stratifying game project                        |           | v2.3.0                 |
-| 0051              | Anaerobic-Coprotection (Run 3) [A]=1mM [O2]=0mg/L Ki=2mM                                  | Stratifying game project                        |           | v2.3.0                 |
-| 0052              | Anaerobic-Coprotection (Run 1) [A]=0.5mM [O2]=0mg/L Ki=2mM                                | Stratifying game project                        |           | v2.3.0                 |
-| 0053              | Anaerobic-Coprotection (Run 2) [A]=0.5mM [O2]=0mg/L Ki=2mM                                | Stratifying game project                        |           | v2.3.0                 |
-| 0054              | Anaerobic-Coprotection (Run 3) [A]=0.5mM [O2]=0mg/L Ki=2mM                                | Stratifying game project                        |           | v2.3.0                 |
+| 0049              | Anaerobic-Coprotection (Run 1) [A]=1mM [O2]=0mg/L Ki=2mM                                  | Stratifying game project                        | 🕐 (Dell)  | v2.3.0                 |
+| 0050              | Anaerobic-Coprotection (Run 2) [A]=1mM [O2]=0mg/L Ki=2mM                                  | Stratifying game project                        | 🕐 (Dell)  | v2.3.0                 |
+| 0051              | Anaerobic-Coprotection (Run 3) [A]=1mM [O2]=0mg/L Ki=2mM                                  | Stratifying game project                        | 🕐 (Dell)  | v2.3.0                 |
+| 0052              | Anaerobic-Coprotection (Run 1) [A]=0.5mM [O2]=0mg/L Ki=2mM                                | Stratifying game project                        | 🕐 (HP)    | v2.3.0                 |
+| 0053              | Anaerobic-Coprotection (Run 2) [A]=0.5mM [O2]=0mg/L Ki=2mM                                | Stratifying game project                        | 🕐 (HP)    | v2.3.0                 |
+| 0054              | Anaerobic-Coprotection (Run 3) [A]=0.5mM [O2]=0mg/L Ki=2mM                                | Stratifying game project                        | 🕐 (HP)    | v2.3.0                 |
 | 0055              | Anaerobic-Coprotection (Run 1) [A]=0.1mM [O2]=0mg/L Ki=2mM                                | Stratifying game project                        | ✅         | v2.3.0                 |
 | 0056              | Anaerobic-Coprotection (Run 2) [A]=0.1mM [O2]=0mg/L Ki=2mM                                | Stratifying game project                        | ✅         | v2.3.0                 |
 | 0057              | Anaerobic-Coprotection (Run 3) [A]=0.1mM [O2]=0mg/L Ki=2mM                                | Stratifying game project                        | ✅         | v2.3.0                 |
