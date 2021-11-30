@@ -22,7 +22,7 @@ function [grid2bac, grid2nBacs] = determine_where_bacteria_in_grid(grid, bac)
     
     
     %% invert to be which bacs per grid cell
-    grid2nBacs = zeros(grid.nX, grid.nY, 'uint8'); % uint8 for reduced storage requirements (assumes no more than 255 bacs per grid cell)
+    grid2nBacs = zeros(grid.nX, grid.nY, 'uint16'); % uint8 for reduced storage requirements (previously exceeded 255 bacs per cell, i.e. uint8 is not enough)
     grid2bac = zeros(grid.nX, grid.nY, maxBacPerGrid, 'uint32'); % uint32 for reduced storage requirements -> lower storage requirements than sparse matrix (nBacs*nGridcells)
     
     for i = 1:size(bac_grid, 1)
