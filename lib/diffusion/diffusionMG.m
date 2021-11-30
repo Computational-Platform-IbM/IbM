@@ -20,7 +20,6 @@ function conc = diffusionMG(conc, reaction_matrix, bulk_concentrations, diffRegi
     % variable declarations/unpacking
     diffusion_coef = constants.diffusion_rates; % [m2/h] <E: diffusion_rates -> diffusion_coef. /> 
     accuracy = constants.diffusion_accuracy;
-    absolute_tolerance = constants.Tol_a;
     nCompounds = length(diffusion_coef);
     dx = grid.dx;
 
@@ -67,11 +66,9 @@ function conc = diffusionMG(conc, reaction_matrix, bulk_concentrations, diffRegi
             isSolution = sum(residual_diffRegion.^2, 'all') < accuracy^2;
         end
         
-        % apply correction for negative values
+        % check for negative values, raise error
         negative_concentration = conc(:,:,iCompound) < 0;
         if any(negative_concentration, 'all')
-%             warning('DEBUG:noActionRequired', 'debug: negative concentration encountered in diffusion solution of compound %s... correction applied', constants.StNames{iCompound})
-%             conc(:,:,iCompound) = ~negative_concentration.*conc(:,:,iCompound) + negative_concentration*absolute_tolerance; % set negative concentrations to very small number, not to 0 because of divide-by-0 in other parts of the code
             error('Diffusion:NegativeConcentration', 'Negative concentration encountered & corrected in diffusion solution of compound %s', constants.StNames{iCompound})
         end    
     end
