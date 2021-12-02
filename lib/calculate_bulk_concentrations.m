@@ -128,15 +128,14 @@ function [bulk_concentrations, invHRT] = calculate_bulk_concentrations(constants
             
         else
             if variableHRT && bulk_conc(setpoint_index) > bulk_setpoint
+                % if bulk conc of set compound is larger than setpoint, decrease HRT
                 if cumulative_reacted(setpoint_index) < 0
                     invHRT = -cumulative_reacted(setpoint_index) / (reactor_influx(setpoint_index) - bulk_setpoint); 
                 end
-            else
-                dy(setpoint_index) = invHRT * (reactor_influx(setpoint_index) - bulk_conc(setpoint_index)) + cumulative_reacted(setpoint_index);
             end
-            ind_variable = (1:length(bulk_conc) ~= setpoint_index) & (~Dir_k);
-            dy(ind_variable) = invHRT * (reactor_influx(ind_variable) - bulk_conc(ind_variable)) + cumulative_reacted(ind_variable);
-            % dy(4:end) = 0; % dirichlet values
+
+            % always calculate all non-dirichlet bulk concentrations
+            dy(~Dir_k) = invHRT * (reactor_influx(~Dir_k) - bulk_conc(~Dir_k)) + cumulative_reacted(~Dir_k);
         end
     end
 end
