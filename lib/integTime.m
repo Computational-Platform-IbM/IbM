@@ -2,7 +2,8 @@ function integTime(simulation_file, directory)
 
     %% load preset file
     load(simulation_file, 'grid', 'bac', 'constants', 'init_params', 'settings')
-    
+    constants.debug.plotConvergence = false;
+    constants.debug.plotDiffRegion = false;
     
     %% Overall settings
     if settings.parallelized
@@ -279,7 +280,7 @@ function integTime(simulation_file, directory)
                     profiling(iProf, 7) = profiling(iProf, 7) + toc;
 
                     % display number of bacteria in system
-                    fprintf('current number of bacteria: %d \n', length(bac.x))
+                    fprintf('current number of bacteria: %d (%d active)\n', length(bac.x), sum(bac.active))
 
                     % auto detect when to switch to parallel
                     % computation of rMatrix
