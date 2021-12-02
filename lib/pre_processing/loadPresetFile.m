@@ -58,6 +58,13 @@ filename = './planning/Excels/Templates/AOBNOBAMXCMX_template.xlsx';
     end
 
     
+    %% constants (Diffusion)
+    [vals, names] = xlsread(filename, 'Diffusion');
+    constants.compoundNames = names(:,1);
+    nCompounds = length(constants.compoundNames);
+    constants.diffusion_rates = vals;                                       % [m2/h]
+    
+    
     %% constants (Operational parameters)
     [vals, names] = xlsread(filename, 'Parameters');
     constants.pHsetpoint = vals(strcmp(names, 'pH setpoint'));              % [-]
@@ -70,18 +77,9 @@ filename = './planning/Excels/Templates/AOBNOBAMXCMX_template.xlsx';
     if settings.variableHRT
         constants.bulk_setpoint = vals(strcmp(names, 'Setpoint'));          % [mol/L]    % -> changed from constants.pOp.NH3sp
         compound_name = names{strcmp(names, 'Compound setpoint'), 2};
-%         constants.setpoint_compound_index = find(strcmp(%%%%%%%%%%%%%%%%%)
+        constants.setpoint__index = find(strcmp(constants.compoundNames, compound_name));
     end
-    
-    % load some constant values for use later in preset file generator
-    
-    
-    %% constants (Diffusion)
-    [vals, names] = xlsread(filename, 'Diffusion');
-    constants.compoundNames = names(:,1);
-    nCompounds = length(constants.compoundNames);
-    constants.diffusion_rates = vals;                                       % [m2/h]
-    
+        
     
     %% constants (Bacteria)
     [vals, names] = xlsread(filename, 'Bacteria');
@@ -285,11 +283,7 @@ filename = './planning/Excels/Templates/AOBNOBAMXCMX_template.xlsx';
     
 
 % check all settings in model if they are applied correctly...
-% how to implement the Ks and Ki generally speaking with matrix instead of
-% values?
 % check pH algorithms with new structs... is Kd now working?
-% constants.speciesNames = {'AOB', 'NOB (Nitrob.)', 'NOB (Nitrosp.)', 'AMX'};
-% constants.react_v = R.pTh.react_v; % --> renamed to constants.prefered state
 % think about what to do with mu_max?
 % think about what to do with maintenance?
 
