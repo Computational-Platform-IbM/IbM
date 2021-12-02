@@ -3,13 +3,6 @@ function integTime(simulation_file, directory)
     %% load preset file
     load(simulation_file, 'grid', 'bac', 'constants', 'init_params', 'settings')
     
-    % ----- QUICK FIX ------
-%     constants.simulation_end = 5000;
-%     constants.dT_bac = 1;
-%     settings.detachment = 'mechanistic';
-%     constants.kDet = 1; % [1/(m.h)]
-    % --- END QUICK FIX ------
-
     
     %% Overall settings
     if settings.parallelized
@@ -46,60 +39,39 @@ function integTime(simulation_file, directory)
         Time.changed_dT = 0;
         Time.changed_dT_bac = 0;
         Time.dT = constants.dT;
-
-        if settings.dynamicDT
-            Neumann = 0.5;
-            Time.maxDT = min(grid.dx^2 ./ constants.diffusion_rates * Neumann);
-            Time.minDT = Time.maxDT / 50;
-            clear Neumann;
-        end
-
-        if settings.dynamicDT
-            Time.dT_bac = constants.dT_bac / 2;
-            Time.maxDT_bac = constants.dT_bac;
-            Time.minDT_bac = Time.maxDT_bac / 20;
-        else
-            Time.dT_bac = constants.dT_bac;
-        end
-
+        Time.dT_bac = constants.dT_bac;
         Time.bac = Time.dT_bac; % include dT_bac and dT_divide in one variable
-        Time.history = zeros(ceil(constants.simulation_end / constants.dT_bac) * 10, 1); % save time at each Steady-state cycle
 
-        profiling = zeros(ceil(constants.simulation_end / constants.dT_bac) * 10, 11);
-        maxErrors = zeros(ceil(constants.simulation_end / constants.dT_bac) * 10, 1); % store max error per dT_bac
-        normOverTime = zeros(ceil(constants.simulation_end / constants.dT_bac) * 10, 1); % store norm of concentration differance per dT_bac
-        nDiffIters = zeros(ceil(constants.simulation_end / constants.dT_bac) * 10, 1); % store number of diffusion iterations per steady state
-        bulk_history = zeros(size(bulk_concs, 1), ceil(constants.simulation_end / constants.dT_bac) * 10);
+        if settings.dynamicDT
+            Time.maxDT = constants.dynamicDT.maxDT;
+            Time.minDT = constants.dynamicDT.minDT;
+            Time.maxDT_bac = constants.dynamicDT.maxDT_bac;
+            Time.minDT_bac = constants.dynamicDT.minDT_bac;
+
+            Time.history = zeros(ceil(constants.simulation_end / Time.minDT_bac), 1, 'single'); % save time at each Steady-state cycle
+            profiling = zeros(ceil(constants.simulation_end / Time.minDT_bac), 11, 'single');
+            maxErrors = zeros(ceil(constants.simulation_end / Time.minDT_bac), 1, 'single'); % store max error per dT_bac
+            normOverTime = zeros(ceil(constants.simulation_end / Time.minDT_bac), 1, 'single'); % store norm of concentration differance per dT_bac
+            nDiffIters = zeros(ceil(constants.simulation_end / Time.minDT_bac), 1, 'uint16'); % store number of diffusion iterations per steady state
+            bulk_history = zeros(size(bulk_concs, 1), ceil(constants.simulation_end / Time.minDT_bac), 'single');
+            maxInitRES = zeros(ceil(constants.simulation_end / Time.minDT_bac), 1, 'single');
+        else
+            Time.history = zeros(ceil(constants.simulation_end / constants.dT_bac), 1, 'single'); % save time at each Steady-state cycle
+            profiling = zeros(ceil(constants.simulation_end / constants.dT_bac), 11, 'single');
+            maxErrors = zeros(ceil(constants.simulation_end / constants.dT_bac), 1, 'single'); % store max error per dT_bac
+            normOverTime = zeros(ceil(constants.simulation_end / constants.dT_bac), 1, 'single'); % store norm of concentration differance per dT_bac
+            nDiffIters = zeros(ceil(constants.simulation_end / constants.dT_bac), 1, 'uint16'); % store number of diffusion iterations per steady state
+            bulk_history = zeros(size(bulk_concs, 1), ceil(constants.simulation_end / constants.dT_bac), 'single');
+            maxInitRES = zeros(ceil(constants.simulation_end / constants.dT_bac), 1, 'single');
+        end
         bulk_history(:, 1) = bulk_concs; % is added after += 1 of iProf, thus give first value already
-        maxInitRES = zeros(ceil(constants.simulation_end / constants.dT_bac) * 10, 1);
 
         % initialise saving file
         save_slice(bac, conc, bulk_concs, pH, invHRT, 0, grid, constants, directory);
     end
 
-    % ----- DEBUG -----
-    constants.Tol_a = 1e-16;
-    constants.debug.plotConvergence = false;
-    % ----- END DEBUG -----
 
-    % ----- DEBUG -----
-    % overall settings dynamic dT
-    settings.dynamicDT = true;
-    constants.dynamicDT.nIterThresholdIncrease = 3;
-
-    % dynamic dT diffusion
-    constants.dynamicDT.iterThresholdDecrease = 200;
-    constants.dynamicDT.iterThresholdIncrease = 40;
-
-    % dynamic dT bac
-    constants.dynamicDT.initRESThresholdIncrease = 20/100;
-
-    constants.dynamicDT.nItersCycle = 500; % in diffusion to steady state, after how many diffusion iterations should bulk conc be recalculated
-    constants.dynamicDT.tolerance_no_convergence = 1e-6; % maximum difference between RES values between diffusion iterations to be considered not converging
-    constants.dynamicDT.maxRelDiffBulkConc = 0.02; % maximum relative difference between bulk concentration values
-    % ----- END DEBUG -----
-
-    RESvalues = zeros(sum(constants.isLiquid), 200); % reserve for n steady state checks beforehand (can be more)
+    RESvalues = zeros(length(constants.compoundNames), 200); % reserve for n steady state checks beforehand (can be more)
     norm_diff = zeros(200, 1);
     res_bacsim = zeros(200, 2);
 
@@ -252,7 +224,7 @@ function integTime(simulation_file, directory)
 
                             figure(20);
                             plot(Time.history(iProf - 10:iProf - 1), diff(bulk_history(:, iProf - 10:iProf), 1, 2) ./ (bulk_history(:, iProf - 10:iProf - 1) + 1e-20), 'LineWidth', 2);
-                            legend(constants.StNames, 'Location', 'northwest');
+                            legend(constants.compoundNames, 'Location', 'northwest');
                         end
 
                         drawnow();
@@ -265,7 +237,7 @@ function integTime(simulation_file, directory)
                     maxInitRES(iProf) = max(RESvalues(:, 1));
                     iDiffusion = 1;
                     iRES = 0;
-                    RESvalues = zeros(sum(constants.isLiquid), 100); % reset RES value array
+                    RESvalues = zeros(length(constants.compoundNames), 100); % reset RES value array
 
                     % reaction_matrix & mu & pH are already calculated (steady state, so still valid)
 
