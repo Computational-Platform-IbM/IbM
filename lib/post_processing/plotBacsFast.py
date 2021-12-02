@@ -1,17 +1,14 @@
-# %%
-import numpy as np
-import h5py
-import matplotlib.pyplot as plt
-import matplotlib.collections
-from matplotlib.lines import Line2D
-import imageio
-import argparse
-from tqdm import tqdm
-import os
-from typing import Dict, List
 import collections
-
-# %%
+from typing import Dict, List
+import os
+from tqdm import tqdm
+import argparse
+import imageio
+from matplotlib.lines import Line2D
+import matplotlib.collections
+import matplotlib.pyplot as plt
+import h5py
+import numpy as np
 
 
 def HEX2RGBsplit(c):
@@ -46,6 +43,10 @@ def muRatio(mu, s, inc):
     Returns:
         muA (float): alpha values to represent the ratio of mu (with darkening)
     """
+
+    if inc == 'NoAlpha':
+        return np.ones(np.size(mu))
+
     mu_noneg = np.maximum(mu, 0.0)
     dct = {}
     for i, j in zip(s, mu_noneg):
@@ -57,12 +58,10 @@ def muRatio(mu, s, inc):
 
     if inc == 0:
         muA = muR
-    elif inc == 'NoAlpha':
-        muA = np.ones(np.size(mu))
     else:
         muA = (np.array(muR) + inc) / (1 + inc)
 
-    return(muA)
+    return muA
 
 
 def save_plot(i: int, xlim: List[float], ylim: List[float], bac: Dict):
@@ -91,9 +90,11 @@ def save_plot(i: int, xlim: List[float], ylim: List[float], bac: Dict):
     muAlpha = muRatio(mu, s, inc)
 
     # Colours: HEX code
-    # c = ['#CC66FF', '#00B04F', '#FFA200', '#FF1482'] # Old colours
+    # c = ['#CC66FF', '#00B04F', '#FFA200', '#FF1482']  # Old colours
     # Colourblind-friendly: ( https://www.color-hex.com/color-palette/49436 )
-    c = ['#0072B2', '#D55E00', '#F0E442', '#CC79A7']
+    # c = ['#0072B2', '#D55E00', '#F0E442', '#CC79A7']
+    c = ['#D81B60', '#1E88E5', '#FFC107', '#004D40']  # colors Chiel
+
     rC, gC, bC = HEX2RGBsplit(c)  # HEX to RGB
 
     patches = [plt.Circle((x, y), radius) for x, y, radius in zip(x, y, r)]
@@ -103,7 +104,7 @@ def save_plot(i: int, xlim: List[float], ylim: List[float], bac: Dict):
     coll = matplotlib.collections.PatchCollection(patches)
     coll.set_facecolor(
         [(rC[species-1]*muA, gC[species-1]*muA, bC[species-1]*muA) if active else '#000000' for muA, species, active in zip(muAlpha, s, a)])
-    # coll.set_alpha([1.0 if active else 0.5 for active in a])
+    coll.set_alpha([1.0 if active else 0.5 for active in a])
     coll.set_edgecolor('k')
     coll.set_linewidth(0.05)
     ax.add_collection(coll)
@@ -122,13 +123,16 @@ def save_plot(i: int, xlim: List[float], ylim: List[float], bac: Dict):
                 markersize=10, markerfacecolor=c[1], markeredgecolor=c[1])
     L3 = Line2D([0], [0], linestyle="none", marker="o",
                 markersize=10, markerfacecolor=c[2], markeredgecolor=c[2])
-    # L4 = Line2D([0], [0], linestyle="none", marker="o", markersize=10, markerfacecolor=c[3], markeredgecolor=c[3])
+    L4 = Line2D([0], [0], linestyle="none", marker="o",
+                markersize=10, markerfacecolor=c[3], markeredgecolor=c[3])
 
-    plt.legend((L1, L2, L3), ('B1', 'B2', 'B3'), numpoints=1,
-               loc="best", frameon=False)  # Structures
-    # plt.legend((L1,L2,L3,L4), ('AOB', 'Nitrobacter', 'Nitrospira', 'AMX'), numpoints=1, loc="upper left", frameon=False) # AOB/NOB/AMX
+    # plt.legend((L1, L2, L3), ('B1', 'B2', 'B3'), numpoints=1,
+    #            loc="best", frameon=False)  # Structures
+    plt.legend((L1, L2, L3, L4), ('AOB', 'Nitrobacter', 'Nitrospira', 'AMX'),
+               numpoints=1, loc="upper left", frameon=False)  # AOB/NOB/AMX
 
-    filename = f'../../{directory}/{i}.png'
+    filename = f'{directory}/{i}.png'
+    plt.title(f'Time = {i*24}')
     plt.savefig(filename)
     plt.close()
 
@@ -138,7 +142,7 @@ def save_plot(i: int, xlim: List[float], ylim: List[float], bac: Dict):
 # %%
 def generate_gif(args: Dict):
     # load data from results file
-    with h5py.File(f'../../{directory}/results1D.mat', 'r') as f:
+    with h5py.File(f'{directory}/results1D.mat', 'r') as f:
         print('Loading results file...')
         bac = {}
         for k in f['bac_saved'].keys():
@@ -172,7 +176,7 @@ def generate_gif(args: Dict):
             filenames.append(save_plot(i, xlim, ylim, bac))
 
     # build gif
-    with imageio.get_writer(f'../../{directory}/bacteria.gif', mode='I', fps=4) as writer:
+    with imageio.get_writer(f'{directory}/bacteria.gif', mode='I', fps=4) as writer:
         for filename in tqdm(filenames, desc='Gif'):
             image = imageio.imread(filename)
             writer.append_data(image)
@@ -198,8 +202,8 @@ args = parser.parse_args()
 sim = f'{args.simulationNumber:04d}'
 directory = f'Results/{sim}'
 if args.finished:
-    simulation_file = f'../../{directory}/sim_{sim}.mat'
+    simulation_file = f'{directory}/sim_{sim}.mat'
 else:
-    simulation_file = f'../../sim_{sim}.mat'
+    simulation_file = f'sim_{sim}.mat'
 
 generate_gif(args)
