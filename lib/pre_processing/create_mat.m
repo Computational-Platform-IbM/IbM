@@ -1,4 +1,5 @@
 filename = './planning/Excels/Templates/AOBNOBAMXCMX_template.xlsx';
+javaaddpath([pwd '/lib/bacteria/shovingQuadTreekDist.jar']);
 
 fprintf('>>>>>>>>>> LOADING EXCEL FILE\n')
 [grid, bac_init, constants, settings, init_params] = loadPresetFile(filename);
