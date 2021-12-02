@@ -26,7 +26,6 @@ function [bulk_concentrations, invHRT] = calculate_bulk_concentrations(constants
     Vr = constants.Vr;
     Vg = constants.Vg;
     Dir_k = constants.Dir_k;
-    isLiquid = constants.isLiquid;
     influent = constants.influent_concentrations;
     NH3sp = constants.pOp.NH3sp;
     keepNH3fixed = constants.constantN;
@@ -35,15 +34,15 @@ function [bulk_concentrations, invHRT] = calculate_bulk_concentrations(constants
     if isscalar(reactionMatrix) % if no reaction matrix formed, then init with previous concentrations
         bulk_concentrations = prev_conc;
     else
-        cumulative_reacted = squeeze(sum(reactionMatrix(:,:,isLiquid), [1,2])) * Vg / Vr;
+        cumulative_reacted = squeeze(sum(reactionMatrix, [1,2])) * Vg / Vr;
         options = odeset('RelTol', 1e-8, 'AbsTol', 1e-20, 'NonNegative', ones(size(cumulative_reacted)));
         try
-            [~, Y] = ode45(@(t, y) massbal(t, y, cumulative_reacted(isLiquid), influent, NH3sp, keepNH3fixed, settings), [0 dT], prev_conc(isLiquid), options);
+            [~, Y] = ode45(@(t, y) massbal(t, y, cumulative_reacted, influent, NH3sp, keepNH3fixed, settings), [0 dT], prev_conc, options);
             bulk_conc_temp = Y(end, :)';
             bulk_concentrations = correct_negative_concentrations(bulk_conc_temp); %<E: Negative concentration from mass balance of reactor. />
         catch e
             fprintf(2, '\n\nSomething went wrong...\nreason: %s\n', e.identifier)
-            bulk_concentrations = prev_conc(isLiquid);
+            bulk_concentrations = prev_conc;
         end
         
         temp = prev_conc(1:length(Dir_k)); % <C: todo => fix that sometimes N2 is taken into account in the model, and most of the times it is not... />
@@ -54,7 +53,7 @@ function [bulk_concentrations, invHRT] = calculate_bulk_concentrations(constants
     %% apply pH correction to bulk_concentrations
     if settings.pHbulkCorrection
         bulk_concentrations(strcmp(StNames, 'SO4')) = bulk_concentrations(strcmp(StNames, 'NH3')) / 2;        
-        bulk_concentrations(isLiquid) = controlpH(Keq, chrM, StNames, pH, bulk_concentrations(isLiquid));
+        bulk_concentrations = controlpH(Keq, chrM, StNames, pH, bulk_concentrations);
     
         if any(bulk_concentrations < 0) %<E: Negative concentration from control pH of reactor. />
             warning('DEBUG:actionRequired', 'debug: negative bulk concentration encountered after pH control... correction required?')
@@ -154,7 +153,7 @@ function conc = controlpH(Keq, chrM, StNames, pH, conc)
     
     Tol = 1e-14;
     Tp = 1;
-    u = [conc; 0; 1; 0]; % C: why [..., 0, 1, 0] ???
+    u = [conc; 1; 0]; % for H2O and H concentrations
 
     NaHCO3 = conc(strcmp(StNames, 'CO2'));
     w = 1;

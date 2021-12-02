@@ -20,7 +20,7 @@ function [conc, bulk_concs, invHRT, reaction_matrix, pH, bac] = initTime(grid, b
     end
     
     % initialise concentrations and pH
-    conc = zeros(grid.nX, grid.nY, size(constants.isLiquid, 1));
+    conc = zeros(grid.nX, grid.nY, size(length(constants.compoundNames), 1));
     conc = set_concentrations(conc, init_params.init_concs, diffusion_region);
     reaction_matrix = zeros(grid.nX, grid.nY, size(conc, 3));
     pH = ones(grid.nX, grid.nY) * constants.pHsetpoint;

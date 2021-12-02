@@ -12,7 +12,7 @@ function [isReached, max_RES_value] = steadystate_is_reached(conc, reaction_matr
     method = constants.RESmethod; % {'mean', 'max', 'norm'}
     
     L = [0 1 0; 1 -4 1; 0 1 0];  % 2D laplacian stencil base
-    nCompounds = sum(constants.isLiquid);
+    nCompounds = length(constants.compoundNames);
     characteristic_time = dx^2 ./ constants.diffusion_rates;
     compound_steadystate = zeros(nCompounds, 1, 'logical');
     

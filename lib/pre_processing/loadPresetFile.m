@@ -270,14 +270,7 @@ filename = './planning/Excels/Templates/AOBNOBAMXCMX_template.xlsx';
     
     
     
-    
-settings.structure_model = false;
-if settings.structure_model
-    settings.type = 'Neut'; % {'Neut': Neutralism, 'Comp': Competition, 'Comm': Commensalism, 'Copr': Co-protection}
-end
 
-
-% constants.isLiquid = strcmp(R.St.Phase(1:8), 'L') | strcmp(R.St.Phase(1:8), 'P'); % should no longer be needed...
 % constants.StNames = R.St.StNames(1:8); --> changed to constants.compoundNames
 % check all settings in model if they are applied correctly...
 % remove N2 from all bulk_conc, reaction_matrix, etc. in the model
@@ -288,7 +281,6 @@ end
 % constants.react_v = R.pTh.react_v; % --> renamed to constants.prefered state
 % think about what to do with mu_max?
 % think about what to do with maintenance?
-constants.constantpH = false; % check what this is used for? and put into excel then?
 
 
     
