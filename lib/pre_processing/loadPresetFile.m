@@ -1,5 +1,4 @@
-filename = './planning/Excels/Templates/AOBNOBAMXCMX_template.xlsx';
-% function [grid, bac, constants, settings, init_params] = loadPresetFile(filename)
+function [grid, bac_init, constants, settings, init_params] = loadPresetFile(filename)
     % Generate the structs for running the IbM model from the provided
     % Excel file.
     %
@@ -16,10 +15,10 @@ filename = './planning/Excels/Templates/AOBNOBAMXCMX_template.xlsx';
     
     %% initialisation of structs
     grid = struct;
-    bac = struct;
     constants = struct;
     settings = struct;
     init_params = struct;
+    bac_init = struct;
 
     
     %% grid
@@ -270,9 +269,20 @@ filename = './planning/Excels/Templates/AOBNOBAMXCMX_template.xlsx';
     end
     
     
-    %% initialise bacteria
-    % what initialisation method?
-    % how big initial granule? / how many individuals?
+    %% initialisation of bacteria
+    [vals, names] = xlsread(filename, 'Bacteria');
+    bac_init.method = names{strcmp(names, 'Initialisation method'), 2};
+    switch (bac_init.method)
+        case 'granule'
+            bac_init.granule_radius = vals(strcmp(names, 'Starting granule radius'));
+            bac_init.start_nBac = vals(strcmp(names, 'Starting number of bacteria (granule)'));
+        case 'suspension'
+            bac_init.start_nBac = vals(strcmp(names, 'Starting number of bacteria (suspension)'));
+        otherwise
+            error(['Initialisation method <', bac_init.method,'> is not a valid method.'])
+    end
+        
+end
     
     
     
