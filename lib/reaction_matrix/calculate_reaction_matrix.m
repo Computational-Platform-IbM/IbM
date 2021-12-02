@@ -49,14 +49,14 @@ function [reaction_matrix, mu, pH] = calculate_reaction_matrix(grid2bac, grid2nB
     Sh_bulk = 10^-pH(1, 1);
     
     if pHincluded
-        [~, Sh_bulk] = solve_pH(Sh_bulk, [reshape(conc(1,1,:), [], 1, 1); 1; 0], Keq, chrM, settings.pHincluded, constants.pHtolerance); % <C: why [...; 1; 0]? />
+        [~, Sh_bulk] = solve_pH(Sh_bulk, [reshape(conc(1,1,:), [], 1, 1); 1; 0], Keq, chrM, pHincluded, constants.pHtolerance);
         pH_bulk = -log10(Sh_bulk);
     else
         pH_bulk = pH(1, 1);
     end
 
     % group constants for easy passing to multiple cores
-    constantValues = [pH_bulk, settings.pHincluded, constants.pHtolerance, constants.T, settings.speciation];
+    constantValues = [pH_bulk, pHincluded, constants.pHtolerance, constants.T, settings.speciation];
     grouped_bac = [bac.species, bac.molarMass, bac.active];
 
     if settings.parallelized

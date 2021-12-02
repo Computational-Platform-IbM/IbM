@@ -36,7 +36,7 @@ function [reaction_matrix, mu, pH_new] = rMatrix_section(pH, conc, grid2bac, gri
             
             else % in diffusion layer, thus pH calculation needs to be performed
                 % calculate pH & speciation
-                if pHincluded
+                if speciation
                     Sh_old = 10^-pH(ix, iy);
                     [spcM, Sh] = solve_pH(Sh_old, [reshape(conc(ix,iy,:), [], 1, 1); 1; 0], Keq, chrM, pHincluded, pHtolerance);
                     pH_new(ix, iy) = -log10(Sh);
@@ -62,11 +62,7 @@ function [reaction_matrix, mu, pH_new] = rMatrix_section(pH, conc, grid2bac, gri
                         [mu_max, maint] = determine_max_growth_rate_and_maint(curr_species, T, Sh, structure_model);
 
                         % get reactive concentrations for soluble components
-                        if ~pHincluded && ~speciation
-                            reactive_conc = spcM;
-                        else
-                            reactive_conc = spcM(reactive_indices);
-                        end
+                        reactive_conc = spcM(reactive_indices);
 
                         % set mu for all bacteria of same species in that gridcell
                         M = calculate_monod(Ks(curr_species,:), Ki(curr_species, :), reactive_conc);                        % [DN]
