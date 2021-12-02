@@ -35,22 +35,11 @@ function [reaction_matrix, mu, pH] = calculate_reaction_matrix(grid2bac, grid2nB
     chrM = constants.chrM;
     Vg = constants.Vg;
     compoundNames = constants.compoundNames;
-    reactive_form = constants.react_v;
+    reactive_indices = constants.reactive_indices;
     Ks = constants.Ks;
     Ki = constants.Ki;
     mMetabolism = constants.MatrixMet;
     mDecay = constants.MatrixDecay;
-    
-    if structure_model
-        iA = find(strcmp(compoundNames, 'A'));
-        iB = find(strcmp(compoundNames, 'B'));
-        iC = find(strcmp(compoundNames, 'C'));
-        iO2 = find(strcmp(compoundNames, 'O2'));        
-    else
-        iNH3 = find(strcmp(compoundNames, 'NH3'));
-        iNO2 = find(strcmp(compoundNames, 'NO2'));
-        iO2 = find(strcmp(compoundNames, 'O2'));
-    end
     
     reaction_matrix = zeros(size(conc));
     mu = zeros(size(bac.x));
@@ -67,11 +56,7 @@ function [reaction_matrix, mu, pH] = calculate_reaction_matrix(grid2bac, grid2nB
     end
 
     % group constants for easy passing to multiple cores
-    if structure_model
-        constantValues = [pH_bulk, settings.pHincluded, constants.pHtolerance, constants.T, iA, iB, iC, iO2];
-    else
-        constantValues = [pH_bulk, settings.pHincluded, constants.pHtolerance, constants.T, iNH3, iNO2, iO2];
-    end
+    constantValues = [pH_bulk, settings.pHincluded, constants.pHtolerance, constants.T, settings.speciation];
     grouped_bac = [bac.species, bac.molarMass, bac.active];
 
     if settings.parallelized
@@ -118,7 +103,7 @@ function [reaction_matrix, mu, pH] = calculate_reaction_matrix(grid2bac, grid2nB
             [chunk_rMatrix{iChunk}, chunk_mu{iChunk}, chunk_pH{iChunk}] = ...
                 rMatrix_section(chunk_pH_OG{iChunk}, chunk_conc{iChunk}, chunk_grid2bac{iChunk}, chunk_grid2nBacs{iChunk}, chunk_diffRegion{iChunk}, ...
                 chunk_grouped_bac{iChunk}, chunk2nBacs(iChunk), bacOffset(iChunk), ...
-                reactive_form, Ks, Ki, Keq, chrM, mMetabolism, mDecay, constantValues, structure_model, pHincluded);
+                reactive_indices, Ks, Ki, Keq, chrM, mMetabolism, mDecay, constantValues, structure_model, pHincluded);
         end
 
         % put everything back into correct matrix/vector
@@ -140,7 +125,7 @@ function [reaction_matrix, mu, pH] = calculate_reaction_matrix(grid2bac, grid2nB
         [reaction_matrix, mu, pH] = ...
             rMatrix_section(pH, conc, grid2bac, grid2nBacs, diffRegion, ...
             grouped_bac, length(bac.x), bacOffset, ...
-            reactive_form, Ks, Ki, Keq, chrM, mMetabolism, mDecay, constantValues, structure_model, pHincluded);
+            reactive_indices, Ks, Ki, Keq, chrM, mMetabolism, mDecay, constantValues, structure_model, pHincluded);
     end
     
     

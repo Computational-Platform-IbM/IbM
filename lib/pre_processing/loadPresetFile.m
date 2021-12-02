@@ -79,6 +79,7 @@ filename = './planning/Excels/Templates/AOBNOBAMXCMX_template.xlsx';
     %% constants (Diffusion)
     [vals, names] = xlsread(filename, 'Diffusion');
     constants.compoundNames = names(:,1);
+    nCompounds = length(constants.compoundNames);
     constants.diffusion_rates = vals;                                       % [m2/h]
     
     
@@ -113,7 +114,10 @@ filename = './planning/Excels/Templates/AOBNOBAMXCMX_template.xlsx';
     if settings.pHincluded
         constants.pHtolerance = vals(strcmp(names, 'pH solver tolerance'));
     end
-    settings.speciation = logical(vals(strcmp(names, 'Speciation included')));
+    
+    % if pH is variable, speciation is always set to true. Otherwise, read
+    % from excel
+    settings.speciation = logical(vals(strcmp(names, 'Speciation included'))) || constants.pHincluded;
 
     settings.structure_model = logical(vals(strcmp(names, 'Structure model')));
     if settings.structure_model
@@ -156,22 +160,13 @@ filename = './planning/Excels/Templates/AOBNOBAMXCMX_template.xlsx';
     dG_rows = [dG_rows, H2O_index(1), H_index(1)];
     
     % extract preferred state per compound
-    constants.preferred_state = vals(dG_rows-1, end);
+    preferred_state = vals(dG_rows-1, end);
 
     % extract equilibrium constants
     Keq_rows = section_starts(2):section_ends(2);
     Keq_rows = [Keq_rows, H2O_index(2), H_index(2)];
     
     constants.Keq = vals(Keq_rows-1, 1:nColumns-1); % dG_rows - 1, because first row in names is for header; nColumns - 1, because always 1 less Keq than subspecies
-    
-    
-    
-    if settings.pHincluded && settings.speciation
-        % add all dG values
-    else 
-        % only add dG values for preferred state
-    end
-    
     
     % extract charge matrix
     charge_rows = section_starts(3):section_ends(3);
@@ -184,31 +179,49 @@ filename = './planning/Excels/Templates/AOBNOBAMXCMX_template.xlsx';
     
     %% constants (Ks & Ki)
     % create Ks matrix (species * compounds)
-    [vals, names] = xlsread(filename, 'Ks');
+    [vals_ks, names_ks] = xlsread(filename, 'Ks');
+    [vals_ki, names_ki] = xlsread(filename, 'Ki');
+
+    constants.speciesNames = names_ks(2:end, 1);
+    assert(areEqual(constants.speciesNames, names_ki(2:end, 1)), 'ERROR: Bacterial species do not have the same name, or are not in the same order.');
+
+    % check which unique compounds in Ks & Ki compounds
+    comp_names = {names_ks(1,2:end-1), names_ki(1, 2:end-1)};
+    uniq_compounds = unique(cat(2, comp_names{:}));
     
-    constants.speciesNames = names(2:end, 1);
-    constants.Ks = zeros(length(constants.speciesNames), length(constants.compoundNames));
-    for i = 1:length(constants.compoundNames)
-        compoundName = constants.compoundNames{i};
-        iColumn = find(strcmp(names(1,:), compoundName));
+    % create Ks and Ki matrix
+    constants.Ks = zeros(length(constants.speciesNames), length(uniq_compounds));
+    constants.Ki = zeros(length(constants.speciesNames), length(uniq_compounds));
+    
+    for i = 1:length(uniq_compounds)
+        compoundName = uniq_compounds{i};
+        iColumn = find(strcmp(names_ks(1,:), compoundName));
         if iColumn
-            constants.Ks(:, i) = vals(:, iColumn-1); % -1, because first column is header
+            constants.Ks(:, i) = vals_ks(:, iColumn-1); % -1, because first column is header
+        end
+        iColumn = find(strcmp(names_ki(1,:), compoundName));
+        if iColumn
+            constants.Ki(:, i) = vals_ki(:, iColumn-1); % -1, because first column is header
         end
     end
     
-    % create Ks matrix (species * compounds)
-    [vals, names] = xlsread(filename, 'Ki');
-    
-    assert(areEqual(constants.speciesNames, names(2:end, 1)), 'ERROR: Bacterial species do not have the same name, or are not in the same order.');
-    constants.Ki = zeros(length(constants.speciesNames), length(constants.compoundNames));
-    for i = 1:length(constants.compoundNames)
-        compoundName = constants.compoundNames{i};
-        iColumn = find(strcmp(names(1,:), compoundName));
-        if iColumn
-            constants.Ki(:, i) = vals(:, iColumn-1); % -1, because first column is header
+    % create reactive_indices
+    constants.reactive_indices = zeros(length(uniq_compounds), 1);
+
+    if settings.speciation
+        sz = [nCompounds, nColumns];
+
+        for i = 1:length(uniq_compounds)
+            I = find(strcmp(constants.compoundNames, uniq_compounds{i}));
+            J = preferred_state(I);
+            constants.reactive_indices(i) = sub2ind(sz, I, J);
+        end
+    else
+        for i = 1:length(uniq_compounds)
+            constants.reactive_indices(i) = find(strcmp(constants.compoundNames, uniq_compounds{i}));
         end
     end
-    
+
     
     %% constants (Yield, eDonor, mu_max, maint)
     [vals, names] = xlsread(filename, 'Yield');
@@ -234,25 +247,25 @@ filename = './planning/Excels/Templates/AOBNOBAMXCMX_template.xlsx';
     iDecay = find(strcmp(names(2,:), 'Decay')) - 1; % idem
     
     % initialise matrix for metabolisms & decay
-    constants.MatrixMet = zeros(length(constants.compoundNames), length(constants.speciesNames));
-    constants.MatrixDecay = zeros(length(constants.compoundNames), length(constants.speciesNames));
+    constants.MatrixMet = zeros(nCompounds, length(constants.speciesNames));
+    constants.MatrixDecay = zeros(nCompounds, length(constants.speciesNames));
     
     % loop over species
     for species = 1:length(constants.speciesNames)
         % get catabolism & anabolism
-        cat = vals(compound_rows, iCat(species));
+        cata = vals(compound_rows, iCat(species));
         ana = vals(compound_rows, iAnab(species));
         
         % get eDonor & yield
         eD_species = eD{species};
         Y = yield(species);
         
-        % check whether eD has value -1 in cat
+        % check whether eD has value -1 in cata
         eD_index = strcmp(constants.compoundNames, eD_species);
-        assert(cat(eD_index) == -1, 'ERROR, catabolism is not normalised towards the electron donor.');
+        assert(cata(eD_index) == -1, 'ERROR, catabolism is not normalised towards the electron donor.');
         
         % calculate metabolism matrix entry
-        constants.MatrixMet(:, species) = cat/Y + ana;
+        constants.MatrixMet(:, species) = cata/Y + ana;
         
         % set decay matrix entry
         constants.MatrixDecay(:, species) = vals(compound_rows, iDecay(species));
@@ -271,9 +284,7 @@ filename = './planning/Excels/Templates/AOBNOBAMXCMX_template.xlsx';
     
     
 
-% constants.StNames = R.St.StNames(1:8); --> changed to constants.compoundNames
 % check all settings in model if they are applied correctly...
-% remove N2 from all bulk_conc, reaction_matrix, etc. in the model
 % how to implement the Ks and Ki generally speaking with matrix instead of
 % values?
 % check pH algorithms with new structs... is Kd now working?
