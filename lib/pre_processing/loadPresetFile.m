@@ -108,12 +108,17 @@ filename = './planning/Excels/Templates/AOBNOBAMXCMX_template.xlsx';
 
     constants.nDiffusion_per_SScheck = vals(strcmp(names, 'nIters diffusion per SS check'));
     
+    settings.pHbulkCorrection = logical(vals(strcmp(names, 'pH bulk concentration corrected')));
     settings.pHincluded = logical(vals(strcmp(names, 'pH solving included')));
     if settings.pHincluded
         constants.pHtolerance = vals(strcmp(names, 'pH solver tolerance'));
     end
     settings.speciation = logical(vals(strcmp(names, 'Speciation included')));
 
+    settings.structure_model = logical(vals(strcmp(names, 'Structure model')));
+    if settings.structure_model
+        settings.type = names{strcmp(names, 'Structure model type'), 2};
+    end
     
     settings.parallelized = logical(vals(strcmp(names, 'Parallelisation')));
 

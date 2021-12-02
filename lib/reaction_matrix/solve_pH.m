@@ -1,4 +1,4 @@
-function [spcM, Sh] = solve_pH(Sh_ini, StV, Keq, chrM, keepConstantpH, Tol)
+function [spcM, Sh] = solve_pH(Sh_ini, StV, Keq, chrM, calculate_pH, Tol)
     % Solve the pH and speciation per grid cell using a modified
     % Newton-Raphson algorithm
     %
@@ -6,14 +6,14 @@ function [spcM, Sh] = solve_pH(Sh_ini, StV, Keq, chrM, keepConstantpH, Tol)
     % StV: concentration vector
     % Keq: equilibrium constants per compound in the StV vector
     % chrM: charge per subcompound of the StV vector
-    % keepConstantpH: (bool) if true, then assume pH is set value,
-    %   otherwise, calculate pH from speciation
+    % calculate_pH: (bool) if false, then assume pH is set value,
+    %   otherwise, calculate pH from speciation/compound concentrations
     % Tol: Newton-Raphson tolerance
     %
     % -> spcM: species matrix for the respective pH
     % -> Sh: proton concentration
     
-    if keepConstantpH
+    if ~calculate_pH
         % assume steady pH value, only calculate speciation
         spcM = zeros(size(chrM));
         Sh = Sh_ini;

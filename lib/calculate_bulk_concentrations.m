@@ -18,8 +18,6 @@ function [bulk_concentrations, invHRT] = calculate_bulk_concentrations(constants
     %   compound
     % -> invHRT: new 1 / (hydrolic retention time) [h-1]
     
-    pHincluded = settings.pHincluded;
-
     %% unpack constants for easy use
     Keq = constants.Keq;
     chrM = constants.chrM;
@@ -54,7 +52,7 @@ function [bulk_concentrations, invHRT] = calculate_bulk_concentrations(constants
     end
     
     %% apply pH correction to bulk_concentrations
-    if pHincluded
+    if settings.pHbulkCorrection
         bulk_concentrations(strcmp(StNames, 'SO4')) = bulk_concentrations(strcmp(StNames, 'NH3')) / 2;        
         bulk_concentrations(isLiquid) = controlpH(Keq, chrM, StNames, pH, bulk_concentrations(isLiquid));
     

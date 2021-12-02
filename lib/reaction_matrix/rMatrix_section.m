@@ -5,7 +5,7 @@ function [reaction_matrix, mu, pH_new] = rMatrix_section(pH, conc, grid2bac, gri
     % domain
 
     pH_bulk = constants(1);
-    constantpH = constants(2);
+    pHincluded = constants(2);
     pHtolerance = constants(3);
     T = constants(4);
     if structure_model
@@ -37,7 +37,7 @@ function [reaction_matrix, mu, pH_new] = rMatrix_section(pH, conc, grid2bac, gri
                 % calculate pH & speciation
                 if pHincluded
                     Sh_old = 10^-pH(ix, iy);
-                    [spcM, Sh] = solve_pH(Sh_old, [reshape(conc(ix,iy,:), [], 1, 1); 1; 0], Keq, chrM, constantpH, pHtolerance); % <C: why [...; 1; 0]? />
+                    [spcM, Sh] = solve_pH(Sh_old, [reshape(conc(ix,iy,:), [], 1, 1); 1; 0], Keq, chrM, pHincluded, pHtolerance); % <C: why [...; 1; 0]? />
                     pH_new(ix, iy) = -log10(Sh);
                 else
                     pH(ix, iy) = pH_bulk;
