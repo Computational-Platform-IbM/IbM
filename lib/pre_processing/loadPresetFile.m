@@ -226,9 +226,19 @@ function [grid, bac_init, constants, settings, init_params] = loadPresetFile(fil
     assert(areEqual(constants.speciesNames, names(2:end,1)), 'ERROR: Bacterial species do not have the same name, or are not in the same order.');
     yield = vals(:, find(strcmp(names(1,:), 'Yield C/N')) - 1);
     eD = names(2:end, strcmp(names(1,:), 'eD'));
-    constants.maintenance = vals(:, find(strcmp(names(1,:), 'Maintenance')) - 1);
-    constants.mu_max = vals(:, find(strcmp(names(1,:), 'Max growth rate')) - 1);
-    
+    try
+        constants.maintenance = vals(:, find(strcmp(names(1,:), 'Maintenance')) - 1);
+        constants.mu_max = vals(:, find(strcmp(names(1,:), 'Max growth rate')) - 1);
+    catch e
+        switch e.identifier
+            case 'MATLAB:badsubscript'
+                constants.maintenance = nan;
+                constants.mu_max = nan;
+                fprintf('Maintenance and maximum growth rate are not set, thus calculating dynamically. Please make sure the equations and species match up in the code.')
+            otherwise
+                rethrow(e)
+        end
+    end
     
     
     %% constants (ReactionMatrix)

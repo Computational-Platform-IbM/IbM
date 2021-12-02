@@ -23,6 +23,7 @@ function [reaction_matrix, mu, pH] = calculate_reaction_matrix(grid2bac, grid2nB
     
     structure_model = settings.structure_model;
     pHincluded = settings.pHincluded;
+    
 
     nChunks = nChunks_dir^2;
     
@@ -58,6 +59,7 @@ function [reaction_matrix, mu, pH] = calculate_reaction_matrix(grid2bac, grid2nB
     % group constants for easy passing to multiple cores
     constantValues = [pH_bulk, pHincluded, constants.pHtolerance, constants.T, settings.speciation];
     grouped_bac = [bac.species, bac.molarMass, bac.active];
+    grouped_kinetics = [constants.mu_max, constants.maintenance];
 
     if settings.parallelized
         % ================ PARALLEL CALCULATION ====================
@@ -103,7 +105,7 @@ function [reaction_matrix, mu, pH] = calculate_reaction_matrix(grid2bac, grid2nB
             [chunk_rMatrix{iChunk}, chunk_mu{iChunk}, chunk_pH{iChunk}] = ...
                 rMatrix_section(chunk_pH_OG{iChunk}, chunk_conc{iChunk}, chunk_grid2bac{iChunk}, chunk_grid2nBacs{iChunk}, chunk_diffRegion{iChunk}, ...
                 chunk_grouped_bac{iChunk}, chunk2nBacs(iChunk), bacOffset(iChunk), ...
-                reactive_indices, Ks, Ki, Keq, chrM, mMetabolism, mDecay, constantValues, structure_model, pHincluded);
+                reactive_indices, Ks, Ki, Keq, chrM, mMetabolism, mDecay, constantValues, grouped_kinetics);
         end
 
         % put everything back into correct matrix/vector
@@ -125,7 +127,7 @@ function [reaction_matrix, mu, pH] = calculate_reaction_matrix(grid2bac, grid2nB
         [reaction_matrix, mu, pH] = ...
             rMatrix_section(pH, conc, grid2bac, grid2nBacs, diffRegion, ...
             grouped_bac, length(bac.x), bacOffset, ...
-            reactive_indices, Ks, Ki, Keq, chrM, mMetabolism, mDecay, constantValues, structure_model, pHincluded);
+            reactive_indices, Ks, Ki, Keq, chrM, mMetabolism, mDecay, constantValues, grouped_kinetics);
     end
     
     

@@ -1,6 +1,6 @@
 function [reaction_matrix, mu, pH_new] = rMatrix_section(pH, conc, grid2bac, grid2nBacs, diffRegion, ...
     grouped_bac, nBacs, bacOffset, ...
-    reactive_indices, Ks, Ki, Keq, chrM, mMetabolism, mDecay, constants, structure_model, pHincluded)
+    reactive_indices, Ks, Ki, Keq, chrM, mMetabolism, mDecay, constants, kinetics)
     % Calculate reaction matrix, mu and pH in one part of the simulation
     % domain
 
@@ -23,6 +23,9 @@ function [reaction_matrix, mu, pH_new] = rMatrix_section(pH, conc, grid2bac, gri
     bac_species = grouped_bac(:,1);
     bac_molarMass = grouped_bac(:,2);
     bac_active = grouped_bac(:,3);
+    
+    mu_max_list = kinetics(:,1);
+    maint_list = kinetics(:,2);
 
     mu = zeros(nBacs, 1);
     reaction_matrix = zeros(size(conc));
@@ -58,8 +61,13 @@ function [reaction_matrix, mu, pH_new] = rMatrix_section(pH, conc, grid2bac, gri
                     for i = 1:length(unique_species)
                         curr_species = unique_species(i);
 
-                        % update mu_max per species based on pH
-                        [mu_max, maint] = determine_max_growth_rate_and_maint(curr_species, T, Sh, structure_model);
+                        % get mu_max and maintenance
+                        if isnan(mu_max_list(1))
+                            [mu_max, maint] = determine_max_growth_rate_and_maint(curr_species, T, Sh, structure_model);
+                        else
+                            mu_max = mu_max_list(curr_species);
+                            maint = maint_list(curr_species);
+                        end
 
                         % get reactive concentrations for soluble components
                         reactive_conc = spcM(reactive_indices);
