@@ -29,9 +29,14 @@ function [bulk_concentrations, invHRT] = calculate_bulk_concentrations(constants
     influent = constants.influent_concentrations;
     % NH3sp = constants.pOp.NH3sp;
     % keepNH3fixed = constants.constantN;
-    variableHRT = settings.variableHRT
-    bulk_setpoint = constants.bulk_setpoint;
-    setpoint_index = constants.setpoint_index;
+    variableHRT = settings.variableHRT;
+    if variableHRT
+        bulk_setpoint = constants.bulk_setpoint;
+        setpoint_index = constants.setpoint_index;
+    else
+        bulk_setpoint = 0;
+        setpoint_index = 0;
+    end
     
     %% set bulk_concentrations 
     if isscalar(reactionMatrix) % if no reaction matrix formed, then init with previous concentrations
@@ -59,7 +64,7 @@ function [bulk_concentrations, invHRT] = calculate_bulk_concentrations(constants
         bulk_concentrations = controlpH(Keq, chrM, compoundNames, pH, bulk_concentrations);
     
         if any(bulk_concentrations < 0) %<E: Negative concentration from control pH of reactor. />
-            error('DEBUG:actionRequired', 'debug: negative bulk concentration encountered after pH control... correction required?')
+            warning('DEBUG:actionRequired', 'debug: negative bulk concentration encountered after pH control... correction required?')
             bulk_concentrations = bulk_concentrations .* (bulk_concentrations > 0);
         end
     end
