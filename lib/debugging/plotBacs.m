@@ -49,6 +49,9 @@ function f = plotBacs(g, bac, constants, Time)
     hold on;
     uniq_s = unique(s);
     for i = 1:length(uniq_s)
+        if uniq_s(i) == 0
+            continue
+        end
         scatter(NaN, NaN, 'Marker', 'o', 'MarkerFaceColor', coloring{uniq_s(i)}, 'MarkerEdgeColor', [0 0 0], 'LineWidth', 1);
     end
     
