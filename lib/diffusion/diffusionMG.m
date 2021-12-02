@@ -69,7 +69,7 @@ function conc = diffusionMG(conc, reaction_matrix, bulk_concentrations, diffRegi
         % check for negative values, raise error
         negative_concentration = conc(:,:,iCompound) < 0;
         if any(negative_concentration, 'all')
-            error('Diffusion:NegativeConcentration', 'Negative concentration encountered & corrected in diffusion solution of compound %s', constants.StNames{iCompound})
+            error('Diffusion:NegativeConcentration', 'Negative concentration encountered & corrected in diffusion solution of compound %s', constants.compoundNames{iCompound})
         end    
     end
     

@@ -34,7 +34,7 @@ function [isReached, max_RES_value] = steadystate_is_reached(conc, reaction_matr
         max_RES_value(iCompound) = max(abs(RES(diffRegion)), [], 'all');
 
         % DEBUG
-%             plotRES(RES, constants.StNames{iCompound}, diffRegion)
+%             plotRES(RES, constants.compoundNames{iCompound}, diffRegion)
         % END DEBUG
         
     end

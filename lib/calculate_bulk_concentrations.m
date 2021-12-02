@@ -21,7 +21,7 @@ function [bulk_concentrations, invHRT] = calculate_bulk_concentrations(constants
     %% unpack constants for easy use
     Keq = constants.Keq;
     chrM = constants.chrM;
-    StNames = constants.StNames;
+    compoundNames = constants.compoundNames;
     pH = constants.pHsetpoint;
     Vr = constants.Vr;
     Vg = constants.Vg;
@@ -52,8 +52,8 @@ function [bulk_concentrations, invHRT] = calculate_bulk_concentrations(constants
     
     %% apply pH correction to bulk_concentrations
     if settings.pHbulkCorrection
-        bulk_concentrations(strcmp(StNames, 'SO4')) = bulk_concentrations(strcmp(StNames, 'NH3')) / 2;        
-        bulk_concentrations = controlpH(Keq, chrM, StNames, pH, bulk_concentrations);
+        bulk_concentrations(strcmp(compoundNames, 'SO4')) = bulk_concentrations(strcmp(compoundNames, 'NH3')) / 2;        
+        bulk_concentrations = controlpH(Keq, chrM, compoundNames, pH, bulk_concentrations);
     
         if any(bulk_concentrations < 0) %<E: Negative concentration from control pH of reactor. />
             warning('DEBUG:actionRequired', 'debug: negative bulk concentration encountered after pH control... correction required?')
@@ -140,12 +140,12 @@ end
 
 
 %%
-function conc = controlpH(Keq, chrM, StNames, pH, conc)
+function conc = controlpH(Keq, chrM, compoundNames, pH, conc)
     % Add NaHCO3 to control the pH at a certain point
     %
     % Keq:
     % chrM:
-    % StNames: names of the compounds
+    % compoundNames: names of the compounds
     % pH: setpoint of the pH
     % conc: bulk concentration per compound before NaHCO3 addition
     %
@@ -155,15 +155,15 @@ function conc = controlpH(Keq, chrM, StNames, pH, conc)
     Tp = 1;
     u = [conc; 1; 0]; % for H2O and H concentrations
 
-    NaHCO3 = conc(strcmp(StNames, 'CO2'));
+    NaHCO3 = conc(strcmp(compoundNames, 'CO2'));
     w = 1;
 
     spcM = zeros(size(chrM));
     Sh = 10^(-pH);
 
     while abs(Tp) > Tol
-        u(strcmp(StNames, 'Na')) = NaHCO3;
-        u(strcmp(StNames, 'CO2')) = NaHCO3;
+        u(strcmp(compoundNames, 'Na')) = NaHCO3;
+        u(strcmp(compoundNames, 'CO2')) = NaHCO3;
 
         Denm = (1 + Keq(:, 1) / w) * Sh^3 + Keq(:, 2) * Sh^2 + Keq(:, 3) .* Keq(:, 2) * Sh + Keq(:, 4) .* Keq(:, 3) .* Keq(:, 2);
 
@@ -177,8 +177,8 @@ function conc = controlpH(Keq, chrM, StNames, pH, conc)
         NaHCO3 = NaHCO3 - Tp;
     end
 
-    conc(strcmp(StNames, 'Na')) = NaHCO3;
-    conc(strcmp(StNames, 'CO2')) = NaHCO3;
+    conc(strcmp(compoundNames, 'Na')) = NaHCO3;
+    conc(strcmp(compoundNames, 'CO2')) = NaHCO3;
 end
 
 

@@ -1,5 +1,5 @@
 function [reaction_matrix, mu, pH] = calculate_reaction_matrix(grid2bac, grid2nBacs, bac, diffRegion, conc, constants, pH, chunks, nChunks_dir, settings)
-    % Calculate how much compounds are consumed/produced per grid cell due
+    % Calculate how much compoundNames are consumed/produced per grid cell due
     % to bacterial activity. Also updates the growth rate of the respective
     % bacteria.
     % 
@@ -34,7 +34,7 @@ function [reaction_matrix, mu, pH] = calculate_reaction_matrix(grid2bac, grid2nB
     Keq = constants.Keq;
     chrM = constants.chrM;
     Vg = constants.Vg;
-    compounds = constants.StNames;
+    compoundNames = constants.compoundNames;
     reactive_form = constants.react_v;
     Ks = constants.Ks;
     Ki = constants.Ki;
@@ -42,14 +42,14 @@ function [reaction_matrix, mu, pH] = calculate_reaction_matrix(grid2bac, grid2nB
     mDecay = constants.MatrixDecay;
     
     if structure_model
-        iA = find(strcmp(compounds, 'A'));
-        iB = find(strcmp(compounds, 'B'));
-        iC = find(strcmp(compounds, 'C'));
-        iO2 = find(strcmp(compounds, 'O2'));        
+        iA = find(strcmp(compoundNames, 'A'));
+        iB = find(strcmp(compoundNames, 'B'));
+        iC = find(strcmp(compoundNames, 'C'));
+        iO2 = find(strcmp(compoundNames, 'O2'));        
     else
-        iNH3 = find(strcmp(compounds, 'NH3'));
-        iNO2 = find(strcmp(compounds, 'NO2'));
-        iO2 = find(strcmp(compounds, 'O2'));
+        iNH3 = find(strcmp(compoundNames, 'NH3'));
+        iNO2 = find(strcmp(compoundNames, 'NO2'));
+        iO2 = find(strcmp(compoundNames, 'O2'));
     end
     
     reaction_matrix = zeros(size(conc));
@@ -104,11 +104,11 @@ function [reaction_matrix, mu, pH] = calculate_reaction_matrix(grid2bac, grid2nB
         chunk_grouped_bac = cellfun(@(bacRange) grouped_bac(bacRange, :), chunk_bacRange, 'UniformOutput', false);
 
         % create storage variables for output per chunk
-        nCompounds = length(compounds);
+        ncompoundNames = length(compoundNames);
         xlens = kron(ones(nChunks_dir,1), diff(chunks.indices_x, [], 2)+1);
         ylens = kron(diff(chunks.indices_y, [], 2)+1, ones(nChunks_dir, 1));
 
-        chunk_rMatrix = arrayfun(@(xlen, ylen) zeros(xlen, ylen, nCompounds), xlens, ylens, 'UniformOutput', false);
+        chunk_rMatrix = arrayfun(@(xlen, ylen) zeros(xlen, ylen, ncompoundNames), xlens, ylens, 'UniformOutput', false);
         chunk_pH = arrayfun(@(xlen, ylen) zeros(xlen, ylen), xlens, ylens, 'UniformOutput', false);
         chunk_mu = arrayfun(@(x) zeros(x, 1), chunk2nBacs, 'UniformOutput', false);
 

@@ -10,7 +10,7 @@ function plotRMatrix(rMatrix, constants, T)
         imagesc(rMatrix(:,:,iPlot)'); 
         colormap(redblue()); 
         colorbar(); 
-        title(sprintf('Reaction profile of %s', constants.StNames{iPlot}));
+        title(sprintf('Reaction profile of %s', constants.compoundNames{iPlot}));
         cval = caxis();
         cval_maxabs = max(abs(cval));
 

@@ -13,7 +13,7 @@ function f = plotBulkConcOverTime(bulk_history, time_history, constants)
             plot_index = (subix - 1)*nPlots(2)+subiy;
             subplot(nPlots(1), nPlots(2), plot_index)
             plot(time_history, bulk_history(plot_index,:), 'LineWidth', 2);
-            title(sprintf('Bulk concentration [%s] over time', constants.StNames{plot_index}));
+            title(sprintf('Bulk concentration [%s] over time', constants.compoundNames{plot_index}));
             xlabel('Simulation time [h]')
             ylabel('Concentration [mol/L]')
         end

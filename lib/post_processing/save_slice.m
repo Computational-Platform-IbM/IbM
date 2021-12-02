@@ -75,7 +75,7 @@ function [bac_saved, conc_saved, pH_saved, reactor_saved] = init_save(constants,
     bac_saved.mu = zeros(nSaves, constants.max_nBac, 'single');
     
     % concentration variable
-    nCompounds = length(constants.StNames);
+    nCompounds = length(constants.compoundNames);
     conc_saved = zeros(nSaves, grid.nX, nCompounds, 'single');
     
     % pH variable
