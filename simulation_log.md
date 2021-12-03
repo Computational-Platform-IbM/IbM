@@ -153,3 +153,15 @@ For the finished column, please use :white_check_mark: (`:white_check_mark:`) wh
 | 0145              | Determine relationship kDet <> steady state granule size<br>kDet = 25 per meter per hour  | Validation                                      |           | v2.4.0<br>(unreleased) |
 | 0146              | Determine relationship kDet <> steady state granule size<br>kDet = 50 per meter per hour  | Validation                                      |           | v2.4.0<br>(unreleased) |
 | 0147              | Determine relationship kDet <> steady state granule size<br>kDet = 100 per meter per hour | Validation                                      |           | v2.4.0<br>(unreleased) |
+| 0148              | <b>Anaerobic-Coprotection</b> (Run 1)<br> [A]=1mM <br> [O2]=0mg/L <br> Ki=0.5mM           | Stratifying game project                        | 🕐 (HP)    | v2.3.0                 |
+| 0149              | <b>Anaerobic-Coprotection</b> (Run 2)<br> [A]=1mM <br> [O2]=0mg/L <br> Ki=0.5mM           | Stratifying game project                        | 🕐 (HP)    | v2.3.0                 |
+| 0150              | <b>Anaerobic-Coprotection</b> (Run 3)<br> [A]=1mM <br> [O2]=0mg/L <br> Ki=0.5mM           | Stratifying game project                        | 🕐 (HP)    | v2.3.0                 |
+| 0151              | <b>Anaerobic-Coprotection</b> (Run 1)<br> [A]=0.5mM <br> [O2]=0mg/L <br> Ki=0.5mM         | Stratifying game project                        | 🕐 (HP)    | v2.3.0                 |
+| 0152              | <b>Anaerobic-Coprotection</b> (Run 2)<br> [A]=0.5mM <br> [O2]=0mg/L <br> Ki=0.5mM         | Stratifying game project                        | 🕐 (HP)    | v2.3.0                 |
+| 0153              | <b>Anaerobic-Coprotection</b> (Run 3)<br> [A]=0.5mM <br> [O2]=0mg/L <br> Ki=0.5mM         | Stratifying game project                        | 🕐 (HP)    | v2.3.0                 |
+| 0154              | <b>Anaerobic-Coprotection</b> (Run 1)<br> [A]=0.1mM <br> [O2]=0mg/L <br> Ki=0.5mM         | Stratifying game project                        | 🕐 (Dell)  | v2.3.0                 |
+| 0155              | <b>Anaerobic-Coprotection</b> (Run 2)<br> [A]=0.1mM <br> [O2]=0mg/L <br> Ki=0.5mM         | Stratifying game project                        | 🕐 (Dell)  | v2.3.0                 |
+| 0156              | <b>Anaerobic-Coprotection</b> (Run 3)<br> [A]=0.1mM <br> [O2]=0mg/L <br> Ki=0.5mM         | Stratifying game project                        | 🕐 (Dell)  | v2.3.0                 |
+| 0157              | <b>Anaerobic-Coprotection</b> (Run 1)<br> [A]=0.01mM <br> [O2]=0mg/L <br> Ki=0.5mM        | Stratifying game project                        | ✅         | v2.3.0                 |
+| 0158              | <b>Anaerobic-Coprotection</b> (Run 2)<br> [A]=0.01mM <br> [O2]=0mg/L <br> Ki=0.5mM        | Stratifying game project                        | ✅         | v2.3.0                 |
+| 0159              | <b>Anaerobic-Coprotection</b> (Run 3)<br> [A]=0.01mM <br> [O2]=0mg/L <br> Ki=0.5mM        | Stratifying game project                        | ✅         | v2.3.0                 |
