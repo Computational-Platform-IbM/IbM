@@ -76,7 +76,7 @@ function [grid, bac_init, constants, settings, init_params] = loadPresetFile(fil
     if settings.variableHRT
         constants.bulk_setpoint = vals(strcmp(names, 'Setpoint'));          % [mol/L]    % -> changed from constants.pOp.NH3sp
         compound_name = names{strcmp(names, 'Compound setpoint'), 2};
-        constants.setpoint__index = find(strcmp(constants.compoundNames, compound_name));
+        constants.setpoint_index = find(strcmp(constants.compoundNames, compound_name));
     end
         
     
@@ -234,7 +234,7 @@ function [grid, bac_init, constants, settings, init_params] = loadPresetFile(fil
             case 'MATLAB:badsubscript'
                 constants.maintenance = nan;
                 constants.mu_max = nan;
-                fprintf('Maintenance and maximum growth rate are not set, thus calculating dynamically. Please make sure the equations and species match up in the code.')
+                fprintf('Maintenance and maximum growth rate are not set, thus calculating dynamically. \nPlease make sure the equations and species match up in the code.\n')
             otherwise
                 rethrow(e)
         end
