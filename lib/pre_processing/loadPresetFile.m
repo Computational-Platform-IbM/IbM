@@ -206,7 +206,7 @@ function [grid, bac_init, constants, settings, init_params] = loadPresetFile(fil
     constants.reactive_indices = zeros(length(uniq_compounds), 1);
 
     if settings.speciation
-        sz = [nCompounds, nColumns];
+        sz = [nCompounds+2, nColumns]; % spcM also includes rows for H2O and H
 
         for i = 1:length(uniq_compounds)
             I = find(strcmp(constants.compoundNames, uniq_compounds{i}));
