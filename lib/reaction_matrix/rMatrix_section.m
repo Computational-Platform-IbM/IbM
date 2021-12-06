@@ -63,7 +63,7 @@ function [reaction_matrix, mu, pH_new] = rMatrix_section(pH, conc, grid2bac, gri
 
                         % get mu_max and maintenance
                         if isnan(mu_max_list(1))
-                            [mu_max, maint] = determine_max_growth_rate_and_maint(curr_species, T, Sh, structure_model);
+                            [mu_max, maint] = determine_max_growth_rate_and_maint(curr_species, T, Sh);
                         else
                             mu_max = mu_max_list(curr_species);
                             maint = maint_list(curr_species);
