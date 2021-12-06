@@ -64,7 +64,7 @@ def muRatio(mu, s, inc):
     return muA
 
 
-def save_plot(i: int, xlim: List[float], ylim: List[float], bac: Dict):
+def save_plot(i: int, xlim: List[float], ylim: List[float], bac: Dict, bacNames: list):
     """Create and save a figure of the bacteria at a certain point in time.
 
     Args:
@@ -94,6 +94,7 @@ def save_plot(i: int, xlim: List[float], ylim: List[float], bac: Dict):
     # Colourblind-friendly: ( https://www.color-hex.com/color-palette/49436 )
     # c = ['#0072B2', '#D55E00', '#F0E442', '#CC79A7']
     c = ['#D81B60', '#1E88E5', '#FFC107', '#004D40']  # colors Chiel
+    c = ['#E69F00', '#56B4E9', '#009E73', '#F0E442', '#0072B2', '#D55E00']
 
     rC, gC, bC = HEX2RGBsplit(c)  # HEX to RGB
 
@@ -117,22 +118,17 @@ def save_plot(i: int, xlim: List[float], ylim: List[float], bac: Dict):
     # plt.margins(0.01)
 
     # Legend
-    L1 = Line2D([0], [0], linestyle="none", marker="o",
-                markersize=10, markerfacecolor=c[0], markeredgecolor=c[0])
-    L2 = Line2D([0], [0], linestyle="none", marker="o",
-                markersize=10, markerfacecolor=c[1], markeredgecolor=c[1])
-    L3 = Line2D([0], [0], linestyle="none", marker="o",
-                markersize=10, markerfacecolor=c[2], markeredgecolor=c[2])
-    L4 = Line2D([0], [0], linestyle="none", marker="o",
-                markersize=10, markerfacecolor=c[3], markeredgecolor=c[3])
+    legend_list = []
+    for ii, bacName in enumerate(bacNames):
+        legend_list.append(Line2D([0], [0], linestyle="none", marker="o",
+                                  markersize=10, markerfacecolor=c[ii], markeredgecolor=c[ii]))
 
-    # plt.legend((L1, L2, L3), ('B1', 'B2', 'B3'), numpoints=1,
-    #            loc="best", frameon=False)  # Structures
-    plt.legend((L1, L2, L3, L4), ('AOB', 'Nitrobacter', 'Nitrospira', 'AMX'),
-               numpoints=1, loc="upper left", frameon=False)  # AOB/NOB/AMX
+    plt.legend(legend_list, bacNames,
+               numpoints=1, loc="upper left", frameon=False)
 
     filename = f'{directory}/{i}.png'
-    plt.title(f'Time = {i*24}')
+    # TODO: set dynamic value of dT_save from constants!!!
+    plt.title(f'Time = {i*96}')
     plt.savefig(filename)
     plt.close()
 
@@ -155,17 +151,22 @@ def generate_gif(args: Dict):
         for k in f['grid'].keys():
             grid[k] = np.array(f['grid'][k]).squeeze()
             print(f'Loaded grid.{k}')
-        dtBac = np.array(f['constants']['dT_bac']).squeeze()
+
+        for columns in f['constants']['speciesNames']:
+            bacNames = []
+            for row in range(len(columns)):
+                bacNames.append(''.join(map(chr, f[columns[row]][:])))
 
     # %%
     # calculate boundaries for the plot
     lastNonzero = np.max(np.nonzero(bac['nBacs']))
+    print(lastNonzero)
     final_nBacs = bac['nBacs'][lastNonzero]
     print(f'final number of bacteria: {final_nBacs}')
     xlim = np.array([bac['x'][0:final_nBacs, lastNonzero].min() - 5*grid['dx'],
-                    bac['x'][0:final_nBacs, lastNonzero].max() + 5*grid['dx']])
+                     bac['x'][0:final_nBacs, lastNonzero].max() + 5*grid['dx']])
     ylim = np.array([bac['y'][0:final_nBacs, lastNonzero].min() - 5*grid['dy'],
-                    bac['y'][0:final_nBacs, lastNonzero].max() + 5*grid['dy']])
+                     bac['y'][0:final_nBacs, lastNonzero].max() + 5*grid['dy']])
     print(xlim, ylim)
 
     # %%
@@ -173,7 +174,7 @@ def generate_gif(args: Dict):
     filenames = []
     for i in tqdm(range(lastNonzero), desc='Generation frames'):
         if bac['nBacs'][i]:
-            filenames.append(save_plot(i, xlim, ylim, bac))
+            filenames.append(save_plot(i, xlim, ylim, bac, bacNames))
 
     # build gif
     with imageio.get_writer(f'{directory}/bacteria.gif', mode='I', fps=4) as writer:
