@@ -8,6 +8,7 @@ All notable changes to this project will be documented in this file.
 - Function to plot bacteria with overlay of detachment times
 - 
 ### Changed
+- Loading of model settings from Excel completely refactored
 ### Fixed
 ### Removed
 
