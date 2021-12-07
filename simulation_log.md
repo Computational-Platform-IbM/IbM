@@ -162,9 +162,9 @@ For the finished column, please use :white_check_mark: (`:white_check_mark:`) wh
 | 0154              | <b>Anaerobic-Coprotection</b> (Run 1)<br> [A]=0.1mM <br> [O2]=0mg/L <br> Ki=0.5mM         | Stratifying game project                        | ✅         | v2.3.0                 |
 | 0155              | <b>Anaerobic-Coprotection</b> (Run 2)<br> [A]=0.1mM <br> [O2]=0mg/L <br> Ki=0.5mM         | Stratifying game project                        | ✅         | v2.3.0                 |
 | 0156              | <b>Anaerobic-Coprotection</b> (Run 3)<br> [A]=0.1mM <br> [O2]=0mg/L <br> Ki=0.5mM         | Stratifying game project                        | ✅         | v2.3.0                 |
-| 0157              | <b>Anaerobic-Coprotection</b> (Run 1)<br> [A]=0.01mM <br> [O2]=0mg/L <br> Ki=0.5mM        | Stratifying game project                        | ✅         | v2.3.0                 |
-| 0158              | <b>Anaerobic-Coprotection</b> (Run 2)<br> [A]=0.01mM <br> [O2]=0mg/L <br> Ki=0.5mM        | Stratifying game project                        | ✅         | v2.3.0                 |
-| 0159              | <b>Anaerobic-Coprotection</b> (Run 3)<br> [A]=0.01mM <br> [O2]=0mg/L <br> Ki=0.5mM        | Stratifying game project                        | ✅         | v2.3.0                 |
+| 0157              | <b>Anaerobic-Coprotection</b> (Run 1)<br> [A]=0.05mM <br> [O2]=0mg/L <br> Ki=0.5mM        | Stratifying game project                        | ✅         | v2.3.0                 |
+| 0158              | <b>Anaerobic-Coprotection</b> (Run 2)<br> [A]=0.05mM <br> [O2]=0mg/L <br> Ki=0.5mM        | Stratifying game project                        | ✅         | v2.3.0                 |
+| 0159              | <b>Anaerobic-Coprotection</b> (Run 3)<br> [A]=0.05mM <br> [O2]=0mg/L <br> Ki=0.5mM        | Stratifying game project                        | ✅         | v2.3.0                 |
 | 0160              | <b>Anaerobic-Coprotection</b> (Run 1)<br> [A]=1mM <br> [O2]=0mg/L <br> Ki=0.65mM          | Stratifying game project                        | ✅         | v2.3.0                 |
 | 0161              | <b>Anaerobic-Coprotection</b> (Run 1)<br> [A]=1mM <br> [O2]=0mg/L <br> Ki=0.65mM          | Stratifying game project                        | ✅         | v2.3.0                 |
 | 0162              | <b>Anaerobic-Coprotection</b> (Run 1)<br> [A]=1mM <br> [O2]=0mg/L <br> Ki=0.65mM          | Stratifying game project                        | ✅         | v2.3.0                 |
