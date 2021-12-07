@@ -64,7 +64,7 @@ def muRatio(mu, s, inc):
     return muA
 
 
-def save_plot(i: int, xlim: List[float], ylim: List[float], bac: Dict, bacNames: list):
+def save_plot(i: int, xlim: List[float], ylim: List[float], bac: Dict, bacNames: List[str], dT_save: float):
     """Create and save a figure of the bacteria at a certain point in time.
 
     Args:
@@ -127,8 +127,7 @@ def save_plot(i: int, xlim: List[float], ylim: List[float], bac: Dict, bacNames:
                numpoints=1, loc="upper left", frameon=False)
 
     filename = f'{directory}/{i}.png'
-    # TODO: set dynamic value of dT_save from constants!!!
-    plt.title(f'Time = {i*96}')
+    plt.title(f'Time = {i*dT_save}')
     plt.savefig(filename)
     plt.close()
 
@@ -156,11 +155,12 @@ def generate_gif(args: Dict):
             bacNames = []
             for row in range(len(columns)):
                 bacNames.append(''.join(map(chr, f[columns[row]][:])))
+        dT_save = f['constants']['dT_save'][0][0]
+        print(dT_save)
 
     # %%
     # calculate boundaries for the plot
     lastNonzero = np.max(np.nonzero(bac['nBacs']))
-    print(lastNonzero)
     final_nBacs = bac['nBacs'][lastNonzero]
     print(f'final number of bacteria: {final_nBacs}')
     xlim = np.array([bac['x'][0:final_nBacs, lastNonzero].min() - 5*grid['dx'],
@@ -174,7 +174,7 @@ def generate_gif(args: Dict):
     filenames = []
     for i in tqdm(range(lastNonzero), desc='Generation frames'):
         if bac['nBacs'][i]:
-            filenames.append(save_plot(i, xlim, ylim, bac, bacNames))
+            filenames.append(save_plot(i, xlim, ylim, bac, bacNames, dT_save))
 
     # build gif
     with imageio.get_writer(f'{directory}/bacteria.gif', mode='I', fps=4) as writer:
