@@ -1,11 +1,14 @@
-function createAnimation(simulation_number)
+function createAnimation(simulation_number, finished)
     % Function to create animations for a given simulation number
 
     %% argument validation
     arguments
         simulation_number (1,1) {mustBeInteger, mustBeInRange(simulation_number, 1, 9999)}
+        finished 
     end
     
+    
+    %% load correct files
     % check if there is a results folder for this simulation
     output_dir = sprintf('./Results/%04d', simulation_number);
     if ~isfolder(output_dir)
@@ -14,7 +17,11 @@ function createAnimation(simulation_number)
 
     
     % check if simulation file exists (meaning the simulation has finished)
-    simulation_file = sprintf('%s/sim_%04d.mat', output_dir, simulation_number);
+    if finished
+        simulation_file = sprintf('%s/sim_%04d.mat', output_dir, simulation_number);
+    else
+        simulation_file = sprintf('sim_%04d.mat', simulation_number);
+    end
     if ~isfile(simulation_file)
         error('The simulation file %s has not finished running', simulation_file)
     end
