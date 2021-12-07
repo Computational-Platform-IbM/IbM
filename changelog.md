@@ -3,16 +3,21 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 ### Added
-- Detachment implemented with similar algorithm as in iDynomics
+- Mechanistic detachment implemented
 - Function to plot detachment time per grid cell
 - Function to plot bacteria with overlay of detachment times
 - Excel template for AOB/NOB/CMX/NRMX/AMX simulation
 - Excel template for AOB/NOB/AMX simulation
+- Setting for suspension initialisation
 -
 ### Changed
 - Loading of model settings from Excel completely refactored
+- Also reduce dT_bac when multiple round of division are needed per timestep (overcrowding)
 ### Fixed
 - Only removing outside bacteria due to erosion, no longer erroneous removal of inside bacteria
+- Inactivation method now correctly takes into account the growth rate
+- Correctly calculating bulk liquid concentrations (gradient was not calculated when HRT was changed)
+- Increase maximum possible number of bacteria per gridcell from 255 to 65535 (uint8 to uint16)
 ### Removed
 - Unnecessary diffusion of non-diffusive compounds (e.g. N2 was in concentration & reaction matrix, but does not diffuse)
 
