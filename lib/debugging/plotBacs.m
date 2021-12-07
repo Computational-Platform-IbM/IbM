@@ -7,6 +7,7 @@ function f = plotBacs(g, bac, constants, Time)
     act = bac.active;
     
     coloring = {'#D81B60', '#1E88E5', '#FFC107', '#004D40'}; % colorblind-friendly colours
+    coloring = {'#E69F00', '#56B4E9','#009E73','#F0E442','#0072B2','#D55E00'};
     
     f = figure(2); clf;
 %     f.Position = [-1800, 65, 1200, 900]; % desktop with two screens
