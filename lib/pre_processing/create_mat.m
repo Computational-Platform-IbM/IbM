@@ -1,4 +1,4 @@
-filename = './planning/Excels/Templates/AOBNOBAMXCMX_template.xlsx';
+filename = './planning/Excels/Templates/AOBNOBAMX.xlsx';
 javaaddpath([pwd '/lib/bacteria/shovingQuadTreekDist.jar']);
 
 fprintf('>>>>>>>>>> LOADING EXCEL FILE\n')
@@ -48,10 +48,7 @@ end
 
 fprintf('%d starting bacteria in the system\n', length(bac.x))
 
-
-% DEBUG
-f = plotBacs(grid, bac, constants, 0);
-% END DEBUG
+fprintf('>>>>>>>>>> DONE!\n')
 
 
 function [X, Y] = rand_circle(N, x_center, y_center, r)
