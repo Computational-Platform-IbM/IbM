@@ -6,11 +6,15 @@ All notable changes to this project will be documented in this file.
 - Detachment implemented with similar algorithm as in iDynomics
 - Function to plot detachment time per grid cell
 - Function to plot bacteria with overlay of detachment times
-- 
+- Excel template for AOB/NOB/CMX/NRMX/AMX simulation
+- Excel template for AOB/NOB/AMX simulation
+-
 ### Changed
 - Loading of model settings from Excel completely refactored
 ### Fixed
+- Only removing outside bacteria due to erosion, no longer erroneous removal of inside bacteria
 ### Removed
+- Unnecessary diffusion of non-diffusive compounds (e.g. N2 was in concentration & reaction matrix, but does not diffuse)
 
 ## [2.3.0] - 2021-11-15
 ### Added
