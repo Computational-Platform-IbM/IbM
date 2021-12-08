@@ -1,4 +1,4 @@
-function bac = bacteria_detachment(bac, grid, constants, settings, timestep)
+function bac = bacteria_detachment(bac, grid, constants, settings, timestep, invHRT)
     % Rough detachment: Remove all bacteria that are outside of maximum radius of granule
     %
     % bac: struct containing all information regarding the bacteria
@@ -77,11 +77,19 @@ function bac = bacteria_detachment(bac, grid, constants, settings, timestep)
             end
 
             
+        case 'suspension'
+            mask_remove = bac.mu < 1 / invHRT;
+            nCellsDetach = sum(mask_remove);
+            
+            if nCellsDetach
+                bac = killBacs(bac, mask_remove);
+            end
+            
         otherwise
             error('Detachment of %s is unknown.', settings.detachment)
     end
     
-    fprintf('%d cells detached from the granule\n', nCellsDetach)
+    fprintf('%d cells removed from the granule\n', nCellsDetach)
 
             
 end
