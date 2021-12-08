@@ -1,14 +1,18 @@
+import numpy as np
+import h5py
 import collections
 from typing import Dict, List
 import os
 from tqdm import tqdm
 import argparse
 import imageio
-from matplotlib.lines import Line2D
-import matplotlib.collections
+
+import matplotlib
+matplotlib.use('Agg') # has to be called before importing pyplot!
 import matplotlib.pyplot as plt
-import h5py
-import numpy as np
+plt.ioff()
+import matplotlib.collections
+from matplotlib.lines import Line2D
 
 
 def HEX2RGBsplit(c):
@@ -94,7 +98,7 @@ def save_plot(i: int, xlim: List[float], ylim: List[float], bac: Dict, bacNames:
     # Colourblind-friendly: ( https://www.color-hex.com/color-palette/49436 )
     # c = ['#0072B2', '#D55E00', '#F0E442', '#CC79A7']
     c = ['#D81B60', '#1E88E5', '#FFC107', '#004D40']  # colors Chiel
-    c = ['#E69F00', '#56B4E9', '#009E73', '#F0E442', '#0072B2', '#D55E00']
+    # c = ['#E69F00', '#56B4E9', '#009E73', '#F0E442', '#0072B2', '#D55E00']
 
     rC, gC, bC = HEX2RGBsplit(c)  # HEX to RGB
 
@@ -129,7 +133,8 @@ def save_plot(i: int, xlim: List[float], ylim: List[float], bac: Dict, bacNames:
     filename = f'{directory}/{i}.png'
     plt.title(f'Time = {i*dT_save}')
     plt.savefig(filename)
-    plt.close()
+    plt.close('all')
+    del fig, ax
 
     return filename
 
