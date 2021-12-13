@@ -110,6 +110,8 @@ function [grid, bac_init, constants, settings, init_params] = loadPresetFile(fil
     settings.pHincluded = logical(vals(strcmp(names, 'pH solving included')));
     if settings.pHincluded
         constants.pHtolerance = vals(strcmp(names, 'pH solver tolerance'));
+    else
+        constants.pHtolerance = nan;
     end
     
     % if pH is variable, speciation is always set to true. Otherwise, read
