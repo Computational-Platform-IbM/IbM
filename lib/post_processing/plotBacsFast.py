@@ -182,7 +182,7 @@ def generate_gif(args: Dict):
             filenames.append(save_plot(i, xlim, ylim, bac, bacNames, dT_save))
 
     # build gif
-    with imageio.get_writer(f'{directory}/bacteria.gif', mode='I', fps=4) as writer:
+    with imageio.get_writer(f'{directory}/bacteria_{sim}.gif', mode='I', fps=4) as writer:
         for filename in tqdm(filenames, desc='Gif'):
             image = imageio.imread(filename)
             writer.append_data(image)
