@@ -116,7 +116,7 @@ function [grid, bac_init, constants, settings, init_params] = loadPresetFile(fil
     
     % if pH is variable, speciation is always set to true. Otherwise, read
     % from excel
-    settings.speciation = logical(vals(strcmp(names, 'Speciation included'))) || constants.pHincluded;
+    settings.speciation = logical(vals(strcmp(names, 'Speciation included'))) || settings.pHincluded;
 
     settings.structure_model = logical(vals(strcmp(names, 'Structure model')));
     if settings.structure_model
