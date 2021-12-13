@@ -1,3 +1,6 @@
+from matplotlib.lines import Line2D
+import matplotlib.collections
+import matplotlib.pyplot as plt
 import numpy as np
 import h5py
 import collections
@@ -8,11 +11,8 @@ import argparse
 import imageio
 
 import matplotlib
-matplotlib.use('Agg') # has to be called before importing pyplot!
-import matplotlib.pyplot as plt
+matplotlib.use('Agg')  # has to be called before importing pyplot?
 plt.ioff()
-import matplotlib.collections
-from matplotlib.lines import Line2D
 
 
 def HEX2RGBsplit(c):
