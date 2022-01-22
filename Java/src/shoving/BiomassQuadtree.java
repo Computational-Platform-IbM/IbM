@@ -17,7 +17,7 @@ public class BiomassQuadtree {
 	}
 
 	public Results pushing2D(int nBac, double[] bac_x, double[] bac_y, double[] bac_r, double tol,
-			double maxCheckingDistance) {
+			double maxCheckingDistance, double kDist) {
 		// create a quadtree
 		Quadtree qt = new Quadtree(this.boundary, 10);
 
@@ -63,7 +63,7 @@ public class BiomassQuadtree {
 					d = sqrt(dx * dx + dy * dy + 1e-20);
 
 					// calculate overlap
-					overlap = b1.r + b2.r - d;
+					overlap = kDist * (b1.r + b2.r) - d;
 					dd = overlap / d;
 					dxd = dx * dd;
 					dyd = dy * dd;
