@@ -52,8 +52,8 @@ function [diffusion_region, focus_region] = determine_diffusion_region(grid2bac,
 % pause(0.01);
 % % </DEBUGGING>
                     for iBac = 1:length(bacs)
-                        if isWithinBoundaryLayer(bac.x(bacs(iBac)), bac.y(bacs(iBac)), gridcell_center, grid.dx, grid.dy, di, dj, grid.blayer_thickness)
-%                         if isWithinBoundaryLayer_v2(bac.x(bacs(iBac)), bac.y(bacs(iBac)), gridcell_center, grid.blayer_thickness)
+%                         if isWithinBoundaryLayer(bac.x(bacs(iBac)), bac.y(bacs(iBac)), gridcell_center, grid.dx, grid.dy, di, dj, grid.blayer_thickness)
+                        if isWithinBoundaryLayer_v2(bac.x(bacs(iBac)), bac.y(bacs(iBac)), gridcell_center, grid.blayer_thickness)
                             isDiffRegion(i(n)+di, j(n)+dj) = 1;
                             break
                         end
