@@ -333,6 +333,12 @@ function integTime(simulation_file, directory)
                     fprintf('\n ================ \n')
                     fprintf('Current simulation time: %.2f h\n\n', Time.current)
 
+                    % recompute reaction matrix for next cycle
+                    tic;
+                    [reaction_matrix(xRange, yRange, :), bac.mu, pH(xRange, yRange)] = calculate_reaction_matrix(grid2bac(xRange, yRange, :), ...
+                        grid2nBacs(xRange, yRange), bac, diffusion_region(xRange, yRange, :), conc(xRange, yRange, :), constants, pH(xRange, yRange), chunks, nChunks_dir, settings);
+                    profiling(iProf, 3) = profiling(iProf, 3) + toc;
+                    
                     % calculate and set bulk concentrations
                     tic;
                     while true % should be a "do while" loop, but Matlab doesn't have that functionality ...
@@ -352,12 +358,6 @@ function integTime(simulation_file, directory)
                     bulk_concs = new_bulk_concs;
                     conc = set_concentrations(conc, bulk_concs, ~diffusion_region);
                     profiling(iProf, 10) = profiling(iProf, 10) + toc;
-
-                    % recompute reaction matrix for next cycle
-                    tic;
-                    [reaction_matrix(xRange, yRange, :), bac.mu, pH(xRange, yRange)] = calculate_reaction_matrix(grid2bac(xRange, yRange, :), ...
-                        grid2nBacs(xRange, yRange), bac, diffusion_region(xRange, yRange, :), conc(xRange, yRange, :), constants, pH(xRange, yRange), chunks, nChunks_dir, settings);
-                    profiling(iProf, 3) = profiling(iProf, 3) + toc;
 
                     iProf = iProf + 1;
                     bulk_history(:, iProf) = bulk_concs;
