@@ -111,7 +111,7 @@ function integTime(simulation_file, directory)
         tic;
         try
             conc(xRange, yRange, :) = diffusionMG(conc(xRange, yRange, :), reaction_matrix(xRange, yRange, :), ...
-                bulk_concs, diffusion_region(xRange, yRange), grid, constants, Time.dT);
+                bulk_concs, diffusion_region(xRange, yRange), grid, constants, Time);
         catch e
             switch e.identifier
                 case 'Diffusion:NegativeConcentration'

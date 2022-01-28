@@ -1,4 +1,4 @@
-function conc = diffusionMG(conc, reaction_matrix, bulk_concentrations, diffRegion, grid, constants, dT)
+function conc = diffusionMG(conc, reaction_matrix, bulk_concentrations, diffRegion, grid, constants, Time)
     % Solve diffusion for all molecules in the liquid phase using the 
     % multigrid method. IMPORTANT: only runs for all dirichlet conditions 
     % as of now. Future versions should include variable conditions per 
@@ -22,6 +22,7 @@ function conc = diffusionMG(conc, reaction_matrix, bulk_concentrations, diffRegi
     accuracy = constants.diffusion_accuracy;
     nCompounds = length(diffusion_coef);
     dx = grid.dx;
+    dT = Time.dT;
 
     % set parameters for V-cycle 
     % <TODO: optimize under realistic conditions/>
@@ -69,8 +70,13 @@ function conc = diffusionMG(conc, reaction_matrix, bulk_concentrations, diffRegi
         % check for negative values, raise error
         negative_concentration = conc(:,:,iCompound) < 0;
         if any(negative_concentration, 'all')
-            error('Diffusion:NegativeConcentration', 'Negative concentration encountered & corrected in diffusion solution of compound %s', constants.compoundNames{iCompound})
-        end    
+            if Time.dT ~= Time.minDT && abs(min(conc(negative_concentration))) > accuracy^2 / 100 % dT can be reduced and significant negative value
+                error('Diffusion:NegativeConcentration', 'Negative concentration encountered in diffusion solution of compound %s', constants.compoundNames{iCompound})
+            else % dT cannot be reduced, thus return corrected concentration or insignificant negative value
+                warning('Diffusion:NegativeConcentration', 'Negative concentration encountered in diffusion solution of compound %s, but cannot correct dT value thus corrected %d value(s) (smallest number %g) to 0', constants.compoundNames{iCompound}, sum(negative_concentration, 'all'), min(conc(negative_concentration)))
+                conc(:,:,iCompound) = (conc(:,:,iCompound) > 0) .* conc(:,:,iCompound);
+            end
+        end
     end
     
     % convert concentrations back to mol/L
