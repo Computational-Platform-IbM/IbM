@@ -143,6 +143,7 @@ function [grid, bac_init, constants, settings, init_params] = loadPresetFile(fil
     init_params.init_concs = vals;                                          % [mol/L]
     init_params.init_bulk_conc = init_params.init_concs;                    % [mol/L]
     init_params.init_bulk_conc(constants.Dir_k) = constants.influent_concentrations(constants.Dir_k);
+%     init_params.init_bulk_conc = constants.influent_concentrations; % TODO: keep original?
     
     
     %% constants (Equilibrium constants & charge matrix)
