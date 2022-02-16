@@ -1,4 +1,4 @@
-function T = calcTimeOfDetach(bac, grid, grid2nBacs, constants)
+function T = calcTimeOfDetach(bac, grid, grid2bac, grid2nBacs, constants)
     % Calculate the time of detachment for each gridcell in the simulation
     % domain
     %
@@ -16,11 +16,13 @@ function T = calcTimeOfDetach(bac, grid, grid2nBacs, constants)
     xcenter = mean(bac.x);
     ycenter = mean(bac.y);
 
-
-    % ----- IMPORTANT ------
-    % % use diffregion here for the real version?
-    biofilm = grid2nBacs > 0;
-    % ----END IMPORTANT ----
+    % where are bacteria located in the grid? apply some smoothing of
+    % logical grid with bacteria (grid2nBacs) for the case of high
+    % resolution grid
+    detachment_grid = grid;
+    detachment_grid.blayer_thickness = constants.kDist*constants.bac_max_radius*2;
+    [aggregate, ~] = determine_diffusion_region(grid2bac, grid2nBacs, bac, detachment_grid);
+    biofilm = aggregate > 0;
 
     % create three matrices with all grid cells
     T = zeros(size(grid2nBacs));
