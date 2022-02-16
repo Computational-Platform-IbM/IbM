@@ -286,11 +286,12 @@ function [grid, bac_init, constants, settings, init_params] = loadPresetFile(fil
     [vals, names] = xlsread(filename, 'Bacteria');
     bac_init.method = names{strcmp(names, 'Initialisation method'), 2};
     switch (bac_init.method)
-        case 'granule'
+        case {'granule', 'mature granule'}
             bac_init.granule_radius = vals(strcmp(names, 'Starting granule radius'));
             bac_init.start_nBac = vals(strcmp(names, 'Starting number of bacteria (granule)'));
         case 'suspension'
-            bac_init.start_nBac = vals(strcmp(names, 'Starting number of bacteria (suspension)'));
+            bac_init.start_nColonies = vals(strcmp(names, 'Starting number of microcolonies (suspension)'));
+            bac_init.start_nBacPerColony = vals(strcmp(names, 'Starting number of bacteria per microcolony (suspension)'));
         otherwise
             error(['Initialisation method <', bac_init.method,'> is not a valid method.'])
     end
