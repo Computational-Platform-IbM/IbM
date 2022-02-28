@@ -1,4 +1,4 @@
-function plotDetachTime(grid, T)
+function plotDetachTime(grid, T, clim)
     % plot the detachment times per gridcell.
     %
     % grid: struct containing all information regarding space
@@ -11,7 +11,6 @@ function plotDetachTime(grid, T)
     try % try updating first, otherwise draw figure entirely
         ax = gca;
         ax.Children(1).CData = T';
-        caxis([0, 12]);
         drawnow();
     catch e
         switch e.identifier
@@ -19,7 +18,6 @@ function plotDetachTime(grid, T)
                 imagesc([grid.dx/2, grid.nX*grid.dx - grid.dx/2], [grid.dy/2, grid.nY*grid.dy - grid.dy/2], T'); hold on;
                 colormap(viridis());
                 colorbar();
-                caxis([0, 12])
                 axis equal;
                 xlim([0, grid.nX*grid.dx]);
                 ylim([0, grid.nY*grid.dy]);
@@ -29,5 +27,7 @@ function plotDetachTime(grid, T)
                 rethrow(e)
         end
     end
+    caxis(clim)
+
 end
 
