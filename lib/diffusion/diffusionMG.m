@@ -7,7 +7,7 @@ function conc = diffusionMG(conc, reaction_matrix, bulk_concentrations, diffRegi
     % conc: concentration of each molecule in the grid [mol/L]
     %   (ix, iy, compound)
     % reaction_matrix: matrix with per grid cell and per compound the
-    %   change [h-1] due to bacterial activity
+    %   change [mol/L/h] due to bacterial activity
     % bulk_concentrations: vector with the bulk concentration per compound
     % diffRegion: matrix with per gridcell whether the cell is in the
     %   diffusion region
@@ -18,7 +18,7 @@ function conc = diffusionMG(conc, reaction_matrix, bulk_concentrations, diffRegi
     % -> conc: concentrations after solving the diffusion equations [mol/L]
     
     % variable declarations/unpacking
-    diffusion_coef = constants.diffusion_rates; % [m2/h] <E: diffusion_rates -> diffusion_coef. /> 
+    diffusion_coef = constants.diffusion_rates; % [m2/h]
     accuracy = constants.diffusion_accuracy;
     nCompounds = length(diffusion_coef);
     dx = grid.dx;
@@ -63,7 +63,7 @@ function conc = diffusionMG(conc, reaction_matrix, bulk_concentrations, diffRegi
         while ~isSolution
             conc(:,:,iCompound) = V_Cycle(conc(:,:,iCompound), diffRegion, bulk_concentrations(iCompound)*1000, rhs, L_0, L_restriction, L_prolongation, 9, 0, iter_pre, iter_post, iter_final);
             residual_diffRegion = residual(conc(:,:,iCompound), rhs, L_lhs);
-            residual_diffRegion = residual_diffRegion(diffRegion);
+            residual_diffRegion = diffRegion.*residual_diffRegion;
             isSolution = sum(residual_diffRegion.^2, 'all') < accuracy^2;
         end
         
@@ -105,9 +105,6 @@ function rhs = calculate_rhs_dirichlet(phi, L_rhs, value, diffRegion)
     
     rhs_diffRegion = convn(diffRegion.*phi + ~diffRegion*value, L_rhs, 'same');
     rhs = diffRegion .* rhs_diffRegion + ~diffRegion .* ones(size(phi)) * value;
-    
-%     phi = create_dirichlet_boundary(phi, 2*value);
-%     rhs = convn(phi, L_rhs, 'valid');
 end
 
 
