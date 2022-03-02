@@ -42,15 +42,17 @@ function [bulk_concentrations, invHRT] = calculate_bulk_concentrations(constants
     if isscalar(reactionMatrix) % if no reaction matrix formed, then init with previous concentrations
         bulk_concentrations = prev_conc;
     else
-        cumulative_reacted = squeeze(sum(reactionMatrix, [1,2])) * Vg / Vr;
+        cumulative_reacted = squeeze(sum(reactionMatrix, [1,2])) * Vg / Vr; % [mol/h] / [L]
         options = odeset('RelTol', 1e-8, 'AbsTol', 1e-20, 'NonNegative', ones(size(cumulative_reacted)));
         try
             [~, Y] = ode45(@(t, y) massbal(t, y, cumulative_reacted, influent, variableHRT, bulk_setpoint, setpoint_index, Dir_k, settings), [0 dT], prev_conc, options);
             bulk_conc_temp = Y(end, :)';
             bulk_concentrations = correct_negative_concentrations(bulk_conc_temp); %<E: Negative concentration from mass balance of reactor. />
-        catch e
+        catch e % really bad practice....
             fprintf(2, '\n\nSomething went wrong...\nreason: %s\n', e.identifier)
-            bulk_concentrations = prev_conc;
+%             bulk_concentrations = prev_conc;
+%             warning(e)
+            rethrow(e);
         end
         
         % set dirichlet boundary condition

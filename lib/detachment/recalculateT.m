@@ -16,7 +16,7 @@ function T_new = recalculateT(T, i, j, kDet, grid, Visited, xcenter, ycenter)
     
     right_visited = Visited(i+1, j); % x + 1 (right)
     left_visited = Visited(i-1, j); % x - 1 (left)
-    if  left_visited
+    if left_visited
         if right_visited
             Tx = min(T(i+1, j), T(i-1, j));
         else
