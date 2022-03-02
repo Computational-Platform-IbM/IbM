@@ -1,5 +1,5 @@
 clear all;
-filename = './planning/Excels/Templates/AOBNOBAMXCMX.xlsx';
+filename = './planning/Excels/Templates/AOBNOBAMXCMX_kinetics.xlsx';
 javaaddpath([pwd '/lib/bacteria/shovingQuadTreekDist.jar']);
 
 fprintf('>>>>>>>>>> LOADING EXCEL FILE\n')
@@ -11,14 +11,14 @@ radius = ((molarMass * constants.bac_MW / constants.bac_rho) * (3 / (4 * pi))).^
 fprintf('>>>>>>>>>> INITIALISING BACTERIA\n')
 % initialise bacteria
 
-switch bac_init.method
+switch settings.model_type
     case {'granule', 'mature granule'}
         n = bac_init.start_nBac; 
 
         % ----- initiate circle with bacteria (random)
-        radius = bac_init.granule_radius;
+        radius_granule = bac_init.granule_radius;
         tic
-        [bac.x, bac.y] = blue_noise_circle(n, grid.nX/2*grid.dx, grid.nY/2*grid.dy, radius);
+        [bac.x, bac.y] = blue_noise_circle(n, grid.nX/2*grid.dx, grid.nY/2*grid.dy, radius_granule);
         toc
     case 'suspension'
 %         n = bac_init.start_nColonies * bac_init.start_nBacPerColony; 
@@ -40,7 +40,7 @@ for gg = 1:5
     bac = bacteria_shove(bac, grid, constants); % otherwise bacteria might overlap at start...
 end
 
-if ismember(bac_init.method, {'granule', 'mature granule'})
+if ismember(settings.model_type, {'granule', 'mature granule'})
     % remove cells outside of granule radius
     remove = sqrt((bac.x - grid.dx*grid.nX/2).^2 + (bac.y - grid.dy*grid.nY/2).^2) > bac_init.granule_radius;
     fprintf('%d bacteria removed outside of starting granule\n', sum(remove))
@@ -53,13 +53,16 @@ if ismember(bac_init.method, {'granule', 'mature granule'})
     bac.active(remove) = [];
 end
 
-if strcmp(bac_init.method, 'mature granule')
+if strcmp(settings.model_type, 'mature granule')
     bac.species = AMXinside(bac, grid, constants);
 else
     bac.species = randi(length(constants.speciesNames), size(bac.x)); % random for now
 end
 
-fprintf('%d starting bacteria in the system\n', length(bac.x))
+fprintf('%d starting bacteria in the system:\n', length(bac.x))
+for s = 1:numel(constants.speciesNames)
+    fprintf('\t%d %s\n', sum(bac.species == s), constants.speciesNames{s})
+end
 
 fprintf('>>>>>>>>>> DONE!\n')
 

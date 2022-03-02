@@ -69,6 +69,7 @@ function [grid, bac_init, constants, settings, init_params] = loadPresetFile(fil
     constants.pHsetpoint = vals(strcmp(names, 'pH setpoint'));              % [-]
     constants.T = vals(strcmp(names, 'Temperature')) + 273.15;              % [K]
     constants.Vr = vals(strcmp(names, 'Representative volume')) * 1000;     % [L]
+    constants.reactor_density = vals(strcmp(names, 'Density reactor'));     % [g/L]
 
     settings.variableHRT = vals(strcmp(names, 'Variable HRT')); % -> changed from constants.constantN
     init_params.invHRT = 1/vals(strcmp(names, 'HRT'));                      % [1/h]
@@ -284,8 +285,8 @@ function [grid, bac_init, constants, settings, init_params] = loadPresetFile(fil
     
     %% initialisation of bacteria
     [vals, names] = xlsread(filename, 'Bacteria');
-    bac_init.method = names{strcmp(names, 'Initialisation method'), 2};
-    switch (bac_init.method)
+    settings.model_type = names{strcmp(names, 'Initialisation method'), 2};
+    switch (settings.model_type)
         case {'granule', 'mature granule'}
             bac_init.granule_radius = vals(strcmp(names, 'Starting granule radius'));
             bac_init.start_nBac = vals(strcmp(names, 'Starting number of bacteria (granule)'));
@@ -293,7 +294,7 @@ function [grid, bac_init, constants, settings, init_params] = loadPresetFile(fil
             bac_init.start_nColonies = vals(strcmp(names, 'Starting number of microcolonies (suspension)'));
             bac_init.start_nBacPerColony = vals(strcmp(names, 'Starting number of bacteria per microcolony (suspension)'));
         otherwise
-            error(['Initialisation method <', bac_init.method,'> is not a valid method.'])
+            error(['Initialisation method <', settings.model_type,'> is not a valid method.'])
     end
         
 end

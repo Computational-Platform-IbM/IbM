@@ -97,8 +97,8 @@ def save_plot(i: int, xlim: List[float], ylim: List[float], bac: Dict, bacNames:
     # c = ['#CC66FF', '#00B04F', '#FFA200', '#FF1482']  # Old colours
     # Colourblind-friendly: ( https://www.color-hex.com/color-palette/49436 )
     # c = ['#0072B2', '#D55E00', '#F0E442', '#CC79A7']
-    c = ['#D81B60', '#1E88E5', '#FFC107', '#004D40']  # colors Chiel
-    # c = ['#E69F00', '#56B4E9', '#009E73', '#F0E442', '#0072B2', '#D55E00']
+    # c = ['#D81B60', '#1E88E5', '#FFC107', '#004D40']  # colors Chiel
+    c = ['#E69F00', '#56B4E9', '#009E73', '#F0E442', '#0072B2', '#D55E00']
 
     rC, gC, bC = HEX2RGBsplit(c)  # HEX to RGB
 
@@ -139,8 +139,7 @@ def save_plot(i: int, xlim: List[float], ylim: List[float], bac: Dict, bacNames:
     return filename
 
 
-# %%
-def generate_gif(args: Dict):
+def loadData(args: Dict):
     # load data from results file
     with h5py.File(f'{directory}/results1D.mat', 'r') as f:
         print('Loading results file...')
@@ -159,22 +158,32 @@ def generate_gif(args: Dict):
         for columns in f['constants']['speciesNames']:
             bacNames = []
             for row in range(len(columns)):
-                bacNames.append(''.join(map(chr, f[columns[row]][:])))
+                bacNames.append(''.join([chr(int(c))
+                                for c in f[columns[row]][:]]))
         dT_save = f['constants']['dT_save'][0][0]
-        print(dT_save)
 
-    # %%
+        return bac, grid, bacNames, dT_save
+
+
+def getLimitsData(bac, grid, ix):
     # calculate boundaries for the plot
-    lastNonzero = np.max(np.nonzero(bac['nBacs']))
-    final_nBacs = bac['nBacs'][lastNonzero]
+    final_nBacs = bac['nBacs'][ix]
     print(f'final number of bacteria: {final_nBacs}')
-    xlim = np.array([bac['x'][0:final_nBacs, lastNonzero].min() - 5*grid['dx'],
-                     bac['x'][0:final_nBacs, lastNonzero].max() + 5*grid['dx']])
-    ylim = np.array([bac['y'][0:final_nBacs, lastNonzero].min() - 5*grid['dy'],
-                     bac['y'][0:final_nBacs, lastNonzero].max() + 5*grid['dy']])
+    xlim = np.array([bac['x'][0:final_nBacs, ix].min() - 5*grid['dx'],
+                     bac['x'][0:final_nBacs, ix].max() + 5*grid['dx']])
+    ylim = np.array([bac['y'][0:final_nBacs, ix].min() - 5*grid['dy'],
+                     bac['y'][0:final_nBacs, ix].max() + 5*grid['dy']])
+
+    return xlim, ylim
+
+
+def generate_gif(args: Dict):
+    bac, grid, bacNames, dT_save = loadData(args)
+    lastNonzero = np.max(np.nonzero(bac['nBacs']))
+    xlim, ylim = getLimitsData(bac, grid, lastNonzero)
+
     print(xlim, ylim)
 
-    # %%
     # create figure per timepoint
     filenames = []
     for i in tqdm(range(lastNonzero), desc='Generation frames'):
@@ -187,7 +196,6 @@ def generate_gif(args: Dict):
             image = imageio.imread(filename)
             writer.append_data(image)
 
-    # %%
     # remove files afterwards
     for filename in tqdm(set(filenames), desc='Removing images'):
         os.remove(filename)
@@ -202,6 +210,11 @@ parser.add_argument("simulationNumber",
                     help="[int] Simulation number for which to create the animation (1-9999)", type=int)
 parser.add_argument('-nf', '--notFinished', dest='finished', default=True, action='store_false',
                     help="[bool] Has the simulation finished?")
+parser.add_argument('-fig', dest='figureOnly', default=False,
+                    action='store_true', help="[bool] Only create a figure for the last point in time?")
+parser.add_argument('-figInit', dest='figureInit', default=False,
+                    action='store_true', help="[bool] Only create a figure for the initial situation?")
+
 args = parser.parse_args()
 
 # set directory and resultsFile
@@ -212,4 +225,18 @@ if args.finished:
 else:
     simulation_file = f'sim_{sim}.mat'
 
-generate_gif(args)
+if not args.figureOnly and not args.figureInit:
+    generate_gif(args)
+else:
+    bac, grid, bacNames, dT_save = loadData(args)
+    lastNonzero = np.max(np.nonzero(bac['nBacs']))
+
+    if args.figureOnly:
+        ix = lastNonzero
+        xlim, ylim = getLimitsData(bac, grid, ix)
+        save_plot(ix, xlim, ylim, bac, bacNames, dT_save)
+
+    if args.figureInit:
+        ix = 0
+        xlim, ylim = getLimitsData(bac, grid, ix)
+        save_plot(ix, xlim, ylim, bac, bacNames, dT_save)
