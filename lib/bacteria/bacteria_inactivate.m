@@ -8,7 +8,8 @@ function bac = bacteria_inactivate(bac, constants)
 
     mask_tooSmall = bac.molarMass * constants.bac_MW < constants.min_bac_mass_grams;
     mask_growthRate = bac.mu < 0;
-    mask_combined = mask_tooSmall & mask_growthRate;
+    mask_tiny = bac.molarMass * constants.bac_MW < 0.5*constants.min_bac_mass_grams;
+    mask_combined = mask_tooSmall & mask_growthRate | mask_tiny;
     
     bac.active(mask_combined) = 0;
     bac.active(~mask_combined) = 1;

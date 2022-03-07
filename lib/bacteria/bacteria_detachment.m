@@ -7,7 +7,7 @@ function bac = bacteria_detachment(bac, grid, constants, settings, timestep, inv
     % -> bac: see above
     
     switch settings.detachment
-        case 'none'
+        case {'none', 'SBR'}
             return
         case 'naive'
             bac_distance_from_center = sqrt((bac.x - grid.dx * grid.nX/2).*(bac.x - grid.dx * grid.nX/2) + (bac.y - grid.dy * grid.nY/2).*(bac.y - grid.dy * grid.nY/2));
