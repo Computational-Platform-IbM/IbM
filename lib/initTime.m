@@ -3,7 +3,7 @@ function [conc, bulk_concs, invHRT, reaction_matrix, pH, bac] = initTime(grid, b
     % initiate values from preset parameters
     
     % calculate boundary conditions
-    [bulk_concs, invHRT] = calculate_bulk_concentrations(constants, init_params.init_bulk_conc, init_params.invHRT, 0, constants.dT_bac, settings);
+    [bulk_concs, invHRT] = calculate_bulk_concentrations(bac, constants, init_params.init_bulk_conc, init_params.invHRT, 0, constants.dT_bac, settings);
     
     % <C: why calculate bulk concentration with dT_bac? />
     

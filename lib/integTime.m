@@ -140,7 +140,7 @@ function integTime(simulation_file, directory)
         if mod(iDiffusion, constants.dynamicDT.nItersCycle) == 0 && ...
                 non_convergent(iRES, RESvalues, constants)
             
-            [bulk_concs, invHRT] = calculate_bulk_concentrations(constants, bulk_concs, invHRT, reaction_matrix, Time.dT_bac - Time.current, settings);
+            [bulk_concs, invHRT] = calculate_bulk_concentrations(bac, constants, bulk_concs, invHRT, reaction_matrix, Time.dT_bac - Time.current, settings);
             conc = set_concentrations(conc, bulk_concs, ~diffusion_region);
 
             % ----- DEBUG -----
@@ -181,8 +181,8 @@ function integTime(simulation_file, directory)
             if settings.dynamicDT
                 if upward_trend(iDiffusion, iRES, RESvalues, constants)
                     Time = decrease_dT_diffusion(Time, 'Upward trend in RES values detected', grid.dx, constants);
-%                 elseif non_convergent_diffusion(iDiffusion, iRES, RESvalues, Time, constants)
-%                     Time = decrease_dT_diffusion(Time, sprintf('Diffusion takes longer than %d diffusion iterations', constants.dynamicDT.iterThresholdDecrease), grid.dx, constants);
+                elseif non_convergent_diffusion(iDiffusion, iRES, RESvalues, Time, constants)
+                    Time = decrease_dT_diffusion(Time, sprintf('Diffusion takes longer than %d diffusion iterations', constants.dynamicDT.iterThresholdDecrease), grid.dx, constants);
                 end
             end
 
@@ -342,7 +342,7 @@ function integTime(simulation_file, directory)
                     % calculate and set bulk concentrations
                     tic;
                     while true % should be a "do while" loop, but Matlab doesn't have that functionality ...
-                        [new_bulk_concs, invHRT] = calculate_bulk_concentrations(constants, bulk_concs, invHRT, reaction_matrix, Time.dT_bac, settings);
+                        [new_bulk_concs, invHRT] = calculate_bulk_concentrations(bac, constants, bulk_concs, invHRT, reaction_matrix, Time.dT_bac, settings);
                         if ~settings.dynamicDT || bulk_conc_diff_within_limit(new_bulk_concs, bulk_concs, constants)
                             break
                         end
@@ -384,6 +384,10 @@ function integTime(simulation_file, directory)
                         % simulation from this point
                         save_backup(bac, bulk_concs, invHRT, conc, reaction_matrix, pH, directory)
                         save_profiling(profiling, maxErrors, normOverTime, nDiffIters, bulk_history, Time, directory)
+                    end
+                    
+                    if strcmp(settings.detachment, 'SBR')
+                        bac.molarMass(bac.active) = max(bac.molarMass(bac.active) - 0.1*constants.min_bac_mass_grams/constants.bac_MW, eps);
                     end
                 end
             end

@@ -1,4 +1,4 @@
-function [bulk_concentrations, invHRT] = calculate_bulk_concentrations(constants, prev_conc, invHRT, reactionMatrix, dT, settings)
+function [bulk_concentrations, invHRT] = calculate_bulk_concentrations(bac, constants, prev_conc, invHRT, reactionMatrix, dT, settings)
     % Function to calculate the bulk layer concentrations. Assumes that the
     % simulated bio-aggregate is representative of the entire reactor. 
     %
@@ -42,7 +42,21 @@ function [bulk_concentrations, invHRT] = calculate_bulk_concentrations(constants
     if isscalar(reactionMatrix) % if no reaction matrix formed, then init with previous concentrations
         bulk_concentrations = prev_conc;
     else
-        cumulative_reacted = squeeze(sum(reactionMatrix, [1,2])) * Vg / Vr; % [mol/h] / [L]
+        
+        % calculate correction factor between volume of sphere and volume
+        % of slice (simulation domain)
+        if ismember(settings.model_type, {'granule', 'mature granule'})
+            x = bac.x(bac.active);
+            y = bac.y(bac.active);
+            center_x = mean(x);
+            center_y = mean(y);
+            radius_granule = max(sqrt((x - center_x).^2 + (y - center_y).^2));
+            f = 4 * radius_granule / (3 * (constants.bac_max_radius * 2));
+        else
+            f = 1;
+        end
+        
+        cumulative_reacted = squeeze(sum(reactionMatrix, [1,2])) * Vg * f / Vr; % [mol/h] / [L]
         options = odeset('RelTol', 1e-8, 'AbsTol', 1e-20, 'NonNegative', ones(size(cumulative_reacted)));
         try
             [~, Y] = ode45(@(t, y) massbal(t, y, cumulative_reacted, influent, variableHRT, bulk_setpoint, setpoint_index, Dir_k, settings), [0 dT], prev_conc, options);
