@@ -25,10 +25,9 @@ function conc = diffusionMG(conc, reaction_matrix, bulk_concentrations, diffRegi
     dT = Time.dT;
 
     % set parameters for V-cycle 
-    % <TODO: optimize under realistic conditions/>
-    iter_pre = 3;
-    iter_post = 3;
-    iter_final = 4;
+    iter_pre = 6;
+    iter_post = 7;
+    iter_final = 5;
     
     % convert concentration to mol/m3
     conc = conc * 1000; 
