@@ -72,7 +72,8 @@ function conc = diffusionMG(conc, reaction_matrix, bulk_concentrations, diffRegi
             if Time.dT ~= Time.minDT && abs(min(conc(negative_concentration))) > accuracy^2 / 100 % dT can be reduced and significant negative value
                 error('Diffusion:NegativeConcentration', 'Negative concentration encountered in diffusion solution of compound %s', constants.compoundNames{iCompound})
             else % dT cannot be reduced, thus return corrected concentration or insignificant negative value
-                warning('Diffusion:NegativeConcentration', 'Negative concentration encountered in diffusion solution of compound %s, but cannot correct dT value thus corrected %d value(s) (smallest number %g) to 0', constants.compoundNames{iCompound}, sum(negative_concentration, 'all'), min(conc(negative_concentration)))
+                temp = conc(:,:,iCompound);
+                warning('Diffusion:NegativeConcentration', 'Negative concentration encountered in diffusion solution of compound %s, but cannot correct dT value thus corrected %d value(s) (smallest number %g) to 0', constants.compoundNames{iCompound}, sum(negative_concentration, 'all'), min(temp(negative_concentration)))
                 conc(:,:,iCompound) = (conc(:,:,iCompound) > 0) .* conc(:,:,iCompound);
             end
         end
