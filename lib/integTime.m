@@ -184,6 +184,16 @@ function integTime(simulation_file, directory)
                 elseif non_convergent_diffusion(iDiffusion, iRES, RESvalues, Time, constants)
                     Time = decrease_dT_diffusion(Time, 'Diffusion does not converge any more', grid.dx, constants);
                 end
+            else
+                if iDiffusion > 5000 && non_convergent_diffusion(iDiffusion, iRES, RESvalues, Time, constants)
+                    % without dynamic timestep & negative concentrations
+                    % due to too large step size, accept SS under
+                    % non-convergent conditions
+                    ssReached = true;
+                end
+                if iDiffusion > 10000
+                    ssReached = true;
+                end
             end
 
             if ssReached
