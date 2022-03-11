@@ -10,10 +10,10 @@ function analyseGranule(simulation_number, finished)
         simulation_file = sprintf('sim_%04d.mat', simulation_number);
     end
     simulation_result = sprintf('%s/results1D.mat', output_dir);
-    profiling_result = sprintf('%s/profilingResults.mat', output_dir);
+%     profiling_result = sprintf('%s/profilingResults.mat', output_dir);
 
-    load(simulation_file);
-    load(simulation_result);
+    load(simulation_file, 'constants', 'grid', 'settings');    
+    load(simulation_result, 'bac_saved', 'conc_saved', 'pH_saved', 'reactor_saved');
 %     load(profiling_result);
     
     
@@ -119,10 +119,15 @@ function analyseGranule(simulation_number, finished)
     for t=1:last_nonzero
         cumul_mass_active(t) = sum(4/3 * pi * bac_saved.radius(t, bac_saved.active(t, :)).^3 * constants.bac_rho, 2);
     end
+    if strcmp(settings.model_type, 'suspension')
+        f = 1;
+    else
+        f = 4 * granule_radius ./ (3 * (constants.bac_max_radius * 2));
+    end
     figure(12);
     clf;
-    plot(save_times, cumul_mass(1:last_nonzero) / constants.Vr, 'LineWidth', 2); hold on;
-    plot(save_times, cumul_mass_active(1:last_nonzero) / constants.Vr, 'LineWidth', 2);
+    plot(save_times, cumul_mass(1:last_nonzero) .* f / constants.Vr, 'LineWidth', 2); hold on;
+    plot(save_times, cumul_mass_active(1:last_nonzero) .* f/ constants.Vr, 'LineWidth', 2);
     title('Bacterial density in reactor')
     xlabel('Simulation time [h]')
     ylabel('density in reactor [g/L]')
