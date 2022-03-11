@@ -7,8 +7,8 @@ function bac = update_bacterial_mass(bac, dT)
     %
     % -> bac: see above
 
-    % mu >= 0: grow all
-    bac.molarMass(bac.mu >= 0) = bac.molarMass(bac.mu >= 0) + dT * bac.mu(bac.mu >= 0) .* bac.molarMass(bac.mu >= 0);
+    % mu >= 0: grow active cells
+    bac.molarMass(bac.mu >= 0 & bac.active) = bac.molarMass(bac.mu >= 0 & bac.active) + dT * bac.mu(bac.mu >= 0 & bac.active) .* bac.molarMass(bac.mu >= 0 & bac.active);
 
     % mu < 0: shrink only active
     bac.molarMass(bac.mu < 0 & bac.active) = bac.molarMass(bac.mu < 0 & bac.active) + dT * bac.mu(bac.mu < 0 & bac.active) .* bac.molarMass(bac.mu < 0 & bac.active);
