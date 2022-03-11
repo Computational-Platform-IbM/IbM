@@ -182,7 +182,7 @@ function integTime(simulation_file, directory)
                 if upward_trend(iDiffusion, iRES, RESvalues, constants)
                     Time = decrease_dT_diffusion(Time, 'Upward trend in RES values detected', grid.dx, constants);
                 elseif non_convergent_diffusion(iDiffusion, iRES, RESvalues, Time, constants)
-                    Time = decrease_dT_diffusion(Time, sprintf('Diffusion takes longer than %d diffusion iterations', constants.dynamicDT.iterThresholdDecrease), grid.dx, constants);
+                    Time = decrease_dT_diffusion(Time, 'Diffusion does not converge any more', grid.dx, constants);
                 end
             end
 
