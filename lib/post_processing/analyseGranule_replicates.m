@@ -33,9 +33,10 @@ function analyseGranule_replicates(simulation_number, nReplicates, finished)
     global nSpecies
     global nCompounds
     
-    colors_species_raw = {'#E69F00', '#56B4E9','#009E73','#F0E442','#0072B2','#D55E00'};
-    %                      orange   light blue   green    yellow   dark blue    red
-    species_per_color = { 'An-NRMX', 'NRMX',    'AOB',    'CMX',    'NOB',    'AMX'};
+%     colors_species_raw = {'#E69F00','#56B4E9','#009E73','#F0E442','#0072B2','#D55E00'};
+    colors_species_raw = {'#E69F00','#56B4E9','#33b190','#F0E442','#0072B2','#D55E00'};
+    %                      orange   light blue  green    yellow   dark blue    red
+    species_per_color = { 'An-NRMX', 'CMX',    'NOB',    'AOB',    'NRMX',    'AMX'};
     colors_qualitative = {'#a6cee3','#1f78b4','#b2df8a','#33a02c','#fb9a99','#e31a1c'};
     linestyles = {'-','--',':','-.'};
 
