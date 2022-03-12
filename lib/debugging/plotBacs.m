@@ -9,7 +9,7 @@ function f = plotBacs(g, bac, constants, Time)
 %     colors_species_raw = {'#E69F00','#56B4E9','#009E73','#F0E442','#0072B2','#D55E00'};
     colors_species_raw = {'#E69F00','#56B4E9','#33b190','#F0E442','#0072B2','#D55E00'};
     %                      orange   light blue  green    yellow   dark blue    red
-    species_per_color = { 'An-NRMX', 'NRMX',    'AOB',    'CMX',    'NOB',    'AMX'};
+    species_per_color = { 'An-NRMX', 'CMX',    'NOB',    'AOB',    'NRMX',    'AMX'};
     nSpecies = length(constants.speciesNames);
     species_index = zeros(nSpecies, 1);
     for si = 1:nSpecies
