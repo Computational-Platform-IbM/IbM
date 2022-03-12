@@ -65,7 +65,7 @@ function analyseGranule_replicates(simulation_number, nReplicates, finished)
         plot_nBacs(bac_saved, n)
         final_mass(:, n) = plot_active_mass(bac_saved, constants, n);
         plot_active_nBacs(bac_saved, constants, n)
-        plot_reactor_density(bac_saved, constants, n)
+        plot_reactor_density(bac_saved, constants, settings, n)
         if ~isnan(constants.maintenance)
             plot_reactor_oxygen_uptake(bac_saved, constants, reactor_saved, n)
         end
@@ -181,13 +181,30 @@ function final_mass = plot_active_mass(bac_saved, constants, replicate)
     end
 end
 
-function plot_reactor_density(bac_saved, constants, replicate)
+function plot_reactor_density(bac_saved, constants, settings, replicate)
     % plot the reactor density (total and active) over time
     
     global last_nonzero
     global save_times
     global colors_qualitative
     global linestyles
+    
+    granule_radius = zeros(last_nonzero, 1);
+        
+    for i = 1:last_nonzero
+        nBac = bac_saved.nBacs(i);
+        x = bac_saved.x(i, bac_saved.active(i, 1:nBac));
+        y = bac_saved.y(i, bac_saved.active(i, 1:nBac));
+        center_x = mean(x);
+        center_y = mean(y);
+        granule_radius(i) = max(sqrt((x - center_x).^2 + (y - center_y).^2));
+    end
+    
+    if strcmp(settings.model_type, 'suspension')
+        f = 1;
+    else
+        f = 4 * granule_radius ./ (3 * (constants.bac_max_radius * 2));
+    end
     
     figure(4); hold on;
     cumul_mass = sum(4/3 * pi * bac_saved.radius.^3 * constants.bac_rho, 2);
@@ -196,8 +213,8 @@ function plot_reactor_density(bac_saved, constants, replicate)
         cumul_mass_active(t) = sum(4/3 * pi * bac_saved.radius(t, bac_saved.active(t, :)).^3 * constants.bac_rho, 2);
     end
     
-    plot(save_times, cumul_mass(1:last_nonzero) / constants.Vr, 'LineWidth', 2, 'LineStyle', linestyles{replicate}, 'Color', colors_qualitative{1}); 
-    plot(save_times, cumul_mass_active(1:last_nonzero) / constants.Vr, 'LineWidth', 2, 'LineStyle', linestyles{replicate}, 'Color', colors_qualitative{2});
+    plot(save_times, cumul_mass(1:last_nonzero) .* f / constants.Vr, 'LineWidth', 2, 'LineStyle', linestyles{replicate}, 'Color', colors_qualitative{1}); 
+    plot(save_times, cumul_mass_active(1:last_nonzero) .* f / constants.Vr, 'LineWidth', 2, 'LineStyle', linestyles{replicate}, 'Color', colors_qualitative{2});
     
     if replicate == 1
         legend('Total', 'Active','AutoUpdate','off', 'Location', 'northwest')
