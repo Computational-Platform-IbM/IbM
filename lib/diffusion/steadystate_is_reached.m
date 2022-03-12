@@ -25,9 +25,8 @@ function [isReached, max_RES_value] = steadystate_is_reached(conc, reaction_matr
     % per compound, calculate delta-concentration
     for iCompound = 1:nCompounds % parfor?
         padded_conc = create_dirichlet_boundary(conc(:,:,iCompound), bulk_concentrations(iCompound));
-        delta_conc = convn(padded_conc, L, 'valid');
-        delta_conc = delta_conc + characteristic_time(iCompound) * reaction_matrix(:,:,iCompound);
-        RES = delta_conc ./ (correction_concentration_steadystate + conc(:,:,iCompound)); % ==> RES [mol/L] ./ ([mol/L] + [mol/L])
+        RES = convn(padded_conc, L, 'valid');
+        RES = RES / characteristic_time(iCompound) + reaction_matrix(:,:,iCompound); % [mol/L/h]
         
         % only look at RES values in diffusion region, edge in bulk-layer is by definition not zero in SS
         compound_steadystate(iCompound) = isReached_compound(RES(diffRegion), method, steadystate_tolerance);

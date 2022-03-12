@@ -198,7 +198,7 @@ function integTime(simulation_file, directory)
 
             if ssReached
                 fprintf('Steady state reached after %d diffusion iterations\n', iDiffusion)
-                fprintf('\twith at most %.4f %% off of steady state (norm = %e)\n', max(RESvalues(:, iRES)) * 100, norm_diff(iRES))
+                fprintf('\twith at most %.4g mol/L/h off of steady state (norm = %e)\n', max(RESvalues(:, iRES)), norm_diff(iRES))
 
                 % set time to next bacterial activity time
                 previousTime = Time.current;
