@@ -5,8 +5,6 @@ function [conc, bulk_concs, invHRT, reaction_matrix, pH, bac] = initTime(grid, b
     % calculate boundary conditions
     [bulk_concs, invHRT] = calculate_bulk_concentrations(bac, constants, init_params.init_bulk_conc, init_params.invHRT, 0, constants.dT_bac, settings);
     
-    % <C: why calculate bulk concentration with dT_bac? />
-    
     % make bacterial-grid matrix
     [grid2bac, grid2nBacs] = determine_where_bacteria_in_grid(grid, bac);
     
@@ -28,6 +26,8 @@ function [conc, bulk_concs, invHRT, reaction_matrix, pH, bac] = initTime(grid, b
     % set bulk layer concentrations
     conc = set_concentrations(conc, bulk_concs, ~diffusion_region);
 
+    
+    settings.parallelized = false; % at init: compute sequentially
     % calculate reaction matrix
     [reaction_matrix(xRange, yRange, :), bac.mu, pH(xRange, yRange)] = calculate_reaction_matrix(grid2bac(xRange, yRange, :), ...
         grid2nBacs(xRange, yRange), bac, diffusion_region(xRange, yRange, :), conc(xRange, yRange, :), constants, pH(xRange, yRange), 0, 0, settings);
