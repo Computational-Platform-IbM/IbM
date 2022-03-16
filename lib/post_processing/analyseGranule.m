@@ -79,28 +79,44 @@ function analyseGranule(simulation_number, finished)
     % calculate per bin the relative abundance of the bacteria
     
     % plot in stacked bar chart
-    coloring = {'#D81B60', '#1E88E5', '#FFC107', '#004D40'};
-    coloring = {'#E69F00', '#56B4E9','#009E73','#F0E442','#0072B2','#D55E00'};
-
+    colors_species_raw = {'#E69F00','#56B4E9','#33b190','#F0E442','#0072B2','#D55E00'};
+    %                      orange   light blue  green    yellow   dark blue    red
+    species_per_color = { 'An-NRMX', 'CMX',    'NOB',    'AOB',    'NRMX',    'AMX'};
+    
+    species_index = zeros(nSpecies, 1);
+    for s = 1:nSpecies
+        species_index(s) = find(strcmp(species_per_color, constants.speciesNames{s}));
+    end   
+    coloring = colors_species_raw(species_index);
+    
+    
     ar = area((1:nBins) * bin_size * 1e6, strat_data);
-    legend(constants.speciesNames);
+    legend(constants.speciesNames, 'Location', 'northwest');
     for s = 1:nSpecies
         ar(s).FaceColor = coloring{s};
     end
-    title('Absolute bacterial numbers per radial segment')
-    xlabel('Distance from center of granule [um]')
-    ylabel('Number of bacteria')
+    
+    xlim([0, granule_radius(end)*1e6])
+    ax = gca;
+    ax.FontSize = 11;
+%     title('Number of individuals per radial segment')
+    xlabel('Distance from center of granule [μm]', 'FontSize', 14)
+    ylabel({'Number of', 'individuals'}, 'FontSize', 14)
     
     subplot(2,1,2);
-    strat_data_relative = strat_data ./ sum(strat_data, 2);
+    strat_data_relative = strat_data ./ sum(strat_data, 2) * 100;
     ar = area((1:nBins) * bin_size * 1e6, strat_data_relative);
-    legend(constants.speciesNames);
+    legend(constants.speciesNames, 'Location', 'northwest');
     for s = 1:nSpecies
         ar(s).FaceColor = coloring{s};
     end
-    title('Relative bacterial numbers per radial segment')
-    xlabel('Distance from center of granule [um]')
-    ylabel('Relative portion of the number of bacteria')
+    
+    xlim([0, granule_radius(end)*1e6])
+    ax = gca;
+    ax.FontSize = 11;
+%     title('Relative abundance per radial segment')
+    xlabel('Distance from center of granule [μm]', 'FontSize', 14)
+    ylabel({'Relative','abundance [%]'}, 'FontSize', 14)
     
     
     
