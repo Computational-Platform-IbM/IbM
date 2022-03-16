@@ -64,9 +64,13 @@ function [bulk_concentrations, invHRT] = calculate_bulk_concentrations(bac, cons
             bulk_concentrations = correct_negative_concentrations(bulk_conc_temp); %<E: Negative concentration from mass balance of reactor. />
         catch e % really bad practice....
             fprintf(2, '\n\nSomething went wrong...\nreason: %s\n', e.identifier)
-%             bulk_concentrations = prev_conc;
-%             warning(e)
-            rethrow(e);
+            if strcmp(e.identifier, 'MATLAB:ode45:IntegrationTolNotMet')
+                bulk_concentrations = prev_conc;
+            else
+%                 bulk_concentrations = prev_conc;
+%                 warning(e)
+                rethrow(e);
+            end
         end
         
         % set dirichlet boundary condition
