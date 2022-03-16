@@ -98,8 +98,17 @@ def save_plot(i: int, xlim: List[float], ylim: List[float], bac: Dict, bacNames:
     # Colourblind-friendly: ( https://www.color-hex.com/color-palette/49436 )
     # c = ['#0072B2', '#D55E00', '#F0E442', '#CC79A7']
     # c = ['#D81B60', '#1E88E5', '#FFC107', '#004D40']  # colors Chiel
-    c = ['#E69F00', '#56B4E9', '#009E73', '#F0E442', '#0072B2', '#D55E00']
-
+    # colors_species_raw = {'#E69F00','#56B4E9','#33b190','#F0E442','#0072B2','#D55E00'};
+    # %                      orange   light blue  green    yellow   dark blue    red
+    # species_per_color = { 'An-NRMX', 'CMX',    'NOB',    'AOB',    'NRMX',    'AMX'};
+    colors_dict = {'An-NRMX': '#E69F00',
+                   'CMX': '#56B4E9',
+                   'NOB': '#009E73',
+                   'AOB': '#F0E442',
+                   'NRMX': '#0072B2',
+                   'AMX': '#D55E00'}
+    # c = ['#E69F00', '#56B4E9', '#009E73', '#F0E442', '#0072B2', '#D55E00']
+    c = [colors_dict[bName] for bName in bacNames]
     rC, gC, bC = HEX2RGBsplit(c)  # HEX to RGB
 
     patches = [plt.Circle((x, y), radius) for x, y, radius in zip(x, y, r)]
@@ -109,9 +118,9 @@ def save_plot(i: int, xlim: List[float], ylim: List[float], bac: Dict, bacNames:
     coll = matplotlib.collections.PatchCollection(patches)
     coll.set_facecolor(
         [(rC[species-1]*muA, gC[species-1]*muA, bC[species-1]*muA) if active else '#000000' for muA, species, active in zip(muAlpha, s, a)])
-    coll.set_alpha([1.0 if active else 0.5 for active in a])
+    coll.set_alpha([1.0 if active else 0.2 for active in a])
     coll.set_edgecolor('k')
-    coll.set_linewidth(0.05)
+    coll.set_linewidth(0.1)
     ax.add_collection(coll)
 
     plt.xlim(xlim * 1e6)
@@ -125,14 +134,14 @@ def save_plot(i: int, xlim: List[float], ylim: List[float], bac: Dict, bacNames:
     legend_list = []
     for ii, bacName in enumerate(bacNames):
         legend_list.append(Line2D([0], [0], linestyle="none", marker="o",
-                                  markersize=10, markerfacecolor=c[ii], markeredgecolor=c[ii]))
+                                  markersize=10, markerfacecolor=c[ii], markeredgecolor='k', markeredgewidth=0.5))
 
     plt.legend(legend_list, bacNames,
                numpoints=1, loc="upper left", frameon=False)
 
     filename = f'{directory}/{i}.png'
     plt.title(f'Time = {i*dT_save}')
-    plt.savefig(filename)
+    plt.savefig(filename, dpi=600)
     plt.close('all')
     del fig, ax
 
