@@ -58,6 +58,7 @@ function integTime(simulation_file, directory)
             maxInitRES = zeros(ceil(constants.simulation_end / Time.minDT_bac), 1, 'single');
         else
             Time.history = zeros(ceil(constants.simulation_end / constants.dT_bac), 1, 'single'); % save time at each Steady-state cycle
+            Time.minDT = Time.dT;
             profiling = zeros(ceil(constants.simulation_end / constants.dT_bac), 11, 'single');
             maxErrors = zeros(ceil(constants.simulation_end / constants.dT_bac), 1, 'single'); % store max error per dT_bac
             normOverTime = zeros(ceil(constants.simulation_end / constants.dT_bac), 1, 'single'); % store norm of concentration differance per dT_bac
@@ -107,6 +108,11 @@ function integTime(simulation_file, directory)
     prev_conc = conc;
 
     while Time.current < constants.simulation_end
+        
+        if mod(iDiffusion, constants.dynamicDT.nItersCycle) == 0
+            fprintf('Currently at diffusion iteration %d (max error: %g)\n', iDiffusion, max(RESvalues(:, iRES)))
+        end
+        
         % diffuse (MG)
         tic;
         try
@@ -137,28 +143,38 @@ function integTime(simulation_file, directory)
             grid2nBacs(xRange, yRange), bac, diffusion_region(xRange, yRange, :), conc(xRange, yRange, :), constants, pH(xRange, yRange), chunks, nChunks_dir, settings);
         profiling(iProf, 3) = profiling(iProf, 3) + toc;
 
-        if mod(iDiffusion, constants.dynamicDT.nItersCycle) == 0 && ...
-                non_convergent(iRES, RESvalues, constants)
-            
-            [bulk_concs, invHRT] = calculate_bulk_concentrations(bac, constants, bulk_concs, invHRT, reaction_matrix, Time.dT_bac - Time.current, settings);
-            conc = set_concentrations(conc, bulk_concs, ~diffusion_region);
+%         if mod(iDiffusion, constants.dynamicDT.nItersCycle) == 0 && ...
+%                 non_convergent(iRES, RESvalues, constants)
+%             
+%             [bulk_concs, invHRT] = calculate_bulk_concentrations(bac, constants, bulk_concs, invHRT, reaction_matrix, Time.dT_bac - Time.current, settings);
+%             conc = set_concentrations(conc, bulk_concs, ~diffusion_region);
+% 
+%             % ----- DEBUG -----
+%             if constants.debug.plotConvergence
+%                 plotConvergence(RESvalues, iRES, constants, Time.current)
+%                 plotNormDiff(norm_diff, iRES, constants, Time.current)
+%                 plotBacSimError(res_bacsim, iRES, constants, Time.current)
+%                 drawnow()
+%             end
+%             fprintf('Bulk concentrations recalculated,\nmax RES value at the moment: %.2f %%\n\n', max(RESvalues(:,iRES))*100)
+%             % ----- END DEBUG -----
+%             
+%             % recompute reaction matrix
+%             tic;
+%             [reaction_matrix(xRange, yRange, :), bac.mu, pH(xRange, yRange)] = calculate_reaction_matrix(grid2bac(xRange, yRange, :), ...
+%                 grid2nBacs(xRange, yRange), bac, diffusion_region(xRange, yRange, :), conc(xRange, yRange, :), constants, pH(xRange, yRange), chunks, nChunks_dir, settings);
+%             profiling(iProf, 3) = profiling(iProf, 3) + toc;
+%         end
 
-            % ----- DEBUG -----
-            if constants.debug.plotConvergence
-                plotConvergence(RESvalues, iRES, constants, Time.current)
-                plotNormDiff(norm_diff, iRES, constants, Time.current)
-                plotBacSimError(res_bacsim, iRES, constants, Time.current)
-                drawnow()
-            end
-            fprintf('Bulk concentrations recalculated,\nmax RES value at the moment: %.2f %%\n\n', max(RESvalues(:,iRES))*100)
-            % ----- END DEBUG -----
-            
-            % recompute reaction matrix
-            tic;
-            [reaction_matrix(xRange, yRange, :), bac.mu, pH(xRange, yRange)] = calculate_reaction_matrix(grid2bac(xRange, yRange, :), ...
-                grid2nBacs(xRange, yRange), bac, diffusion_region(xRange, yRange, :), conc(xRange, yRange, :), constants, pH(xRange, yRange), chunks, nChunks_dir, settings);
-            profiling(iProf, 3) = profiling(iProf, 3) + toc;
-        end
+
+%         if settings.dynamicDT && mod(iDiffusion, constants.dynamicDT.nItersCycle) == 0
+%             if mod(iDiffusion, 2*constants.dynamicDT.nItersCycle) == 0
+%                 Time = increase_dT_diffusion(Time, 'Diffusion takes a long time', grid.dx, constants);
+%             else
+%                 % if increasing does not work, try decreasing...
+%                 Time = decrease_dT_diffusion(Time, 'Diffusion takes a long time', grid.dx, constants);
+%             end
+%         end
         
         
         % if T>T_ss: calculate residual
@@ -171,7 +187,7 @@ function integTime(simulation_file, directory)
             tic;
             [ssReached, RESvalues(:, iRES)] = steadystate_is_reached(conc(xRange, yRange, :), reaction_matrix(xRange, yRange, :), grid.dx, bulk_concs, diffusion_region(xRange, yRange), constants);
             norm_diff(iRES) = sqrt(sum((prev_conc - conc).^2, 'all'));
-            res_bacsim(iRES, 1) = max(abs(prev_conc - conc), [], 'all') / Time.dT;
+            res_bacsim(iRES, 1) = max(abs((prev_conc - conc) ./ Time.dT), [], 'all');
             res_bacsim(iRES, 2) = norm_diff(iRES) / Time.dT;
             profiling(iProf, 4) = profiling(iProf, 4) + toc;
 
@@ -179,10 +195,15 @@ function integTime(simulation_file, directory)
 
             % perform dynamic dT for diffusion
             if settings.dynamicDT
-                if upward_trend(iDiffusion, iRES, RESvalues, constants)
+                if slow_convergence(iRES, RESvalues, constants) && Time.dT < Time.maxDT/2
+                    Time = increase_dT_diffusion(Time, 'Slow convergence', grid.dx, constants);
+%                     Time = decrease_dT_diffusion(Time, 'Diffusion takes a long time', grid.dx, constants);
+                end
+                if upward_trend(iRES, RESvalues)
                     Time = decrease_dT_diffusion(Time, 'Upward trend in RES values detected', grid.dx, constants);
-                elseif non_convergent_diffusion(iDiffusion, iRES, RESvalues, Time, constants)
-                    Time = decrease_dT_diffusion(Time, 'Diffusion does not converge any more', grid.dx, constants);
+                    Time = decrease_dT_diffusion(Time, 'Upward trend in RES values detected', grid.dx, constants);
+                elseif non_convergent(iRES, RESvalues, constants.dynamicDT.tolerance_no_convergence)
+                    Time = decrease_dT_diffusion(Time, 'Convergence is stuck', grid.dx, constants);
                 end
             else
                 if iDiffusion > 5000 && non_convergent_diffusion(iDiffusion, iRES, RESvalues, Time, constants)
