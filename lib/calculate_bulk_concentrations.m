@@ -152,7 +152,7 @@ function [bulk_concentrations, invHRT] = calculate_bulk_concentrations(bac, cons
             end
             
         else
-            if variableHRT && bulk_conc(setpoint_index) > bulk_setpoint
+            if variableHRT % && bulk_conc(setpoint_index) > bulk_setpoint
                 % if bulk conc of set compound is larger than setpoint, decrease HRT
                 if cumulative_reacted(setpoint_index) < 0
                     invHRT = -cumulative_reacted(setpoint_index) / (reactor_influx(setpoint_index) - bulk_setpoint); 
