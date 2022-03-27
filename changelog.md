@@ -1,7 +1,7 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [Unreleased]
+## [2.4.0]
 ### Added
 - Mechanistic detachment implemented
 - Function to plot detachment time per grid cell
@@ -9,10 +9,13 @@ All notable changes to this project will be documented in this file.
 - Excel template for AOB/NOB/CMX/NRMX/AMX simulation
 - Excel template for AOB/NOB/AMX simulation
 - Setting for suspension initialisation
--
+- Height correction for single aggregate simulations reaction rate in simulation domain
 ### Changed
 - Loading of model settings from Excel completely refactored
 - Also reduce dT_bac when multiple round of division are needed per timestep (overcrowding)
+- HRT not only changed when bulk concentrations are higher than setpoint, but also when below the setpoint
+- Paramters of adaptive step size optimized
+- Diffusion region determined based on center of the grid cell
 ### Fixed
 - Only removing outside bacteria due to erosion, no longer erroneous removal of inside bacteria
 - Inactivation method now correctly takes into account the growth rate
@@ -114,7 +117,7 @@ Direct import of code from RGC with minor bug fixes.
 
 
 
-[Unreleased]: https://github.com/Computational-Platform-IbM/IbM/compare/v2.3.0...development
+[2.4.0]: https://github.com/Computational-Platform-IbM/IbM/compare/v2.3.0...v2.4.0
 [2.3.0]: https://github.com/Computational-Platform-IbM/IbM/compare/v2.2.0...v2.3.0
 [2.2.0]: https://github.com/Computational-Platform-IbM/IbM/compare/v2.1.0...v2.2.0
 [2.1.0]: https://github.com/Computational-Platform-IbM/IbM/compare/v2.0.0...v2.1.0
