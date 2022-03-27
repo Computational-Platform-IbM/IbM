@@ -11,10 +11,10 @@ function plotConvergence(RESvalues, iRES, constants, Time)
     % diffusion cycles until it is declared steady state
     
     figure(4); 
-    plot((1:iRES)*constants.nDiffusion_per_SScheck, RESvalues(:,1:iRES)'*100, 'LineWidth', 2); 
+    plot((1:iRES)*constants.nDiffusion_per_SScheck, RESvalues(:,1:iRES)', 'LineWidth', 2); 
 %     ylim([0, 3]); 
-    legend(constants.StNames{1:7}); 
-    ylabel('Maximum error [%]'); 
+    legend(constants.compoundNames{1:size(RESvalues, 1)}); 
+    ylabel('Maximum diffusion-reaction residual [mol/L/h]'); 
     xlabel('Diffusion iteration')
     title(sprintf('Convergence plot at t=%.1f', Time))
 end

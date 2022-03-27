@@ -6,7 +6,17 @@ function f = plotBacs(g, bac, constants, Time)
     s = bac.species;
     act = bac.active;
     
-    coloring = {'#D81B60', '#1E88E5', '#FFC107', '#004D40'}; % colorblind-friendly colours
+%     colors_species_raw = {'#E69F00','#56B4E9','#009E73','#F0E442','#0072B2','#D55E00'};
+    colors_species_raw = {'#E69F00','#56B4E9','#33b190','#F0E442','#0072B2','#D55E00'};
+    %                      orange   light blue  green    yellow   dark blue    red
+    species_per_color = { 'An-NRMX', 'CMX',    'NOB',    'AOB',    'NRMX',    'AMX'};
+    nSpecies = length(constants.speciesNames);
+    species_index = zeros(nSpecies, 1);
+    for si = 1:nSpecies
+        species_index(si) = find(strcmp(constants.speciesNames{si}, species_per_color));
+    end   
+    coloring = colors_species_raw(species_index);    
+    
     
     f = figure(2); clf;
 %     f.Position = [-1800, 65, 1200, 900]; % desktop with two screens
@@ -49,6 +59,9 @@ function f = plotBacs(g, bac, constants, Time)
     hold on;
     uniq_s = unique(s);
     for i = 1:length(uniq_s)
+        if uniq_s(i) == 0
+            continue
+        end
         scatter(NaN, NaN, 'Marker', 'o', 'MarkerFaceColor', coloring{uniq_s(i)}, 'MarkerEdgeColor', [0 0 0], 'LineWidth', 1);
     end
     

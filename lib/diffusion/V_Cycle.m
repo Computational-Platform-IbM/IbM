@@ -26,12 +26,12 @@ function phi = V_Cycle(phi, diffRegion, bulk_value, f, L_0, L_restriction, L_pro
 	% Pre-Smoothing
     for i = 1:iter_pre
         phi = smoothing(phi,f,L_lhs);
-        phi(~diffRegion) = bulk_value;
+        phi = phi.*diffRegion + bulk_value*~diffRegion;
     end
 	
 	% Compute Residual Errors
     r = residual(phi,f,L_lhs);
-    r(~diffRegion) = 0;
+    r = diffRegion.*r;
     
 	% Restriction
 	rhs = restriction(r, L_restriction);
@@ -45,7 +45,7 @@ function phi = V_Cycle(phi, diffRegion, bulk_value, f, L_0, L_restriction, L_pro
         L_lhs_deeper = [0 0 0; 0 1 0; 0 0 0] - (1/2^(2*(depth+1)))*L_0;
         for i = 1:iter_final
             eps = smoothing(eps,rhs,L_lhs_deeper);
-            eps(~next_diffRegion) = next_bulk_value;
+            eps = eps.*next_diffRegion;
         end
     else
         eps = V_Cycle(eps, next_diffRegion, next_bulk_value, rhs, L_0, L_restriction, L_prolongation, maxDepth, depth+1, iter_pre, iter_post, iter_final);        
@@ -57,6 +57,7 @@ function phi = V_Cycle(phi, diffRegion, bulk_value, f, L_0, L_restriction, L_pro
 	% Post-Smoothing
     for i = 1:iter_post
         phi = smoothing(phi,f,L_lhs);
-        phi(~diffRegion) = bulk_value;
+        phi = phi.*diffRegion + bulk_value*~diffRegion;
     end
 end
+

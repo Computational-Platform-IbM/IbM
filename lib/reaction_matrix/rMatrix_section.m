@@ -1,27 +1,31 @@
 function [reaction_matrix, mu, pH_new] = rMatrix_section(pH, conc, grid2bac, grid2nBacs, diffRegion, ...
     grouped_bac, nBacs, bacOffset, ...
-    reactive_form, Ks, Ki, Keq, chrM, mMetabolism, mDecay, constants, structure_model, pHincluded)
+    reactive_indices, Ks, Ki, Keq, chrM, mMetabolism, mDecay, constants, kinetics)
     % Calculate reaction matrix, mu and pH in one part of the simulation
     % domain
 
     pH_bulk = constants(1);
-    constantpH = constants(2);
+    pHincluded = constants(2);
     pHtolerance = constants(3);
     T = constants(4);
-    if structure_model
-        iA = constants(5);
-        iB = constants(6);
-        iC = constants(7);
-        iO2 = constants(8);   
-    else
-        iNH3 = constants(5);
-        iNO2 = constants(6);
-        iO2 = constants(7);
-    end
+    speciation = constants(5);
+    % if structure_model
+    %     iA = constants(5);
+    %     iB = constants(6);
+    %     iC = constants(7);
+    %     iO2 = constants(8);   
+    % else
+    %     iNH3 = constants(5);
+    %     iNO2 = constants(6);
+    %     iO2 = constants(7);
+    % end
 
     bac_species = grouped_bac(:,1);
     bac_molarMass = grouped_bac(:,2);
     bac_active = grouped_bac(:,3);
+    
+    mu_max_list = kinetics(:,1);
+    maint_list = kinetics(:,2);
 
     mu = zeros(nBacs, 1);
     reaction_matrix = zeros(size(conc));
@@ -35,12 +39,12 @@ function [reaction_matrix, mu, pH_new] = rMatrix_section(pH, conc, grid2bac, gri
             
             else % in diffusion layer, thus pH calculation needs to be performed
                 % calculate pH & speciation
-                if pHincluded
+                if speciation
                     Sh_old = 10^-pH(ix, iy);
-                    [spcM, Sh] = solve_pH(Sh_old, [reshape(conc(ix,iy,:), [], 1, 1); 1; 0], Keq, chrM, constantpH, pHtolerance); % <C: why [...; 1; 0]? />
+                    [spcM, Sh] = solve_pH(Sh_old, [reshape(conc(ix,iy,:), [], 1, 1); 1; 0], Keq, chrM, pHincluded, pHtolerance);
                     pH_new(ix, iy) = -log10(Sh);
                 else
-                    pH(ix, iy) = pH_bulk;
+                    pH_new(ix, iy) = pH_bulk;
                     Sh = 10^-pH(ix, iy);
                     spcM = reshape(conc(ix,iy,:), [], 1, 1);
                 end
@@ -57,30 +61,19 @@ function [reaction_matrix, mu, pH_new] = rMatrix_section(pH, conc, grid2bac, gri
                     for i = 1:length(unique_species)
                         curr_species = unique_species(i);
 
-                        % update mu_max per species based on pH
-                        [mu_max, maint] = determine_max_growth_rate_and_maint(curr_species, T, Sh, structure_model);
-
-                        % get reactive concentrations for soluble components
-                        if structure_model
-                            if pHincluded
-                                reactive_conc = [spcM(iA, reactive_form(iA)), ...
-                                    spcM(iB, reactive_form(iB)), ...
-                                    spcM(iC, reactive_form(iC)), ...
-                                    spcM(iO2, reactive_form(iO2))];
-                            else
-                                reactive_conc = [spcM(iA), ...
-                                                spcM(iB), ...
-                                                spcM(iC), ...
-                                                spcM(iO2)];  
-                            end
+                        % get mu_max and maintenance
+                        if isnan(mu_max_list(1))
+                            [mu_max, maint] = determine_max_growth_rate_and_maint(curr_species, T, Sh);
                         else
-                            reactive_conc = [spcM(iNH3, reactive_form(iNH3)), ...
-                                spcM(iNO2, reactive_form(iNO2)), ...
-                                spcM(iO2, reactive_form(iO2))];
+                            mu_max = mu_max_list(curr_species);
+                            maint = maint_list(curr_species);
                         end
 
+                        % get reactive concentrations for soluble components
+                        reactive_conc = spcM(reactive_indices);
+
                         % set mu for all bacteria of same species in that gridcell
-                        M = calculate_monod(Ks(curr_species,:), Ki(curr_species, :), reactive_conc);                        % [DN]
+                        M = calculate_monod(Ks(curr_species,:), Ki(curr_species, :), reshape(reactive_conc, 1, []));                        % [DN]
                         mu_noMaintenance = mu_max * M;                                                                      % [1/h]
                         mu_withMaintenance = mu_noMaintenance - maint;                                                      % [1/h]
                         mu(iBacs(speciesGrid == curr_species)) = mu_withMaintenance;                                        % [1/h]

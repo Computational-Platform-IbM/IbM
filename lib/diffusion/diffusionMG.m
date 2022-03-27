@@ -1,4 +1,4 @@
-function conc = diffusionMG(conc, reaction_matrix, bulk_concentrations, diffRegion, grid, constants, dT)
+function conc = diffusionMG(conc, reaction_matrix, bulk_concentrations, diffRegion, grid, constants, Time)
     % Solve diffusion for all molecules in the liquid phase using the 
     % multigrid method. IMPORTANT: only runs for all dirichlet conditions 
     % as of now. Future versions should include variable conditions per 
@@ -7,7 +7,7 @@ function conc = diffusionMG(conc, reaction_matrix, bulk_concentrations, diffRegi
     % conc: concentration of each molecule in the grid [mol/L]
     %   (ix, iy, compound)
     % reaction_matrix: matrix with per grid cell and per compound the
-    %   change [h-1] due to bacterial activity
+    %   change [mol/L/h] due to bacterial activity
     % bulk_concentrations: vector with the bulk concentration per compound
     % diffRegion: matrix with per gridcell whether the cell is in the
     %   diffusion region
@@ -18,17 +18,16 @@ function conc = diffusionMG(conc, reaction_matrix, bulk_concentrations, diffRegi
     % -> conc: concentrations after solving the diffusion equations [mol/L]
     
     % variable declarations/unpacking
-    diffusion_coef = constants.diffusion_rates; % [m2/h] <E: diffusion_rates -> diffusion_coef. /> 
+    diffusion_coef = constants.diffusion_rates; % [m2/h]
     accuracy = constants.diffusion_accuracy;
-    absolute_tolerance = constants.Tol_a;
     nCompounds = length(diffusion_coef);
     dx = grid.dx;
+    dT = Time.dT;
 
     % set parameters for V-cycle 
-    % <TODO: optimize under realistic conditions/>
-    iter_pre = 3;
-    iter_post = 3;
-    iter_final = 4;
+    iter_pre = 6;
+    iter_post = 7;
+    iter_final = 5;
     
     % convert concentration to mol/m3
     conc = conc * 1000; 
@@ -63,17 +62,21 @@ function conc = diffusionMG(conc, reaction_matrix, bulk_concentrations, diffRegi
         while ~isSolution
             conc(:,:,iCompound) = V_Cycle(conc(:,:,iCompound), diffRegion, bulk_concentrations(iCompound)*1000, rhs, L_0, L_restriction, L_prolongation, 9, 0, iter_pre, iter_post, iter_final);
             residual_diffRegion = residual(conc(:,:,iCompound), rhs, L_lhs);
-            residual_diffRegion = residual_diffRegion(diffRegion);
+            residual_diffRegion = diffRegion.*residual_diffRegion;
             isSolution = sum(residual_diffRegion.^2, 'all') < accuracy^2;
         end
         
-        % apply correction for negative values
+        % check for negative values, raise error
         negative_concentration = conc(:,:,iCompound) < 0;
         if any(negative_concentration, 'all')
-%             warning('DEBUG:noActionRequired', 'debug: negative concentration encountered in diffusion solution of compound %s... correction applied', constants.StNames{iCompound})
-%             conc(:,:,iCompound) = ~negative_concentration.*conc(:,:,iCompound) + negative_concentration*absolute_tolerance; % set negative concentrations to very small number, not to 0 because of divide-by-0 in other parts of the code
-            error('Diffusion:NegativeConcentration', 'Negative concentration encountered & corrected in diffusion solution of compound %s', constants.StNames{iCompound})
-        end    
+            if Time.dT ~= Time.minDT && abs(min(conc(negative_concentration))) > accuracy^2 / 100 % dT can be reduced and significant negative value
+                error('Diffusion:NegativeConcentration', 'Negative concentration encountered in diffusion solution of compound %s', constants.compoundNames{iCompound})
+            else % dT cannot be reduced, thus return corrected concentration or insignificant negative value
+                temp = conc(:,:,iCompound);
+                warning('Diffusion:NegativeConcentration', 'Negative concentration encountered in diffusion solution of compound %s, but cannot correct dT value thus corrected %d value(s) (smallest number %g) to 0', constants.compoundNames{iCompound}, sum(negative_concentration, 'all'), min(temp(negative_concentration)))
+                conc(:,:,iCompound) = (conc(:,:,iCompound) > 0) .* conc(:,:,iCompound);
+            end
+        end
     end
     
     % convert concentrations back to mol/L
@@ -102,9 +105,6 @@ function rhs = calculate_rhs_dirichlet(phi, L_rhs, value, diffRegion)
     
     rhs_diffRegion = convn(diffRegion.*phi + ~diffRegion*value, L_rhs, 'same');
     rhs = diffRegion .* rhs_diffRegion + ~diffRegion .* ones(size(phi)) * value;
-    
-%     phi = create_dirichlet_boundary(phi, 2*value);
-%     rhs = convn(phi, L_rhs, 'valid');
 end
 
 

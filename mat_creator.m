@@ -27,8 +27,8 @@ function mat_creator(num_replicates)
                 disp(['>> Excel: ' excel.name ' (Run ' num2str(r) ')'])
                 matID = matID + 1;
                 [simname, siminfo, simgoal] = mc(excel.name, matID);
-                clear R
                 py.readwrite_md.writemd(matID, simname, siminfo, simgoal, version, r);
+                clear R bac constants grid init_params settings
             end
         end
     end
@@ -62,7 +62,6 @@ function [simname, siminfo, simgoal] = mc(filename, sim_number)
     settings.pHincluded = R.settings.pHincluded;
 
     %% Manually creating the structs required for integTime (i.e. loadExcel mimic)
-    rng(2021);
 
     grid = struct;
     grid.dx = R.Sxy.dx;

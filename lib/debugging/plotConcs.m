@@ -10,10 +10,10 @@ function plotConcs(conc, constants, T)
         imagesc(conc(:,:,iPlot)'); 
         colormap(viridis()); 
         colorbar(); 
-        title(sprintf('Concentration profile of %s', constants.StNames{iPlot}));
+        title(sprintf('Concentration profile of %s', constants.compoundNames{iPlot}));
         cval = caxis();
         if cval(1) < 0
-            warning('concentration below zero detected in %s', constants.StNames{iPlot})
+            warning('concentration below zero detected in %s', constants.compoundNames{iPlot})
         end
         caxis([0, cval(2)]);
         axis square;

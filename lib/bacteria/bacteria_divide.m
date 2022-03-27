@@ -1,4 +1,4 @@
-function bac = bacteria_divide(bac, constants)
+function [bac, cycle] = bacteria_divide(bac, constants)
     % Divide bacteria that are above the mass threshold
     %
     % bac: struct containing all information regarding the bacteria
@@ -6,12 +6,10 @@ function bac = bacteria_divide(bac, constants)
     %
     % -> bac: see above
     
-    cycle = 1;
+    cycle = 0;
     
     while sum(bac.molarMass * constants.bac_MW > constants.max_bac_mass_grams) > 1
-        if cycle > 1
-            warning('DEBUG:noActionRequired', 'debug: multiple rounds of division required, consider lowering the dT_division')
-        end
+        cycle = cycle + 1;
         
         mask_tooBig = bac.molarMass * constants.bac_MW > constants.max_bac_mass_grams;
         nCellsTooBig = sum(mask_tooBig);
@@ -41,6 +39,5 @@ function bac = bacteria_divide(bac, constants)
         bac.mu = [bac.mu; new_mu];
         bac.active = [bac.active; new_active];
         
-        cycle = cycle + 1;
     end
 end

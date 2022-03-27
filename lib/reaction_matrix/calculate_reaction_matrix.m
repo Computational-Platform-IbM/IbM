@@ -1,5 +1,5 @@
 function [reaction_matrix, mu, pH] = calculate_reaction_matrix(grid2bac, grid2nBacs, bac, diffRegion, conc, constants, pH, chunks, nChunks_dir, settings)
-    % Calculate how much compounds are consumed/produced per grid cell due
+    % Calculate how much compoundNames are consumed/produced per grid cell due
     % to bacterial activity. Also updates the growth rate of the respective
     % bacteria.
     % 
@@ -23,6 +23,7 @@ function [reaction_matrix, mu, pH] = calculate_reaction_matrix(grid2bac, grid2nB
     
     structure_model = settings.structure_model;
     pHincluded = settings.pHincluded;
+    
 
     nChunks = nChunks_dir^2;
     
@@ -34,23 +35,12 @@ function [reaction_matrix, mu, pH] = calculate_reaction_matrix(grid2bac, grid2nB
     Keq = constants.Keq;
     chrM = constants.chrM;
     Vg = constants.Vg;
-    compounds = constants.StNames;
-    reactive_form = constants.react_v;
+    compoundNames = constants.compoundNames;
+    reactive_indices = constants.reactive_indices;
     Ks = constants.Ks;
     Ki = constants.Ki;
     mMetabolism = constants.MatrixMet;
     mDecay = constants.MatrixDecay;
-    
-    if structure_model
-        iA = find(strcmp(compounds, 'A'));
-        iB = find(strcmp(compounds, 'B'));
-        iC = find(strcmp(compounds, 'C'));
-        iO2 = find(strcmp(compounds, 'O2'));        
-    else
-        iNH3 = find(strcmp(compounds, 'NH3'));
-        iNO2 = find(strcmp(compounds, 'NO2'));
-        iO2 = find(strcmp(compounds, 'O2'));
-    end
     
     reaction_matrix = zeros(size(conc));
     mu = zeros(size(bac.x));
@@ -60,19 +50,16 @@ function [reaction_matrix, mu, pH] = calculate_reaction_matrix(grid2bac, grid2nB
     Sh_bulk = 10^-pH(1, 1);
     
     if pHincluded
-        [~, Sh_bulk] = solve_pH(Sh_bulk, [reshape(conc(1,1,:), [], 1, 1); 1; 0], Keq, chrM, constants.constantpH, constants.pHtolerance); % <C: why [...; 1; 0]? />
+        [~, Sh_bulk] = solve_pH(Sh_bulk, [reshape(conc(1,1,:), [], 1, 1); 1; 0], Keq, chrM, pHincluded, constants.pHtolerance);
         pH_bulk = -log10(Sh_bulk);
     else
         pH_bulk = pH(1, 1);
     end
 
     % group constants for easy passing to multiple cores
-    if structure_model
-        constantValues = [pH_bulk, constants.constantpH, constants.pHtolerance, constants.T, iA, iB, iC, iO2];
-    else
-        constantValues = [pH_bulk, constants.constantpH, constants.pHtolerance, constants.T, iNH3, iNO2, iO2];
-    end
+    constantValues = [pH_bulk, pHincluded, constants.pHtolerance, constants.T, settings.speciation];
     grouped_bac = [bac.species, bac.molarMass, bac.active];
+    grouped_kinetics = [constants.mu_max, constants.maintenance];
 
     if settings.parallelized
         % ================ PARALLEL CALCULATION ====================
@@ -104,11 +91,11 @@ function [reaction_matrix, mu, pH] = calculate_reaction_matrix(grid2bac, grid2nB
         chunk_grouped_bac = cellfun(@(bacRange) grouped_bac(bacRange, :), chunk_bacRange, 'UniformOutput', false);
 
         % create storage variables for output per chunk
-        nCompounds = length(compounds);
+        ncompoundNames = length(compoundNames);
         xlens = kron(ones(nChunks_dir,1), diff(chunks.indices_x, [], 2)+1);
         ylens = kron(diff(chunks.indices_y, [], 2)+1, ones(nChunks_dir, 1));
 
-        chunk_rMatrix = arrayfun(@(xlen, ylen) zeros(xlen, ylen, nCompounds), xlens, ylens, 'UniformOutput', false);
+        chunk_rMatrix = arrayfun(@(xlen, ylen) zeros(xlen, ylen, ncompoundNames), xlens, ylens, 'UniformOutput', false);
         chunk_pH = arrayfun(@(xlen, ylen) zeros(xlen, ylen), xlens, ylens, 'UniformOutput', false);
         chunk_mu = arrayfun(@(x) zeros(x, 1), chunk2nBacs, 'UniformOutput', false);
 
@@ -118,7 +105,7 @@ function [reaction_matrix, mu, pH] = calculate_reaction_matrix(grid2bac, grid2nB
             [chunk_rMatrix{iChunk}, chunk_mu{iChunk}, chunk_pH{iChunk}] = ...
                 rMatrix_section(chunk_pH_OG{iChunk}, chunk_conc{iChunk}, chunk_grid2bac{iChunk}, chunk_grid2nBacs{iChunk}, chunk_diffRegion{iChunk}, ...
                 chunk_grouped_bac{iChunk}, chunk2nBacs(iChunk), bacOffset(iChunk), ...
-                reactive_form, Ks, Ki, Keq, chrM, mMetabolism, mDecay, constantValues, structure_model, pHincluded);
+                reactive_indices, Ks, Ki, Keq, chrM, mMetabolism, mDecay, constantValues, grouped_kinetics);
         end
 
         % put everything back into correct matrix/vector
@@ -140,7 +127,7 @@ function [reaction_matrix, mu, pH] = calculate_reaction_matrix(grid2bac, grid2nB
         [reaction_matrix, mu, pH] = ...
             rMatrix_section(pH, conc, grid2bac, grid2nBacs, diffRegion, ...
             grouped_bac, length(bac.x), bacOffset, ...
-            reactive_form, Ks, Ki, Keq, chrM, mMetabolism, mDecay, constantValues, structure_model, pHincluded);
+            reactive_indices, Ks, Ki, Keq, chrM, mMetabolism, mDecay, constantValues, grouped_kinetics);
     end
     
     

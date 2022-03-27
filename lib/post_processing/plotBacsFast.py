@@ -1,17 +1,18 @@
-# %%
+from matplotlib.lines import Line2D
+import matplotlib.collections
+import matplotlib.pyplot as plt
 import numpy as np
 import h5py
-import matplotlib.pyplot as plt
-import matplotlib.collections
-from matplotlib.lines import Line2D
-import imageio
-import argparse
-from tqdm import tqdm
-import os
-from typing import Dict, List
 import collections
+from typing import Dict, List
+import os
+from tqdm import tqdm
+import argparse
+import imageio
 
-# %%
+import matplotlib
+matplotlib.use('Agg')  # has to be called before importing pyplot?
+plt.ioff()
 
 
 def HEX2RGBsplit(c):
@@ -46,6 +47,10 @@ def muRatio(mu, s, inc):
     Returns:
         muA (float): alpha values to represent the ratio of mu (with darkening)
     """
+
+    if inc == 'NoAlpha':
+        return np.ones(np.size(mu))
+
     mu_noneg = np.maximum(mu, 0.0)
     dct = {}
     for i, j in zip(s, mu_noneg):
@@ -57,15 +62,13 @@ def muRatio(mu, s, inc):
 
     if inc == 0:
         muA = muR
-    elif inc == 'NoAlpha':
-        muA = np.ones(np.size(mu))
     else:
         muA = (np.array(muR) + inc) / (1 + inc)
 
-    return(muA)
+    return muA
 
 
-def save_plot(i: int, xlim: List[float], ylim: List[float], bac: Dict):
+def save_plot(i: int, xlim: List[float], ylim: List[float], bac: Dict, bacNames: List[str], dT_save: float):
     """Create and save a figure of the bacteria at a certain point in time.
 
     Args:
@@ -87,13 +90,25 @@ def save_plot(i: int, xlim: List[float], ylim: List[float], bac: Dict):
 
     # Calculus of mu/max(mu)
     # Recommended: 1.0 - 2.0  (inc = 'NoAlpha' -> alpha = 1; inc = 0 -> alpha = mu/max_mu)
-    inc = 1
+    inc = 'NoAlpha'
     muAlpha = muRatio(mu, s, inc)
 
     # Colours: HEX code
-    # c = ['#CC66FF', '#00B04F', '#FFA200', '#FF1482'] # Old colours
+    # c = ['#CC66FF', '#00B04F', '#FFA200', '#FF1482']  # Old colours
     # Colourblind-friendly: ( https://www.color-hex.com/color-palette/49436 )
-    c = ['#0072B2', '#D55E00', '#F0E442', '#CC79A7']
+    # c = ['#0072B2', '#D55E00', '#F0E442', '#CC79A7']
+    # c = ['#D81B60', '#1E88E5', '#FFC107', '#004D40']  # colors Chiel
+    # colors_species_raw = {'#E69F00','#56B4E9','#33b190','#F0E442','#0072B2','#D55E00'};
+    # %                      orange   light blue  green    yellow   dark blue    red
+    # species_per_color = { 'An-NRMX', 'CMX',    'NOB',    'AOB',    'NRMX',    'AMX'};
+    colors_dict = {'An-NRMX': '#E69F00',
+                   'CMX': '#56B4E9',
+                   'NOB': '#009E73',
+                   'AOB': '#F0E442',
+                   'NRMX': '#0072B2',
+                   'AMX': '#D55E00'}
+    # c = ['#E69F00', '#56B4E9', '#009E73', '#F0E442', '#0072B2', '#D55E00']
+    c = [colors_dict[bName] for bName in bacNames]
     rC, gC, bC = HEX2RGBsplit(c)  # HEX to RGB
 
     patches = [plt.Circle((x, y), radius) for x, y, radius in zip(x, y, r)]
@@ -103,9 +118,9 @@ def save_plot(i: int, xlim: List[float], ylim: List[float], bac: Dict):
     coll = matplotlib.collections.PatchCollection(patches)
     coll.set_facecolor(
         [(rC[species-1]*muA, gC[species-1]*muA, bC[species-1]*muA) if active else '#000000' for muA, species, active in zip(muAlpha, s, a)])
-    # coll.set_alpha([1.0 if active else 0.5 for active in a])
+    coll.set_alpha([1.0 if active else 0.2 for active in a])
     coll.set_edgecolor('k')
-    coll.set_linewidth(0.05)
+    coll.set_linewidth(0.1)
     ax.add_collection(coll)
 
     plt.xlim(xlim * 1e6)
@@ -116,27 +131,24 @@ def save_plot(i: int, xlim: List[float], ylim: List[float], bac: Dict):
     # plt.margins(0.01)
 
     # Legend
-    L1 = Line2D([0], [0], linestyle="none", marker="o",
-                markersize=10, markerfacecolor=c[0], markeredgecolor=c[0])
-    L2 = Line2D([0], [0], linestyle="none", marker="o",
-                markersize=10, markerfacecolor=c[1], markeredgecolor=c[1])
-    L3 = Line2D([0], [0], linestyle="none", marker="o",
-                markersize=10, markerfacecolor=c[2], markeredgecolor=c[2])
-    # L4 = Line2D([0], [0], linestyle="none", marker="o", markersize=10, markerfacecolor=c[3], markeredgecolor=c[3])
+    legend_list = []
+    for ii, bacName in enumerate(bacNames):
+        legend_list.append(Line2D([0], [0], linestyle="none", marker="o",
+                                  markersize=10, markerfacecolor=c[ii], markeredgecolor='k', markeredgewidth=0.5))
 
-    plt.legend((L1, L2, L3), ('B1', 'B2', 'B3'), numpoints=1,
-               loc="best", frameon=False)  # Structures
-    # plt.legend((L1,L2,L3,L4), ('AOB', 'Nitrobacter', 'Nitrospira', 'AMX'), numpoints=1, loc="upper left", frameon=False) # AOB/NOB/AMX
+    plt.legend(legend_list, bacNames,
+               numpoints=1, loc="upper left", frameon=False)
 
     filename = f'{directory}/{i}.png'
-    plt.savefig(filename)
-    plt.close()
+    plt.title(f'Time = {i*dT_save}')
+    plt.savefig(filename, dpi=600)
+    plt.close('all')
+    del fig, ax
 
     return filename
 
 
-# %%
-def generate_gif(args: Dict):
+def loadData(args: Dict):
     # load data from results file
     with h5py.File(f'{directory}/results1D.mat', 'r') as f:
         print('Loading results file...')
@@ -151,33 +163,48 @@ def generate_gif(args: Dict):
         for k in f['grid'].keys():
             grid[k] = np.array(f['grid'][k]).squeeze()
             print(f'Loaded grid.{k}')
-        dtBac = np.array(f['constants']['dT_bac']).squeeze()
 
-    # %%
+        for columns in f['constants']['speciesNames']:
+            bacNames = []
+            for row in range(len(columns)):
+                bacNames.append(''.join([chr(int(c))
+                                for c in f[columns[row]][:]]))
+        dT_save = f['constants']['dT_save'][0][0]
+
+        return bac, grid, bacNames, dT_save
+
+
+def getLimitsData(bac, grid, ix):
     # calculate boundaries for the plot
-    lastNonzero = np.max(np.nonzero(bac['nBacs']))
-    final_nBacs = bac['nBacs'][lastNonzero]
+    final_nBacs = bac['nBacs'][ix]
     print(f'final number of bacteria: {final_nBacs}')
-    xlim = np.array([bac['x'][0:final_nBacs, lastNonzero].min() - 5*grid['dx'],
-                    bac['x'][0:final_nBacs, lastNonzero].max() + 5*grid['dx']])
-    ylim = np.array([bac['y'][0:final_nBacs, lastNonzero].min() - 5*grid['dy'],
-                    bac['y'][0:final_nBacs, lastNonzero].max() + 5*grid['dy']])
+    xlim = np.array([bac['x'][0:final_nBacs, ix].min() - 5*grid['dx'],
+                     bac['x'][0:final_nBacs, ix].max() + 5*grid['dx']])
+    ylim = np.array([bac['y'][0:final_nBacs, ix].min() - 5*grid['dy'],
+                     bac['y'][0:final_nBacs, ix].max() + 5*grid['dy']])
+
+    return xlim, ylim
+
+
+def generate_gif(args: Dict):
+    bac, grid, bacNames, dT_save = loadData(args)
+    lastNonzero = np.max(np.nonzero(bac['nBacs']))
+    xlim, ylim = getLimitsData(bac, grid, lastNonzero)
+
     print(xlim, ylim)
 
-    # %%
     # create figure per timepoint
     filenames = []
     for i in tqdm(range(lastNonzero), desc='Generation frames'):
         if bac['nBacs'][i]:
-            filenames.append(save_plot(i, xlim, ylim, bac))
+            filenames.append(save_plot(i, xlim, ylim, bac, bacNames, dT_save))
 
     # build gif
-    with imageio.get_writer(f'{directory}/bacteria.gif', mode='I', fps=4) as writer:
+    with imageio.get_writer(f'{directory}/bacteria_{sim}.gif', mode='I', fps=4) as writer:
         for filename in tqdm(filenames, desc='Gif'):
             image = imageio.imread(filename)
             writer.append_data(image)
 
-    # %%
     # remove files afterwards
     for filename in tqdm(set(filenames), desc='Removing images'):
         os.remove(filename)
@@ -192,6 +219,11 @@ parser.add_argument("simulationNumber",
                     help="[int] Simulation number for which to create the animation (1-9999)", type=int)
 parser.add_argument('-nf', '--notFinished', dest='finished', default=True, action='store_false',
                     help="[bool] Has the simulation finished?")
+parser.add_argument('-fig', dest='figureOnly', default=False,
+                    action='store_true', help="[bool] Only create a figure for the last point in time?")
+parser.add_argument('-figInit', dest='figureInit', default=False,
+                    action='store_true', help="[bool] Only create a figure for the initial situation?")
+
 args = parser.parse_args()
 
 # set directory and resultsFile
@@ -202,4 +234,18 @@ if args.finished:
 else:
     simulation_file = f'sim_{sim}.mat'
 
-generate_gif(args)
+if not args.figureOnly and not args.figureInit:
+    generate_gif(args)
+else:
+    bac, grid, bacNames, dT_save = loadData(args)
+    lastNonzero = np.max(np.nonzero(bac['nBacs']))
+
+    if args.figureOnly:
+        ix = lastNonzero
+        xlim, ylim = getLimitsData(bac, grid, ix)
+        save_plot(ix, xlim, ylim, bac, bacNames, dT_save)
+
+    if args.figureInit:
+        ix = 0
+        xlim, ylim = getLimitsData(bac, grid, ix)
+        save_plot(ix, xlim, ylim, bac, bacNames, dT_save)
