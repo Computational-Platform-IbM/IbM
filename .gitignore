@@ -10,7 +10,6 @@ IbM_V2/testingRMatrix.mat
 *.pyc
 *tmp/*
 *.vscode/*
-planning/*.mat
 *testing*
 *.fig
 *.xlsx
