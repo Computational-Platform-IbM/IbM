@@ -101,12 +101,19 @@ def save_plot(i: int, xlim: List[float], ylim: List[float], bac: Dict, bacNames:
     # colors_species_raw = {'#E69F00','#56B4E9','#33b190','#F0E442','#0072B2','#D55E00'};
     # %                      orange   light blue  green    yellow   dark blue    red
     # species_per_color = { 'An-NRMX', 'CMX',    'NOB',    'AOB',    'NRMX',    'AMX'};
-    colors_dict = {'An-NRMX': '#E69F00',
-                   'CMX': '#56B4E9',
-                   'NOB': '#009E73',
-                   'AOB': '#F0E442',
-                   'NRMX': '#0072B2',
-                   'AMX': '#D55E00'}
+    ## NOB genera diversity
+    # colors_dict = {'An-NRMX': '#E69F00',
+    #                'CMX': '#56B4E9',
+    #                'NOB': '#009E73',
+    #                'AOB': '#F0E442',
+    #                'NRMX': '#0072B2',
+    #                'AMX': '#D55E00'}
+    ## NOB genera diversity
+    colors_dict = {'AOB': '#CC00FF',
+                   'Nitrobacter': '#00B050',
+                   'Nitrospira': '#FFC000',
+                   'Nitrotoga': '#6292FE',
+                   'AMX': '#FF017A'}
     # c = ['#E69F00', '#56B4E9', '#009E73', '#F0E442', '#0072B2', '#D55E00']
     c = [colors_dict[bName] for bName in bacNames]
     rC, gC, bC = HEX2RGBsplit(c)  # HEX to RGB
@@ -116,11 +123,16 @@ def save_plot(i: int, xlim: List[float], ylim: List[float], bac: Dict, bacNames:
     fig, ax = plt.subplots()
 
     coll = matplotlib.collections.PatchCollection(patches)
-    coll.set_facecolor(
-        [(rC[species-1]*muA, gC[species-1]*muA, bC[species-1]*muA) if active else '#000000' for muA, species, active in zip(muAlpha, s, a)])
-    coll.set_alpha([1.0 if active else 0.2 for active in a])
-    coll.set_edgecolor('k')
-    coll.set_linewidth(0.1)
+    if inc == 'NoAlpha':
+        coll.set_facecolor(
+            [(rC[species-1], gC[species-1], bC[species-1]) if active else '#000000' for species, active in zip(s, a)])
+    else:
+        coll.set_facecolor(
+            [(rC[species-1]*muA, gC[species-1]*muA, bC[species-1]*muA) if active else '#000000' for muA, species, active in zip(muAlpha, s, a)])
+        coll.set_alpha([1.0 if active else 0.2 for active in a])
+    
+    # coll.set_edgecolor('k')
+    # coll.set_linewidth(0.1)
     ax.add_collection(coll)
 
     plt.xlim(xlim * 1e6)
@@ -228,11 +240,11 @@ args = parser.parse_args()
 
 # set directory and resultsFile
 sim = f'{args.simulationNumber:04d}'
-directory = f'Results/{sim}'
+directory = f'../../Results/{sim}'
 if args.finished:
     simulation_file = f'{directory}/sim_{sim}.mat'
 else:
-    simulation_file = f'sim_{sim}.mat'
+    simulation_file = f'../../sim_{sim}.mat'
 
 if not args.figureOnly and not args.figureInit:
     generate_gif(args)

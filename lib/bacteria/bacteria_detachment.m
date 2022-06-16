@@ -28,18 +28,23 @@ function bac = bacteria_detachment(bac, grid, constants, settings, timestep, inv
             
             % decrease mass of bacteria (radius will be updated when
             % needed) -> Erosion
+            %%{
             [i, j] = find(ratio > 0 & ratio < 1);
-            for k=1:length(i)
+            for k = 1:length(i)
                 ii = i(k);
                 jj = j(k);
                 r = ratio(ii,jj);
                 iBacs = nonzeros(grid2bac(ii, jj, :));
                 for n = 1:length(iBacs)
-                    iBac = iBacs(n);        
-                    bac.molarMass(iBac) = bac.molarMass(iBac) * (1 - r);
+                    iBac = iBacs(n);
+                    if bac.active(iBac) % Erosion only for active bac (to avoid empty granule cores)
+                        bac.molarMass(iBac) = bac.molarMass(iBac) * (1 - r);
+                    end
                 end    
             end
-
+            %%}
+            %----------------%
+            
             % remove bacteria with T < timestep -> Detachment
             [i, j] = find(ratio >= 1 & ratio < Inf);
             bac_detach = zeros(length(i)*size(grid2bac, 3), 1, 'uint32');

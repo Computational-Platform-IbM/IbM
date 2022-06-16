@@ -5,6 +5,7 @@ function f = plotBulkConcOverTime(bulk_history, time_history, constants)
     %   compound at each dT_bac timepoint
     f = figure(6);
     f.Position = [50,50, 1000, 700];
+    size(bulk_history)
     
     nPlots = [4,2]; % 3 plots in x direction, 2 in y direction (6 total)
 

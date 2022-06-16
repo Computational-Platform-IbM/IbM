@@ -1,6 +1,7 @@
-clear all;
-filename = './planning/Excels/Templates/AOBNOBAMXCMX_kinetics.xlsx';
+clear all; %#ok<CLALL>
+filename = './planning/Excels/Templates/AOBNOBAMX.xlsx';
 javaaddpath([pwd '/lib/bacteria/shovingQuadTreekDist.jar']);
+
 
 fprintf('>>>>>>>>>> LOADING EXCEL FILE\n')
 [grid, bac_init, constants, settings, init_params] = loadPresetFile(filename);
@@ -134,8 +135,8 @@ function [x, y] = distribute_microcolonies(nColonies, nBacPerCol, r_colony, xRan
     % create microcolony at each x, y
     for ix = 1:numel(x)
         [x_microcol, y_microcol] = blue_noise_circle(nBacPerCol, x(ix), y(ix), r_colony);
-        x = [x; x_microcol(2:end)];
-        y = [y; y_microcol(2:end)];
+        x = [x; x_microcol(2:end)]; %#ok<AGROW>
+        y = [y; y_microcol(2:end)]; %#ok<AGROW>
     end
 end
 

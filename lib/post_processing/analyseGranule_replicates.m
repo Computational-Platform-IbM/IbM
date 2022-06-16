@@ -65,13 +65,17 @@ function analyseGranule_replicates(simulation_number, nReplicates, finished)
         plot_nBacs(bac_saved, n)
         final_mass(:, n) = plot_active_mass(bac_saved, constants, n);
         plot_active_nBacs(bac_saved, constants, n)
-        plot_reactor_density(bac_saved, constants, settings, n)
+        if sum(final_mass ~= 0)
+            plot_reactor_density(bac_saved, constants, settings, n)
+        end
         if ~isnan(constants.maintenance)
             plot_reactor_oxygen_uptake(bac_saved, constants, reactor_saved, n)
         end
         plot_bulk_concs(reactor_saved, constants, n)
     end
     
+    %% write Excel
+    writematrix(final_mass,'resultsCMX.xlsx')
   
     %% show AMX:Nitrospira ratio
     ix_AMX = strcmp(constants.speciesNames, 'AMX');

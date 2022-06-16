@@ -122,6 +122,7 @@ function integTime(simulation_file, directory)
             switch e.identifier
                 case 'Diffusion:NegativeConcentration'
                     Time = decrease_dT_diffusion(Time, e.message, grid.dx, constants);
+%                     NegConc = 1;
                 otherwise
                     rethrow(e)
             end
@@ -195,7 +196,7 @@ function integTime(simulation_file, directory)
 
             % perform dynamic dT for diffusion
             if settings.dynamicDT
-                if slow_convergence(iRES, RESvalues, constants) && Time.dT < Time.maxDT/2
+                if slow_convergence(iRES, RESvalues, constants) && Time.dT < Time.maxDT/2 %&& NegConc == 0 %-- Testing --%
                     Time = increase_dT_diffusion(Time, 'Slow convergence', grid.dx, constants);
 %                     Time = decrease_dT_diffusion(Time, 'Diffusion takes a long time', grid.dx, constants);
                 end
@@ -205,6 +206,9 @@ function integTime(simulation_file, directory)
                 elseif non_convergent(iRES, RESvalues, constants.dynamicDT.tolerance_no_convergence)
                     Time = decrease_dT_diffusion(Time, 'Convergence is stuck', grid.dx, constants);
                 end
+%                 if iDiffusion > 5000
+%                     ssReached = true;
+%                 end
             else
                 if iDiffusion > 5000 && non_convergent_diffusion(iDiffusion, iRES, RESvalues, Time, constants)
                     % without dynamic timestep & negative concentrations
@@ -218,6 +222,7 @@ function integTime(simulation_file, directory)
             end
 
             if ssReached
+%                 NegConc = 0;
                 fprintf('Steady state reached after %d diffusion iterations\n', iDiffusion)
                 fprintf('\twith at most %.4g mol/L/h off of steady state (norm = %e)\n', max(RESvalues(:, iRES)), norm_diff(iRES))
 
@@ -405,7 +410,7 @@ function integTime(simulation_file, directory)
 
                     % save all important variables
                     save_slice(bac, conc, bulk_concs, pH, invHRT, Time.current, grid, constants, directory);
-                    %                     save_profile(bac, conc, bulk_concs, pH, invHRT, Time.current, grid, constants, directory); % entire plane of simulation
+%                     save_profile(bac, conc, bulk_concs, pH, invHRT, Time.current, grid, constants, directory); % entire plane of simulation
 
                     if Time.current >= Time.backup
                         % set next backup time

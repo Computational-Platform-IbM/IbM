@@ -73,7 +73,7 @@ function [reaction_matrix, mu, pH_new] = rMatrix_section(pH, conc, grid2bac, gri
                         reactive_conc = spcM(reactive_indices);
 
                         % set mu for all bacteria of same species in that gridcell
-                        M = calculate_monod(Ks(curr_species,:), Ki(curr_species, :), reshape(reactive_conc, 1, []));                        % [DN]
+                        M = calculate_monod(Ks(curr_species,:), Ki(curr_species, :), reshape(reactive_conc, 1, []));        % [DN]
                         mu_noMaintenance = mu_max * M;                                                                      % [1/h]
                         mu_withMaintenance = mu_noMaintenance - maint;                                                      % [1/h]
                         mu(iBacs(speciesGrid == curr_species)) = mu_withMaintenance;                                        % [1/h]

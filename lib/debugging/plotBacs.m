@@ -6,29 +6,43 @@ function f = plotBacs(g, bac, constants, Time)
     s = bac.species;
     act = bac.active;
     
-%     colors_species_raw = {'#E69F00','#56B4E9','#009E73','#F0E442','#0072B2','#D55E00'};
-    colors_species_raw = {'#E69F00','#56B4E9','#33b190','#F0E442','#0072B2','#D55E00'};
-    %                      orange   light blue  green    yellow   dark blue    red
-    species_per_color = { 'An-NRMX', 'CMX',    'NOB',    'AOB',    'NRMX',    'AMX'};
+    %% Colour sets
+    % Nitrospira's metabolism niches
+%     colors_species_raw = {'#E69F00','#56B4E9','#33b190','#F0E442','#0072B2','#D55E00'};
+%     %                      orange   light blue  green    yellow   dark blue    red
+%     colors_species_rgb = [230 159 0; 86 180 233; 51 177 144; 240 228 66; 0 114 178; 213 94 0]./255;
+%     species_per_color = { 'An-NRMX', 'CMX',    'NOB',    'AOB',    'NRMX',    'AMX'};
+    % NOB genera diversity
+    colors_species_raw = {'#CC00FF','#00B050','#FFC000','#6292FE','#FF017A'};
+    %                      purple     green     yellow    blue      pink
+    colors_species_rgb = [204 0 255; 0 176 80; 255 192 0; 98 146 254; 255 1 122]./255;
+    species_per_color = { 'AOB', 'Nitrobacter', 'Nitrospira', 'Nitrotoga', 'AMX'};    
+    
+    %% pLoting
     nSpecies = length(constants.speciesNames);
     species_index = zeros(nSpecies, 1);
     for si = 1:nSpecies
         species_index(si) = find(strcmp(constants.speciesNames{si}, species_per_color));
     end   
-    coloring = colors_species_raw(species_index);    
+    coloring = colors_species_raw(species_index);
+    coloring_rgb = colors_species_rgb(species_index, :);
     
     
-    f = figure(2); clf;
+    f = figure(); clf;
 %     f.Position = [-1800, 65, 1200, 900]; % desktop with two screens
     f.Position = [60 60 1000 700];
     
     for i = 1:length(x)
         if act(i)
-            col = coloring{s(i)};
+%             col = coloring{s(i)};	% HEX
+            col = [coloring_rgb(s(i), :) 1];
+            ir = r(i);
         else
-            col = [0 0 0];
+            col = [0 0 0];          % HEX
+%             col = [coloring_rgb(s(i), :) 0.3];
+            ir = 1.0 * r(i);
         end
-        rectangle('Curvature', [1 1], 'Position', [x(i) - r(i), y(i) - r(i), 2 * r(i), 2 * r(i)], 'LineWidth', 0.1, 'EdgeColor', col, 'FaceColor', col);
+        rectangle('Curvature', [1 1], 'Position', [x(i) - ir, y(i) - ir, 2 * ir, 2 * ir], 'LineWidth', 0.1, 'EdgeColor', col, 'FaceColor', col);
     end
     
     axis equal;
