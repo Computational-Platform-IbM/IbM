@@ -206,9 +206,9 @@ function integTime(simulation_file, directory)
                 elseif non_convergent(iRES, RESvalues, constants.dynamicDT.tolerance_no_convergence)
                     Time = decrease_dT_diffusion(Time, 'Convergence is stuck', grid.dx, constants);
                 end
-%                 if iDiffusion > 5000
-%                     ssReached = true;
-%                 end
+                if iDiffusion > 5000
+                    ssReached = true;
+                end
             else
                 if iDiffusion > 5000 && non_convergent_diffusion(iDiffusion, iRES, RESvalues, Time, constants)
                     % without dynamic timestep & negative concentrations
