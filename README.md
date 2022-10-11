@@ -67,6 +67,7 @@ During the execution of the `IbM()` , *Warning messages* may be displaied to *Co
 > Error using `function` (line x)<br>*Details of error*
 <p>See list of *[Warning messages](https://github.com/Computational-Platform-IbM/IbM#warning-list)*.</p>
 ________________
+
 8. Visualization of Results. See [Data visualization](https://github.com/Computational-Platform-IbM/IbM#data-visualization) section.
 
 ## Granule version
