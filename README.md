@@ -53,7 +53,7 @@ Click [here](https://www.mathworks.com/help/install/) for more information about
     2. Call to `IbM(sim_xxxx)` (:bulb: `sim_xxxx`, where xxxx is the chosen simulation number).
 
 During the execution of the `IbM()` , *Warning messages* may be displaied to *Command Window*. *Warning messages* are merely informative about the simulation progress (i.e., it is not an Error of the code). MATLAB errors looks like 
-> Error using `function` (Line xx)<br>*Information of error*
+> Error using <u>`function`</u> (<u>line xx</u>)<br>*Details of error*
 ________________
 You can review the seed-file writing `load(sim_xxxx.mat)` to *Command Window* or with double click to `sim_xxxx.mat` in *Current folder*. All data is on *Workspace*.
 <br>`bac`           - Information of initial position (*x,y*), molar mass, radius, species and which cell is active/inactive.
