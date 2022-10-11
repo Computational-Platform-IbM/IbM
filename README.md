@@ -4,7 +4,7 @@ From: Gonzalez-Cabaleiro group.
 
 *Contributors: Chiel van Amstel, Eloi Martinez-Rabert, Rebeca Gonzalez-Cabaliero
 
-:warning: To open the links in a new tab - right click on the link + "Open link in new tab". :warning:
+**:warning: To open the links in a new tab: right click on the link + "Open link in new tab". :warning:**
 
 Individual-based Models (IbM) are characterized for simulating the microbes in an 
 aggregate (granule or biofilm) as a discrete entity with unique traits. Each of the microbe is 
@@ -21,7 +21,7 @@ each of the cells and only function of local conditions, capturing the heterogen
 and supporting non-linear growth models [1].
 
 
-## Before having fun
+##:building_construction: Before having fun
 
 This IbM framework is build up in MATLAB. Therefore, MATLAB must be installed in your 
 computer.You can use the [free 30-day trial](https://www.mathworks.com/campaigns/products/trials.html?ef_id=CjwKCAjwqJSaBhBUEiwAg5W9p96Y1NtC8BCa4Pw_wm3sswXR27ZkvuHZtWMOMUntOrmDSc1Ib3MGCRoCILQQAvD_BwE:G:s&s_kwcid=AL!8664!3!463011314378!p!!g!!matlab%20downlaod&s_eid=ppc_6588247642&q=matlab%20downlaod&gclid=CjwKCAjwqJSaBhBUEiwAg5W9p96Y1NtC8BCa4Pw_wm3sswXR27ZkvuHZtWMOMUntOrmDSc1Ib3MGCRoCILQQAvD_BwE) or "Sign in"/"Create account" if your university already has a MATLAB campus license (see ["Campus-Wide License" Search](https://www.mathworks.com/academia/tah-support-program/eligibility.html)).
@@ -34,7 +34,7 @@ Lorem ipsum
 
 ## Suspension version
 
-**Comming soon...**
+:building_construction: **Comming soon...**
 
 ## References
 
