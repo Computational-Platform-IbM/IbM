@@ -76,7 +76,7 @@ Lorem ipsum
 
 Lorem ipsum
 
-### :card_file_box: Publications
+### :newspaper: Publications
 
 ```
 E. Martinez-Rabert, C. van Amstel, C. Smith, W. T. Sloang, R. Gonzalez-Cabaleiro (under review), 
