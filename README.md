@@ -98,7 +98,7 @@ All possible *Warning messages* are listed here:
 - *CellDivision:TooFastDivision* (`lib\integTime.m`) - **dt_bac** is decreased. 
 - *BulkConcentration:ValueJump* (`lib\integTime.m`) - **dt_bac** is decreased.
 
-Special *Warning messages*, possible action required: 
+&#09;Special *Warning messages*, possible action required: 
 - *DEBUG:actionRequired* (`lib\determine_diffusion_region.m`) - Higher simulation domain must be set.
 - *DEBUG:actionRequired* (`lib\calculate_bulk_concentration.m`) - Negative bulk concentration encountered after pH control.
 - *DEBUG:actionRequired* (`lib\detachment\computeRoot.m`) - ValueError:Should always be above 0...
