@@ -225,10 +225,10 @@ function [grid, bac_init, constants, settings, init_params] = loadPresetFile(fil
 
     
     %% constants (Yield, eDonor, mu_max, maint)
-    [vals, names] = xlsread(filename, 'Yield');
+    [vals, names] = xlsread(filename, 'Yield-Mu');
     
     assert(areEqual(constants.speciesNames, names(2:end,1)), 'ERROR: Bacterial species do not have the same name, or are not in the same order.');
-    yield = vals(:, find(strcmp(names(1,:), 'Yield C/N')) - 1);
+    yield = vals(:, find(strcmp(names(1,:), 'Yield')) - 1);
     eD = names(2:end, strcmp(names(1,:), 'eD'));
     try
         constants.maintenance = vals(:, find(strcmp(names(1,:), 'Maintenance')) - 1);
