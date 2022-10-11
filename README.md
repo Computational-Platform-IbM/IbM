@@ -2,7 +2,7 @@
 
 From: Gonzalez-Cabaleiro group.
 
-*Contributors: Chiel van Amstel, Eloi Martinez-Rabert, Rebeca Gonzalez-Cabaliero
+:computer: Contributors: Chiel van Amstel, Eloi Martinez-Rabert, Rebeca Gonzalez-Cabaliero
 
 
 ## Granule version
