@@ -95,6 +95,7 @@ Lorem ipsum
 ### · Draw aggregate (Granule & Suspension version)
 Function to plot cells for a given simulation number and time → `plotBacsMatlab(simulation_number, Time)`.<br>
 <sub>Inputs: `simulation_number` is the chosen simulation, and `Time` in days.</sub>
+:warning: If the simulation has not finishied yet, copy the seed-file (`simulation_xxxx.mat`) to the corresponding Result folder (`Results\xxxx`).
 
 
 ## Warning List
