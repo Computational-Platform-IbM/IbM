@@ -1,4 +1,4 @@
-# Individual-based Model framework.
+# Individual-based Model framework
 
 From: Gonzalez-Cabaleiro group.
 
@@ -56,7 +56,7 @@ Click [here](https://www.mathworks.com/help/install/) for more information about
 
 ### :card_file_box: Supplementary Information
 
-· During the execution of the `IbM()` , *Warning messages* may be displaied to *Command Window*. *Warning messages* are merely informative about the simulation progress (i.e., it is not an Error of the code). See list of [Warning messages](https://github.com/Computational-Platform-IbM/IbM#warning-list).
+· During the execution of the `IbM()` , *Warning messages* may be displaied to *Command Window*. *Warning messages* are merely informative about the simulation progress (i.e., they are not an Error of the code). See list of [Warning messages](https://github.com/Computational-Platform-IbM/IbM#warning-list).
 <br>A MATLAB error looks like:
 > Error using `function` (line x)<br>*Details of error*
 
@@ -84,8 +84,8 @@ Lorem ipsum
 
 ## Warning List
 
-All possible *Warning messages* are listed here:
-- *Lorem ipsum 1* - Lorem ipsum
+All possible *Warning messages* are listed here (*WarningTag* (`script.m` source) - Explanation):
+- *Diffusion:NegativeConcentration* () - Lorem ipsum
 - *Lorem ipsum 2* - Lorem ipsum
 
 ## References
