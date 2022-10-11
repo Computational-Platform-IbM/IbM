@@ -59,7 +59,7 @@ During the execution of the `IbM()` , *Warning messages* may be displaied to *Co
 <p>See list of *[Warning messages](https://github.com/Computational-Platform-IbM/IbM#warning-list)*.</p>
 
 ________________
-You can review the seed-file writing `load(sim_xxxx.mat)` to *Command Window* or with double click to `sim_xxxx.mat` in *Current folder*. All data is on *Workspace*.
+You can review the seed-file writing `load(sim_xxxx.mat)` to *Command Window* or with double click to `sim_xxxx.mat` in *Current folder*. All data is on *Workspace*.<br>
 <br>`bac`           - Information of initial position (*x,y*), molar mass, radius, species and which cell is active/inactive.
 <br>`constants`     - Summary of all parameters of model (Discretization, Kinetic parameters, Metabolic matrix, and so on).
 <br>`grid`          - Information of grid.
