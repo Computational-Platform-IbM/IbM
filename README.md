@@ -85,9 +85,19 @@ Lorem ipsum
 ## Warning List
 
 All possible *Warning messages* are listed here:
-<br><sub>Legend: *WarningTag* (`script.m` source) - Explanation</sub>
-- *Diffusion:NegativeConcentration* () - Lorem ipsum
-- *Lorem ipsum 2* - Lorem ipsum
+<br><sub>Legend: *WarningTag* (`script.m` source) - Action</sub>
+- *DEBUG:actionRequired* (`lib\determine_diffusion_region.m`) - Higher simulation domain must be set.
+- *dT_diffusion:Limits* (`lib\integTime.m`) - Maximum/Minimum **dt_diffusion** value is reached.
+- *dT_bac:Limits* (`lib\integTime.m`) - Maximum/Minimum **dt_bac** value is reached.
+- *Diffusion:SlowConvergence* (`lib\integTime.m`) - **dt_diffusion** is increased. 
+- *Diffusion:SlowConvergence* (`lib\integTime.m`) - **dt_bac** is increased. 
+- *Diffusion:ConvergenceStuck* (`lib\integTime.m`) - **dt_diffusion** is decreased. 
+- *Diffusion:UpwardRES* (`lib\integTime.m`) - **dt_diffusion** is decreased. 
+- *Diffusion:NegativeConcentration* (`lib\diffusion\diffusionMG.m`) - **dt_diffusion** is reduced.
+- *CellDivision:TooFastDivision* (`lib\integTime.m`) - **dt_bac** is decreased. 
+- *BulkConcentration:ValueJump* (`lib\integTime.m`) - **dt_bac** is decreased.
+
+
 
 ## References
 
