@@ -34,7 +34,7 @@ Click [here](https://www.mathworks.com/help/install/) for more information about
 <sup><sup>1</sup>Seed-file: `.mat` file with all information of simulation. This file is used to execute the code.</sup><br>
 &nbsp;**<sup>All seed-files must be saved as 'sim_xxxx.mat'. More info in Step 6 (*Create the seed-file*)</sup>**
 
-Instructions to Download and run IbM:
+Instructions to Download and Run IbM:
 1. Download .zip code. Last version: `v2.4.1`. [Download code](https://github.com/Computational-Platform-IbM/IbM/archive/refs/tags/v2.4.0.zip).
 2. Extract files to a destination (:bulb: recommendation - Desktop).
 3. Open MATLAB.
@@ -54,7 +54,8 @@ Instructions to Download and run IbM:
     1. Copy the desired seed-file to Code folder (folder with `IbM.m` file)
     2. Call to `IbM(sim_xxxx)` (:bulb: `sim_xxxx`, where xxxx is the chosen simulation number).
 ________________
-&#09;**Extra:.** You can review the seed-file writing `load(sim_xxxx.mat)` to *Command Window* or with double click to `sim_xxxx.mat` in *Current folder*. All data is on *Workspace*.
+&#09;**Extra:.**
+<br>You can review the seed-file writing `load(sim_xxxx.mat)` to *Command Window* or with double click to `sim_xxxx.mat` in *Current folder*. All data is on *Workspace*.
 ________________
 
 ## Granule version
