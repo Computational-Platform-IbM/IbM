@@ -54,7 +54,7 @@ Instructions to Download and Run IbM:
     1. Copy the desired seed-file to Code folder (folder with `IbM.m` file)
     2. Call to `IbM(sim_xxxx)` (:bulb: `sim_xxxx`, where xxxx is the chosen simulation number).
 ________________
-&#09;**Extra:.**
+**Extra:.**
 <br>You can review the seed-file writing `load(sim_xxxx.mat)` to *Command Window* or with double click to `sim_xxxx.mat` in *Current folder*. All data is on *Workspace*.
 ________________
 
