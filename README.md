@@ -1,5 +1,9 @@
 # IbM
 
+## From Gonzalez-Cabaleiro group
+
+### Contributors: Chiel van Amstel; Eloi Martinez-Rabert; Rebeca Gonzalez-Cabaleiro
+
 Individual based model on bacterial colonies
 
 Mathemathical model simulating the diffusion of compounds and bacterial growth.
