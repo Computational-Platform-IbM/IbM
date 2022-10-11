@@ -92,8 +92,9 @@ PLOS Computational Biology. doi: TBA
 
 Lorem ipsum
 
-### Draw cell (Granule & Suspension version)
-Function to create aggregate image for a given simulation number and time.
+### · Draw aggregate (Granule & Suspension version)
+Function to plot cells for a given simulation number and time.
+
 
 
 ## Warning List
