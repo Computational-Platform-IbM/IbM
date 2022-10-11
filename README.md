@@ -68,9 +68,11 @@ Lorem ipsum
 
 :building_construction: **Comming soon...**
 
-## :warning: Warning List
+## Warning List
 
-Lorem ipsum
+During the execution of the `IbM()` , *Warning messages* may be displaied to *Command Window*. These are merely informative about the simulation process (i.e., if discretization time must be modified to avoid negative concentration or for slow convergece). Here, all the possible *Warning messages* are listed:
+- `Lorem ipsum 1`
+- *Lorem ipsum 2*
 
 ## References
 
