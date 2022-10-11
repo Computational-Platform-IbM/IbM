@@ -55,11 +55,11 @@ Instructions to Download and Run IbM:
     2. Call to `IbM(sim_xxxx)` (:bulb: `sim_xxxx`, where xxxx is the chosen simulation number).
 ________________
 You can review the seed-file writing `load(sim_xxxx.mat)` to *Command Window* or with double click to `sim_xxxx.mat` in *Current folder*. All data is on *Workspace*.
-<br>`bac`&#09;&#09;-
-<br>`constants`&#09;-
-<br>`grid`&#09;&#09;&#09;-
-<br>`init_params`&#09;-
-<br>`settings`&#09;&#09;-
+<br>`bac`           - Info of initial position (*x,y*), molar mass, radius, species and which cell is active/inactive
+<br>`constants`     - Summary of all parameters of model (Discretization, Kinetic parameters, Metabolic matrix, and so on).
+<br>`grid`          - Information of grid
+<br>`init_params`	- Initial conditions of the system (HRT, concentration in aggregate and concentration in bulk liquid).
+<br>`settings`      - Settings of the model (Time discretization, HRT, detachment, pH submodel, version of model, parallization)
 ________________
 
 ## Granule version
