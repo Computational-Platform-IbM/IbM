@@ -27,7 +27,7 @@ function [bulk_concentrations, invHRT] = calculate_bulk_concentrations(bac, cons
     Vg = constants.Vg;
     Dir_k = constants.Dir_k;
     influent = constants.influent_concentrations;
-    % NH3sp = constants.pOp.NH3sp;
+    Bsp = constants.bulk_setpoint;
     % keepNH3fixed = constants.constantN;
     variableHRT = settings.variableHRT;
     if variableHRT
@@ -111,25 +111,25 @@ function [bulk_concentrations, invHRT] = calculate_bulk_concentrations(bac, cons
         if settings.structure_model
             switch settings.type
                 case 'Neut'
-                    if variableHRT == 1 && (bulk_conc(1) > NH3sp || bulk_conc(1) < NH3sp)
+                    if variableHRT == 1 && (bulk_conc(1) > Bsp || bulk_conc(1) < Bsp)
                         if cumulative_reacted(1) < 0
-                            invHRT = -cumulative_reacted(1) / (reactor_influx(1) - NH3sp);
+                            invHRT = -cumulative_reacted(1) / (reactor_influx(1) - Bsp);
                         end
                     else
                         dy(1) = invHRT * (reactor_influx(1) - bulk_conc(1)) + cumulative_reacted(1);
                     end
                     
-                    if variableHRT == 1 && (bulk_conc(2) > NH3sp || bulk_conc(2) < NH3sp)
+                    if variableHRT == 1 && (bulk_conc(2) > Bsp || bulk_conc(2) < Bsp)
                         if cumulative_reacted(2) < 0
-                            invHRT = -cumulative_reacted(2) / (reactor_influx(2) - NH3sp);
+                            invHRT = -cumulative_reacted(2) / (reactor_influx(2) - Bsp);
                         end
                     else
                         dy(2) = invHRT * (reactor_influx(2) - bulk_conc(2)) + cumulative_reacted(2);
                     end
                     
-                    if variableHRT == 1 && (bulk_conc(3) > NH3sp || bulk_conc(3) < NH3sp)
+                    if variableHRT == 1 && (bulk_conc(3) > Bsp || bulk_conc(3) < Bsp)
                         if cumulative_reacted(3) < 0
-                            invHRT = -cumulative_reacted(3) / (reactor_influx(3) - NH3sp);
+                            invHRT = -cumulative_reacted(3) / (reactor_influx(3) - Bsp);
                         end
                     else
                         dy(3) = invHRT * (reactor_influx(3) - bulk_conc(3)) + cumulative_reacted(3);
@@ -137,9 +137,9 @@ function [bulk_concentrations, invHRT] = calculate_bulk_concentrations(bac, cons
                     dy(4:end) = invHRT * (reactor_influx(4:end) - bulk_conc(4:end)) + cumulative_reacted(4:end);
                     dy(5:end) = 0;
                 case {'Comp','Comm','Copr'}
-                    if variableHRT == 1 && (bulk_conc(1) > NH3sp || bulk_conc(1) < NH3sp)
+                    if variableHRT == 1 && (bulk_conc(1) > Bsp || bulk_conc(1) < Bsp)
                         if cumulative_reacted(1) < 0
-                            invHRT = -cumulative_reacted(1) / (reactor_influx(1) - NH3sp);
+                            invHRT = -cumulative_reacted(1) / (reactor_influx(1) - Bsp);
                         end
                     else
                         dy(1) = invHRT * (reactor_influx(1) - bulk_conc(1)) + cumulative_reacted(1);
