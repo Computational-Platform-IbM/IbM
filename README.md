@@ -34,12 +34,12 @@ Click [here](https://www.mathworks.com/help/install/) for more information about
 
 Instructions to Download and setup IbM code:
 1. Download .zip code. Last version: `v2.4.1`. [Download code](https://github.com/Computational-Platform-IbM/IbM/archive/refs/tags/v2.4.0.zip)
-2. Extract files to a destination (*:bulb: recommendation - Desktop*)
+2. Extract files to a destination (:bulb: recommendation - Desktop)
 3. Open MATLAB
     - For more information about MATLAB Layout and how to change it, click [here](https://www.mathworks.com/help/matlab/matlab_env/change-the-desktop-layout.html).
 4. Go to the **Code folder**...
-    &#09;<br>→ using `Command Window` - [cd](https://www.mathworks.com/help/matlab/ref/cd.html).
-    &#09;<br>→ using `Folder Toolbar`.
+    &#09;<br>→ using *Command Window* - [cd](https://www.mathworks.com/help/matlab/ref/cd.html).
+    &#09;<br>→ using *Folder Toolbar*.
 5. Generate the path to the main code:
     &#09;<br>→ write `addpath(genpath('lib'))` to *Command Window*.
 
