@@ -51,6 +51,7 @@ Click [here](https://www.mathworks.com/help/install/) for more information about
 7. Execute IbM code:
     1. Copy the desired seed-file to Code folder (folder with `IbM.m` file)
     2. Call to `IbM(sim_xxxx)` (:bulb: `sim_xxxx`, where xxxx is the chosen simulation number).
+Move the preset file in the corresponding results folder (signifying that the simulation has been run) after running the model
 8. Visualization of Results. See [Data visualization](https://github.com/Computational-Platform-IbM/IbM#data-visualization) section.
 
 ### :card_file_box: Supplementary Information
