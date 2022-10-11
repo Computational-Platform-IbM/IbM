@@ -32,7 +32,9 @@ Click [here](https://www.mathworks.com/help/install/) for more information about
 
 ### :arrow_down: Code download and setup
 
-
+Instructions to Download and setup IbM code:
+1. Download .zip code (Last version: 'v2.4.0') ([clik here](https://github.com/Computational-Platform-IbM/IbM/archive/refs/tags/v2.4.0.zip))
+2. 
 
 ## Granule version
 
@@ -46,6 +48,7 @@ Lorem ipsum
 
 [1] Hellweger, F.L., et al., (2016). doi: 10.1038/nrmicro.2016.62
 
+________________
 Individual based model on bacterial colonies
 
 Mathemathical model simulating the diffusion of compounds and bacterial growth.
