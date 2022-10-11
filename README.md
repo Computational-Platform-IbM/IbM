@@ -48,7 +48,7 @@ Click [here](https://www.mathworks.com/help/install/) for more information about
     2. Create seed-file writing `create_mat` to *Command Window*.
     3. Save seed-file writing <br> `save('planning/sim_xxxx.mat','grid','bac','constants','init_params','settings','-v7.3')`</br> to *Command Window* (:bulb: `sim_xxxx.mat`, where xxxx is the simulation number [from 0001 to 9999]).
     4. Remove items from workspace, freeing up system memory - writing `clear all` to *Command Window* (more info about [clear](https://www.mathworks.com/help/matlab/ref/clear.html)).
-8. Execute IbM code:
+7. Execute IbM code:
     1. Copy the desired seed-file to Code folder (folder with `IbM.m` file)
     2. Call to `IbM(sim_xxxx)` (:bulb: `sim_xxxx`, where xxxx is the chosen simulation number).
 
