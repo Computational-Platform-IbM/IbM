@@ -79,7 +79,7 @@ Lorem ipsum
 ### :card_file_box: Publications
 
 ```
-E. Martinez-Rabert, C. van Amstel, C. Smith, W. T. Sloang, R. Gonzalez-Cabaleiro (under review), "Environmental and ecological controls of the spatial distribution of microbial populations in aggregates". *PLOS Computational Biology*. doi: TBA
+E. Martinez-Rabert, C. van Amstel, C. Smith, W. T. Sloang, R. Gonzalez-Cabaleiro (under review), <br>"Environmental and ecological controls of the spatial distribution of microbial populations in aggregates". <br>*PLOS Computational Biology*. <br>doi: TBA
 ```
 
 ## Suspension version
