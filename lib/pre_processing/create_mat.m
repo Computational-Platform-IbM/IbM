@@ -1,5 +1,5 @@
 clear all;
-filename = './planning/Excels/Templates/AOBNOBAMXCMX_kinetics.xlsx';
+filename = './planning/Excels/main.xlsx';
 javaaddpath([pwd '/lib/bacteria/shovingQuadTreekDist.jar']);
 
 fprintf('>>>>>>>>>> LOADING EXCEL FILE\n')
