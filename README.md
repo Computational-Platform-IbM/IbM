@@ -67,6 +67,7 @@ Click [here](https://www.mathworks.com/help/install/) for more information about
 <br>`settings`      - Settings of the model (Time discretization, HRT, detachment, pH submodel, version of model, parallization).
 
 ## Granule version
+Lorem ipsum
 
 ### :bar_chart: Excel setup
 
