@@ -18,7 +18,7 @@ microbe’s age, cycle stage or size. Therefore, division or death occurs indepe
 each of the cells and only function of local conditions, capturing the heterogeneity of the aggregate 
 and supporting non-linear growth models [1].
 ____________________________
-Methods of IbM can be downloaded [here](https://github.com/Computational-Platform-IbM/IbM/raw/main/Documents/Methods.pdf).<br>
+**Methods of IbM can be downloaded [here](https://github.com/Computational-Platform-IbM/IbM/raw/main/Documents/Methods.pdf).**<br>
 Detailed description of [detachment](https://github.com/Computational-Platform-IbM/IbM/blob/main/Documents/detachment.md) and [dynamic time step](https://github.com/Computational-Platform-IbM/IbM/blob/main/Documents/timestepping.md) is also available.
 
 ## Before having fun...
