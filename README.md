@@ -59,7 +59,7 @@ Click [here](https://www.mathworks.com/help/install/) for more information about
 <br>MATLAB errors looks like:
 > Error using `function` (line x)<br>*Details of error*
 <p>See list of [Warning messages](https://github.com/Computational-Platform-IbM/IbM#warning-list).</p>
-
+<br>
 
 · You can review the seed-file writing `load(sim_xxxx.mat)` (or `load(planning\sim_xxxx.mat)` if this isn't in **Code folder**) to *Command Window*, or double click to `sim_xxxx.mat` in *Current folder*. All data is on *Workspace*.<br>
 <br>`bac`           - Information of initial position (*x,y*), molar mass, radius, species and which cell is active/inactive.
