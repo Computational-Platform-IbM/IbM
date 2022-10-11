@@ -2,7 +2,12 @@
 
 From: Gonzalez-Cabaleiro group.
 
-Contributors :computer:: Chiel van Amstel, Eloi Martinez-Rabert, Rebeca Gonzalez-Cabaliero
+* Contributors: Chiel van Amstel, Eloi Martinez-Rabert, Rebeca Gonzalez-Cabaliero
+
+
+
+## Before having fun
+
 
 
 ## Granule version
@@ -12,6 +17,10 @@ Lorem ipsum
 ## Suspension version
 
 **Comming soon...**
+
+## References
+
+[1] 
 
 Individual based model on bacterial colonies
 
