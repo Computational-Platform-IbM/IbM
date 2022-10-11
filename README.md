@@ -122,7 +122,7 @@ All possible *Warning messages* are listed here:
 
 **Eloi Martinez-Rabert**. :envelope: 2424069M@student.gla.ac.uk or eloi.mrp@gmail.com
 
-## References
+### References
 
 [^1]: Hellweger, F.L., *et al.*, (2016). *Nature Reviews Microbiology*. doi: 10.1038/nrmicro.2016.62<br>
 [^2]: Martinez-Rabert, E., *et al.*, (under review). *PLOS Computational Biology*. doi: TBA.<br>
