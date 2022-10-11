@@ -112,8 +112,8 @@ All possible *Warning messages* are listed here:
 
 ## References
 
-[1] Hellweger, F.L., *et al.*, (2016). *Nature Reviews Microbiology*. doi: 10.1038/nrmicro.2016.62
-[2] Martinez-Rabert, E., *et al.*, (under review). *PLOS Computational Biology*. doi: TBA.
+[1] Hellweger, F.L., *et al.*, (2016). *Nature Reviews Microbiology*. doi: 10.1038/nrmicro.2016.62<br>
+[2] Martinez-Rabert, E., *et al.*, (under review). *PLOS Computational Biology*. doi: TBA.<br>
 
 ## Contact
 
