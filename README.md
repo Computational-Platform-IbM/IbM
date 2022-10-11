@@ -86,10 +86,6 @@ Lorem ipsum
 
 All possible *Warning messages* are listed here:
 <br><sub>Format: *WarningTag* (`script.m` source) - Action/Message</sub>
-- *DEBUG:actionRequired* (`lib\determine_diffusion_region.m`) - Higher simulation domain must be set.
-- *DEBUG:actionRequired* (`lib\calculate_bulk_concentration.m`) - Negative bulk concentration encountered after pH control.
-- *DEBUG:actionRequired* (`lib\detachment\computeRoot.m`) - ValueError:Should always be above 0...
-- *DEBUG:actionRequired* (`lib\detachment\recalculateT.m`) - All neighbours have infinite time of crossing.
 - *DEBUG:noactionRequired* (`lib\calculate_bulk_concentration.m`) - Negative concentration encountered and corrected.
 - *DEBUG:noactionRequired* (`lib\detachment\recalculateT.m`) - Detachment speed equals 0, thus infinite time of crossing.
 - *dt_diffusion:Limits* (`lib\integTime.m`) - Maximum/Minimum **dt_diffusion** value is reached.
@@ -101,6 +97,12 @@ All possible *Warning messages* are listed here:
 - *Diffusion:NegativeConcentration* (`lib\diffusion\diffusionMG.m`) - **dt_diffusion** is reduced.
 - *CellDivision:TooFastDivision* (`lib\integTime.m`) - **dt_bac** is decreased. 
 - *BulkConcentration:ValueJump* (`lib\integTime.m`) - **dt_bac** is decreased.
+
+Special *Warning messages*, possible action required: 
+- *DEBUG:actionRequired* (`lib\determine_diffusion_region.m`) - Higher simulation domain must be set.
+- *DEBUG:actionRequired* (`lib\calculate_bulk_concentration.m`) - Negative bulk concentration encountered after pH control.
+- *DEBUG:actionRequired* (`lib\detachment\computeRoot.m`) - ValueError:Should always be above 0...
+- *DEBUG:actionRequired* (`lib\detachment\recalculateT.m`) - All neighbours have infinite time of crossing.
 
 >**Legend**
 <br>dt_diffusion - step time applied in solving the diffusion-reaction equation 
