@@ -87,6 +87,8 @@ Lorem ipsum
 All possible *Warning messages* are listed here:
 <br><sub>Format: *WarningTag* (`script.m` source) - Action</sub>
 - *DEBUG:actionRequired* (`lib\determine_diffusion_region.m`) - Higher simulation domain must be set.
+- *DEBUG:actionRequired* (`lib\calculate_bulk_concentration.m`) - Negative bulk concentration encountered after pH control.
+- *DEBUG:noactionRequired* (`lib\calculate_bulk_concentration.m`) - Negative concentration encountered and corrected.
 - *dt_diffusion:Limits* (`lib\integTime.m`) - Maximum/Minimum **dt_diffusion** value is reached.
 - *dt_bac:Limits* (`lib\integTime.m`) - Maximum/Minimum **dt_bac** value is reached.
 - *Diffusion:SlowConvergence* (`lib\integTime.m`) - **dt_diffusion** is increased. 
