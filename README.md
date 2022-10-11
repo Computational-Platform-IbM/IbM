@@ -90,4 +90,4 @@ All possible *Warning messages* are listed here:
 
 ## Contact
 
-Eloi Martinez-Rabert. :envelope: 2424069M@student.gla.ac.uk or eloi.mrp@gmail.com
+**Eloi Martinez-Rabert**. :envelope: 2424069M@student.gla.ac.uk or eloi.mrp@gmail.com
