@@ -79,7 +79,7 @@ Lorem ipsum
 ### :card_file_box: Publications
 
 ```
-Lorem ipsum
+E. Martinez-Rabert, C. van Amstel, C. Smith, W. T. Sloang, R. Gonzalez-Cabaleiro (under review), "Environmental and ecological controls of the spatial distribution of microbial populations in aggregates". *PLOS Computational Biology*. doi: TBA
 ```
 
 ## Suspension version
