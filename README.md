@@ -53,12 +53,14 @@ Click [here](https://www.mathworks.com/help/install/) for more information about
     2. Call to `IbM(sim_xxxx)` (:bulb: `sim_xxxx`, where xxxx is the chosen simulation number).
 8. Visualization of Results. See [Data visualization](https://github.com/Computational-Platform-IbM/IbM#data-visualization) section.
 
-During the execution of the `IbM()` , *Warning messages* may be displaied to *Command Window*. *Warning messages* are merely informative about the simulation progress (i.e., it is not an Error of the code).
+### Supplementary information
+
+- During the execution of the `IbM()` , *Warning messages* may be displaied to *Command Window*. *Warning messages* are merely informative about the simulation progress (i.e., it is not an Error of the code).
 <br>MATLAB errors looks like:
 > Error using `function` (line x)<br>*Details of error*
 <p>See list of *[Warning messages](https://github.com/Computational-Platform-IbM/IbM#warning-list)*.</p>
 
-You can review the seed-file writing `load(sim_xxxx.mat)` (or `load(planning\sim_xxxx.mat)` if this isn't in **Code folder**) to *Command Window*, or double click to `sim_xxxx.mat` in *Current folder*. All data is on *Workspace*.<br>
+- You can review the seed-file writing `load(sim_xxxx.mat)` (or `load(planning\sim_xxxx.mat)` if this isn't in **Code folder**) to *Command Window*, or double click to `sim_xxxx.mat` in *Current folder*. All data is on *Workspace*.<br>
 <br>`bac`           - Information of initial position (*x,y*), molar mass, radius, species and which cell is active/inactive.
 <br>`constants`     - Summary of all parameters of model (Discretization, Kinetic parameters, Metabolic matrix, and so on).
 <br>`grid`          - Information of grid.
