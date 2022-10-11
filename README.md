@@ -78,9 +78,9 @@ Lorem ipsum
 
 ### :card_file_box: Publications
 
-'''
+```
 Lorem ipsum
-'''
+```
 
 ## Suspension version
 
