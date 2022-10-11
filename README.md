@@ -51,6 +51,7 @@ Click [here](https://www.mathworks.com/help/install/) for more information about
 7. Execute IbM code:
     1. Copy the desired seed-file to Code folder (folder with `IbM.m` file)
     2. Call to `IbM(sim_xxxx)` (:bulb: `sim_xxxx`, where xxxx is the chosen simulation number).
+8. Visualization of Results. See [Data visualization](https://github.com/Computational-Platform-IbM/IbM#data-visualization) section.
 
 During the execution of the `IbM()` , *Warning messages* may be displaied to *Command Window*. *Warning messages* are merely informative about the simulation progress (i.e., it is not an Error of the code). MATLAB errors looks like 
 > Error using `function` (line x)<br>*Details of error*
@@ -70,6 +71,10 @@ Lorem ipsum
 ## Suspension version
 
 :building_construction: **Comming soon...**
+
+## Data visualization
+
+Lorem ipsum
 
 ## Warning List
 
