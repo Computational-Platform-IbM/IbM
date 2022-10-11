@@ -31,7 +31,7 @@ computer.You can use the [free 30-day trial](https://www.mathworks.com/campaigns
 Click [here](https://www.mathworks.com/help/install/) for more information about MATLAB Installation and Licensing.
 
 ### :arrow_down: Code download and seed-file<sup>1</sup> creation
-########<sup>1</sup>Present-file: Create .mat file with all information of simulation. This file is used to execute the code.
+######## <sup>1</sup>Seed-file: Create .mat file with all information of simulation. This file is used to execute the code.
 
 Instructions to Download and setup IbM code:
 1. Download .zip code. Last version: `v2.4.1`. [Download code](https://github.com/Computational-Platform-IbM/IbM/archive/refs/tags/v2.4.0.zip)
