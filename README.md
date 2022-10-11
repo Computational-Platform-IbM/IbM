@@ -1,8 +1,12 @@
-# IbM
+# Individual-based Model framework.
 
-## From Gonzalez-Cabaleiro group
+## Granule version
 
-### Contributors: Chiel van Amstel; Eloi Martinez-Rabert; Rebeca Gonzalez-Cabaleiro
+Lorem ipsum
+
+## Suspension version
+
+**Comming soon...**
 
 Individual based model on bacterial colonies
 
