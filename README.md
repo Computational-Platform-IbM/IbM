@@ -57,6 +57,7 @@ During the execution of the `IbM()` , *Warning messages* may be displaied to *Co
 <br>MATLAB errors looks like:
 > Error using `function` (line x)<br>*Details of error*
 <p>See list of *[Warning messages](https://github.com/Computational-Platform-IbM/IbM#warning-list)*.</p>
+
 ________________
 You can review the seed-file writing `load(sim_xxxx.mat)` to *Command Window* or with double click to `sim_xxxx.mat` in *Current folder*. All data is on *Workspace*.
 <br>`bac`           - Information of initial position (*x,y*), molar mass, radius, species and which cell is active/inactive.
