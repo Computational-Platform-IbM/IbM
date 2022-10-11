@@ -53,7 +53,7 @@ Click [here](https://www.mathworks.com/help/install/) for more information about
     2. Call to `IbM(sim_xxxx)` (:bulb: `sim_xxxx`, where xxxx is the chosen simulation number).
 8. Visualization of Results. See [Data visualization](https://github.com/Computational-Platform-IbM/IbM#data-visualization) section.
 
-### Supplementary information
+### :card_file_box: Supplementary Information
 
 · During the execution of the `IbM()` , *Warning messages* may be displaied to *Command Window*. *Warning messages* are merely informative about the simulation progress (i.e., it is not an Error of the code). See list of [Warning messages](https://github.com/Computational-Platform-IbM/IbM#warning-list).
 <br>A MATLAB error looks like:
