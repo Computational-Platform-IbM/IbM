@@ -20,7 +20,7 @@ and supporting non-linear growth models [1].
 ____________________________
 **Methods of IbM can be downloaded [here](https://github.com/Computational-Platform-IbM/IbM/raw/main/Documents/Methods.pdf).**<br>
 Detailed description of [detachment](https://github.com/Computational-Platform-IbM/IbM/blob/main/Documents/detachment.md) and [dynamic time step](https://github.com/Computational-Platform-IbM/IbM/blob/main/Documents/timestepping.md) is also available.
-
+<br>
 ## Before having fun...
 
 **:warning: To open the links in a new tab: right click on the link + "Open link in new tab". :warning:**
