@@ -60,7 +60,7 @@ Click [here](https://www.mathworks.com/help/install/) for more information about
 <br>A MATLAB error looks like:
 > Error using `function` (line x)<br>*Details of error*
 
-· You can review the seed-file writing `load('sim_xxxx.mat')` (or `load('planning\sim_xxxx.mat')` if this isn't in **Code folder**) to *Command Window*, or double click to `sim_xxxx.mat` in *Current folder*. All data is on *Workspace*.
+· The seed-file can be reviewed writing `load('sim_xxxx.mat')` (or `load('planning\sim_xxxx.mat')` if this isn't in **Code folder**) to *Command Window*, or double click to `sim_xxxx.mat` in *Current folder*. All data is on *Workspace*.
 >`bac`           - Information of initial position (*x,y*), molar mass, radius, species and which cell is active/inactive.
 <br>`constants`     - Summary of all parameters of model (Discretization, Kinetic parameters, Metabolic matrix...).
 <br>`grid`          - Information of grid.
