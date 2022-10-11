@@ -64,7 +64,7 @@ Click [here](https://www.mathworks.com/help/install/) for more information about
 <br>`constants`     - Summary of all parameters of model (Discretization, Kinetic parameters, Metabolic matrix...).
 <br>`grid`          - Information of grid.
 <br>`init_params`	- Initial conditions of the system (HRT, concentration in aggregate and bulk liquid).
-<br>`settings`      - Settings of the model (Time discretization, HRT, detachment, pH submodel, version of model, parallization).
+<br>`settings`      - Settings of the model (discretization, HRT, detachment, pH submodel, version of model, parallization).
 
 ## Granule version
 Lorem ipsum
