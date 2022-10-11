@@ -50,8 +50,8 @@ Click [here](https://www.mathworks.com/help/install/) for more information about
     4. Remove items from workspace, freeing up system memory - writing `clear all` to *Command Window* (more info about [clear](https://www.mathworks.com/help/matlab/ref/clear.html)).
 7. Execute IbM code:
     1. Copy the desired seed-file to Code folder (folder with `IbM.m` file)
-    2. Call to `IbM(sim_xxxx)` (:bulb: `sim_xxxx`, where xxxx is the chosen simulation number).
-Move the preset file in the corresponding results folder (signifying that the simulation has been run) after running the model
+    2. Call to `IbM(sim_xxxx)` (:bulb: `sim_xxxx`, where xxxx is the chosen simulation number).<br>
+    Once simulation has been run, `sim_xxxx.mat` (i.e., seed-file) is moved to the corresponding Results folder.
 8. Visualization of Results. See [Data visualization](https://github.com/Computational-Platform-IbM/IbM#data-visualization) section.
 
 ### :card_file_box: Supplementary Information
