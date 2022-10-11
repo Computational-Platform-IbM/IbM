@@ -32,7 +32,7 @@ Click [here](https://www.mathworks.com/help/install/) for more information about
 
 ### :arrow_down: Code download and seed-file<sup>1</sup> creation
 <sup><sup>1</sup>Seed-file: `.mat` file with all information of simulation. This file is used to execute the code.</sup><br>
-  **<sup>All seed-files must be saved as 'sim_xxxx.mat'. More info in step 6 (Create the seed-file)</sup>**
+&nbsp;&nbsp;**<sup>All seed-files must be saved as 'sim_xxxx.mat'. More info in step 6 (Create the seed-file)</sup>**
 
 Instructions to Download and run IbM:
 1. Download .zip code. Last version: `v2.4.1`. [Download code](https://github.com/Computational-Platform-IbM/IbM/archive/refs/tags/v2.4.0.zip).
