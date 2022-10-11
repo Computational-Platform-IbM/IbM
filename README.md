@@ -55,11 +55,11 @@ Instructions to Download and Run IbM:
     2. Call to `IbM(sim_xxxx)` (:bulb: `sim_xxxx`, where xxxx is the chosen simulation number).
 ________________
 You can review the seed-file writing `load(sim_xxxx.mat)` to *Command Window* or with double click to `sim_xxxx.mat` in *Current folder*. All data is on *Workspace*.
-&#09;<br>`bac`
-&#09;<br>`constants`
-&#09;<br>`grid`
-&#09;<br>`init_params`
-&#09;<br>`settings`
+&#09;<br>`bac`          -
+&#09;<br>`constants`    -
+&#09;<br>`grid`         -
+&#09;<br>`init_params`  -
+&#09;<br>`settings`     -
 ________________
 
 ## Granule version
