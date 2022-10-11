@@ -38,14 +38,15 @@ Instructions to Download and setup IbM code:
 2. Extract files to a destination (:bulb: recommendation - Desktop)
 3. Open MATLAB
     - For more information about MATLAB Layout and how to change it, click [here](https://www.mathworks.com/help/matlab/matlab_env/change-the-desktop-layout.html).
-4. Go to the **Code folder**...
+4. Go to the **Code folder<sup>2</sup>**...
+    &#09;<br><sub><sup>2</sup>Code folder: folder with `IbM.m` file </sub>
     &#09;<br>→ writing `cd newFolder` to *Command Window* - more info about [cd](https://www.mathworks.com/help/matlab/ref/cd.html).
     &#09;<br>→ using *Folder Toolbar* - paste the folder name where the code was extracted.
 5. Generate the path to the main code:
     &#09;<br>→ writing `addpath(genpath('lib'))` to *Command Window*.
 6. Create the seed-file:
     1. Modify main Excel (lib\planning\Excels\main.xlsx) with all parameters. <br><sub>Instructions on how to use main.xlsx in *Information* sheet, and [Granule version](https://github.com/Computational-Platform-IbM/IbM#granule-version) | [Suspension version](https://github.com/Computational-Platform-IbM/IbM#suspension-version).</sub>
-    2. 
+    2. Create seed-file writing `create_mat` to *Command Window*.
 
 ## Granule version
 
