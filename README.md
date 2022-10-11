@@ -30,12 +30,9 @@ computer.You can use the [free 30-day trial](https://www.mathworks.com/campaigns
 
 Click [here](https://www.mathworks.com/help/install/) for more information about MATLAB Installation and Licensing.
 
-### :arrow_down: Code download and seed-file<sup>1</sup> creation
-<sup><sup>1</sup>Seed-file: `.mat` file with all information of simulation. This file is used to execute the code.</sup><br>
-&nbsp;**<sup>All seed-files must be saved as 'sim_xxxx.mat'. More info in Step 6 (*Create the seed-file*)</sup>**
+### :clipboard: Instructions to Download and Run IbM:
 
-Instructions to Download and Run IbM:
-1. Download .zip code. Last version: `v2.4.1`. [Download code](https://github.com/Computational-Platform-IbM/IbM/archive/refs/tags/v2.4.0.zip).
+1. Download .zip code. Last version: `v2.4.1`. [Download code](https://github.com/Computational-Platform-IbM/IbM/archive/refs/tags/v2.4.1.zip).
 2. Extract files to a destination (:bulb: recommendation - Desktop).
 3. Open MATLAB.
     - For more information about MATLAB Layout and how to change it, click [here](https://www.mathworks.com/help/matlab/matlab_env/change-the-desktop-layout.html).
@@ -44,7 +41,8 @@ Instructions to Download and Run IbM:
     &#09;<br>→ writing `cd newFolder` to *Command Window* (more info about [cd](https://www.mathworks.com/help/matlab/ref/cd.html)).
     &#09;<br>→ or using *Folder Toolbar* - paste the folder name where the code was extracted.
 5. Generate the path to the main code writing `addpath(genpath('lib'))` to *Command Window*.
-6. Create the seed-file:
+6. Create the seed-file<sup>1</sup>:
+<sup><sup>1</sup>Seed-file: `.mat` file with all information of simulation. This file is used to execute the code.</sup><br>
     1. Modify main Excel (lib\planning\Excels\main.xlsx) with all parameters. 
     <br><sup>Instructions on how to use main.xlsx in *Information* sheet, and [Granule version](https://github.com/Computational-Platform-IbM/IbM#granule-version) | [Suspension version](https://github.com/Computational-Platform-IbM/IbM#suspension-version).</sup>
     2. Create seed-file writing `create_mat` to *Command Window*.
