@@ -118,11 +118,11 @@ All possible *Warning messages* are listed here:
 <br>dt_diffusion - step time applied in solving the diffusion-reaction equation 
 <br>dt_bac - step time applied in computation ofbateria mass change, division and inactivation
 
+## Contact
+
+**Eloi Martinez-Rabert**. :envelope: 2424069M@student.gla.ac.uk or eloi.mrp@gmail.com
+
 ## References
 
 [^1]: Hellweger, F.L., *et al.*, (2016). *Nature Reviews Microbiology*. doi: 10.1038/nrmicro.2016.62<br>
 [^2]: Martinez-Rabert, E., *et al.*, (under review). *PLOS Computational Biology*. doi: TBA.<br>
-
-## Contact
-
-**Eloi Martinez-Rabert**. :envelope: 2424069M@student.gla.ac.uk or eloi.mrp@gmail.com
