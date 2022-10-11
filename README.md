@@ -38,8 +38,8 @@ Instructions to Download and setup IbM code:
 3. Open MATLAB
     - For more information about MATLAB Layout and how to change it, click [here](https://www.mathworks.com/help/matlab/matlab_env/change-the-desktop-layout.html).
 4. Go to the **Code folder**...
-    --> using `Command Window` - [cd](https://www.mathworks.com/help/matlab/ref/cd.html).
-    --> using `Folder Toolbar`.
+    → using `Command Window` - [cd](https://www.mathworks.com/help/matlab/ref/cd.html).
+    → using `Folder Toolbar`.
 
 ## Granule version
 
