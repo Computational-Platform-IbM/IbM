@@ -20,7 +20,7 @@ and supporting non-linear growth models [1].
 ____________________________
 **Methods of IbM can be downloaded [here](https://github.com/Computational-Platform-IbM/IbM/raw/main/Documents/Methods.pdf).**<br>
 Detailed description of [detachment](https://github.com/Computational-Platform-IbM/IbM/blob/main/Documents/detachment.md) and [dynamic time step](https://github.com/Computational-Platform-IbM/IbM/blob/main/Documents/timestepping.md) is also available.
-<br>
+
 ## Before having fun...
 
 **:warning: To open the links in a new tab: right click on the link + "Open link in new tab". :warning:**
@@ -58,7 +58,7 @@ Click [here](https://www.mathworks.com/help/install/) for more information about
 
 ### :card_file_box: Supplementary Information
 
-· During the execution of the `IbM()` , *Warning messages* may be displaied to *Command Window*. *Warning messages* are merely informative about the simulation progress (i.e., they are not an Error of the code). See list of [Warning messages](https://github.com/Computational-Platform-IbM/IbM#warning-list).
+· During the execution of the `IbM()` , *Warning messages* may be displaied to *Command Window*. In general, *Warning messages* are merely informative about the simulation progress. See list of [Warning messages](https://github.com/Computational-Platform-IbM/IbM#warning-list).
 <br>A MATLAB error looks like:
 > Error using `function` (line x)<br>*Details of error*
 
