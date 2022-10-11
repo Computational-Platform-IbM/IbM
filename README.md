@@ -44,7 +44,7 @@ Instructions to Download and setup IbM code:
 5. Generate the path to the main code:
     &#09;<br>→ writing `addpath(genpath('lib'))` to *Command Window*.
 6. Create the seed-file:
-    1. Modify main Excel (lib\planning\Excels\main.xlsx) with all parameters <br>Instructions on how to use main.xlsx in *Information* sheet, and following sections ([Granule version](https://github.com/Computational-Platform-IbM/IbM#granule-version) and [Suspension version](https://github.com/Computational-Platform-IbM/IbM#suspension-version).
+    1. Modify main Excel (lib\planning\Excels\main.xlsx) with all parameters. <br>Instructions on how to use main.xlsx in *Information* sheet, and following sections ([Granule version](https://github.com/Computational-Platform-IbM/IbM#granule-version) and [Suspension version](https://github.com/Computational-Platform-IbM/IbM#suspension-version).
     2. 
 
 ## Granule version
