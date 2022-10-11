@@ -84,7 +84,8 @@ Lorem ipsum
 
 ## Warning List
 
-All possible *Warning messages* are listed here (*WarningTag* (`script.m` source) - Explanation):
+All possible *Warning messages* are listed here:
+<sup>*WarningTag* (`script.m` source) - Explanation</sup>
 - *Diffusion:NegativeConcentration* () - Lorem ipsum
 - *Lorem ipsum 2* - Lorem ipsum
 
