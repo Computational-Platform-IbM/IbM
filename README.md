@@ -33,7 +33,7 @@ Click [here](https://www.mathworks.com/help/install/) for more information about
 ### :arrow_down: Code download and setup
 
 Instructions to Download and setup IbM code:
-1. Download .zip code. Last version: `v2.4.0`. [Download code](https://github.com/Computational-Platform-IbM/IbM/archive/refs/tags/v2.4.0.zip)
+1. Download .zip code. Last version: `v2.4.1`. [Download code](https://github.com/Computational-Platform-IbM/IbM/archive/refs/tags/v2.4.0.zip)
 2. Extract files to a destination (*:bulb: Recommendation - Desktop*)
 3. Open MATLAB
     - For more information about MATLAB Layout and how to change it, click [here](https://www.mathworks.com/help/matlab/matlab_env/change-the-desktop-layout.html).
