@@ -38,8 +38,8 @@ Click [here](https://www.mathworks.com/help/install/) for more information about
 2. Extract files to a destination (:bulb: recommendation - Desktop).
 3. Open MATLAB.
     - For more information about MATLAB Layout and how to change it, click [here](https://www.mathworks.com/help/matlab/matlab_env/change-the-desktop-layout.html).
-4. Go to the **Code folder<sup>2</sup>**...
-    &#09;<br><sup><sup>2</sup>Code folder: folder with `IbM.m` file </sup>.
+4. Go to the **Code folder<sup>2</sup>**
+    &#09;<br><sup><sup>2</sup>Code folder: folder with `IbM.m` file. </sup>
     &#09;<br>→ writing `cd newFolder` to *Command Window* (more info about [cd](https://www.mathworks.com/help/matlab/ref/cd.html)).
     &#09;<br>→ or using *Folder Toolbar* - paste the folder name where the code was extracted.
 5. Generate the path to the main code writing `addpath(genpath('lib'))` to *Command Window*.
@@ -91,9 +91,9 @@ PLOS Computational Biology. doi: TBA
 ## Data visualization
 
 ### :clipboard: Instructions for Data visualization
-1. Go to the **Code folder<sup>2</sup>**...
-    &#09;<br><sup><sup>2</sup>Code folder: folder with `IbM.m` file </sup>.
+1. Go to the **Code folder** (folder with `IbM.m` file).
 2. Generate the path to the main code writing `addpath(genpath('lib'))` to *Command Window*.
+3. 
 
 ### · Draw aggregate (Granule & Suspension version)
 Function to plot cells for a given simulation number and time → `plotBacsMatlab(simulation_number, Time)`.<br>
