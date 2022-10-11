@@ -91,8 +91,9 @@ PLOS Computational Biology. doi: TBA
 ## Data visualization
 
 ### :clipboard: Instructions for Data visualization
-1. Lorem ipsum
-2. Lorem ipsum
+1. Go to the **Code folder<sup>2</sup>**...
+    &#09;<br><sup><sup>2</sup>Code folder: folder with `IbM.m` file </sup>.
+2. Generate the path to the main code writing `addpath(genpath('lib'))` to *Command Window*.
 
 ### · Draw aggregate (Granule & Suspension version)
 Function to plot cells for a given simulation number and time → `plotBacsMatlab(simulation_number, Time)`.<br>
