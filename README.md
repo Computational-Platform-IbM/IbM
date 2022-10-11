@@ -70,7 +70,7 @@ Lorem ipsum
 
 ## Warning List
 
-During the execution of the `IbM()` , *Warning messages* may be displaied to *Command Window*. These are merely informative about the simulation process (e.g., discretization time is changed to avoid negative concentration or because slow convergece). 
+During the execution of the `IbM()` , *Warning messages* may be displaied to *Command Window*. These are merely informative about the simulation progress (e.g., discretization time is changed because convergence is slow). 
 <br>Here, all the possible *Warning messages* are listed:
 - *Lorem ipsum 1* - Lorem ipsum
 - *Lorem ipsum 2* - Lorem ipsum
