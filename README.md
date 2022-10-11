@@ -48,7 +48,7 @@ Instructions to Download and run IbM:
     1. Modify main Excel (lib\planning\Excels\main.xlsx) with all parameters. 
     <br><sup>Instructions on how to use main.xlsx in *Information* sheet, and [Granule version](https://github.com/Computational-Platform-IbM/IbM#granule-version) | [Suspension version](https://github.com/Computational-Platform-IbM/IbM#suspension-version).</sup>
     2. Create seed-file writing `create_mat` to *Command Window*.
-    3. Save seed-file writing `save('planning/HELLO_WORLD.mat','grid','bac','constants','init_params','settings','-v7.3')` to *Command Window* (:bulb: replace `HELLO_WORLD` with your file name).
+    3. Save seed-file writing <br> `save('planning/HELLO_WORLD.mat','grid','bac','constants','init_params','settings','-v7.3')`</br> to *Command Window* (:bulb: replace `HELLO_WORLD` with your file name).
 
 ## Granule version
 
