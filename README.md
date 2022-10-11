@@ -50,7 +50,7 @@ Click [here](https://www.mathworks.com/help/install/) for more information about
     4. Remove items from workspace, freeing up system memory - writing `clear all` to *Command Window* (more info about [clear](https://www.mathworks.com/help/matlab/ref/clear.html)).
 
 ________________
-You can review the seed-file writing `load(sim_xxxx.mat)` to *Command Window* or with double click to `sim_xxxx.mat` in *Current folder*. All data is on *Workspace*.<br>
+You can review the seed-file writing `load(sim_xxxx.mat)` (or `load(planning\sim_xxxx.mat)` if this isn't in **Code folder**) to *Command Window* or with double click to `sim_xxxx.mat` in *Current folder*. All data is on *Workspace*.<br>
 <br>`bac`           - Information of initial position (*x,y*), molar mass, radius, species and which cell is active/inactive.
 <br>`constants`     - Summary of all parameters of model (Discretization, Kinetic parameters, Metabolic matrix, and so on).
 <br>`grid`          - Information of grid.
