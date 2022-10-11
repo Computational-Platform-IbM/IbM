@@ -42,7 +42,7 @@ Click [here](https://www.mathworks.com/help/install/) for more information about
     &#09;<br>→ or using *Folder Toolbar* - paste the folder name where the code was extracted.
 5. Generate the path to the main code writing `addpath(genpath('lib'))` to *Command Window*.
 6. Create the seed-file<sup>1</sup>:
-<sup><sup>1</sup>Seed-file: `.mat` file with all information of simulation. This file is used to execute the code.</sup><br>
+<br><sup><sup>1</sup>Seed-file: `.mat` file with all information of simulation. This file is used to execute the code.</sup><br>
     1. Modify main Excel (lib\planning\Excels\main.xlsx) with all parameters. 
     <br><sup>Instructions on how to use main.xlsx in *Information* sheet, and [Granule version](https://github.com/Computational-Platform-IbM/IbM#granule-version) | [Suspension version](https://github.com/Computational-Platform-IbM/IbM#suspension-version).</sup>
     2. Create seed-file writing `create_mat` to *Command Window*.
