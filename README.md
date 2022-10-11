@@ -1,5 +1,10 @@
 # Individual-based Model framework.
 
+From: Gonzalez-Cabaleiro group.
+
+*Contributors: Chiel van Amstel, Eloi Martinez-Rabert, Rebeca Gonzalez-Cabaliero
+
+
 ## Granule version
 
 Lorem ipsum
