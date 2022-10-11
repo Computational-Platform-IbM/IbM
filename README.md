@@ -90,8 +90,10 @@ PLOS Computational Biology. doi: TBA
 
 ## Data visualization
 
-### Draw cell
 Lorem ipsum
+
+### Draw cell (Granule & Suspension version)
+Function to create aggregate image for a given simulation number and time.
 
 
 ## Warning List
