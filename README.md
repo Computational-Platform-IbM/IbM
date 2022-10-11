@@ -85,7 +85,7 @@ Lorem ipsum
 ## Warning List
 
 All possible *Warning messages* are listed here:
-<br><sub>Format: *WarningTag* (`script.m` source) - Action</sub>
+<br><sub>Format: *WarningTag* (`script.m` source) - Action/Message</sub>
 - *DEBUG:actionRequired* (`lib\determine_diffusion_region.m`) - Higher simulation domain must be set.
 - *DEBUG:actionRequired* (`lib\calculate_bulk_concentration.m`) - Negative bulk concentration encountered after pH control.
 - *DEBUG:actionRequired* (`lib\detachment\computeRoot.m`) - ValueError:Should always be above 0...
