@@ -31,7 +31,7 @@ computer.You can use the [free 30-day trial](https://www.mathworks.com/campaigns
 Click [here](https://www.mathworks.com/help/install/) for more information about MATLAB Installation and Licensing.
 
 ### :arrow_down: Code download and seed-file<sup>1</sup> creation
-<sub><sup>1</sup>Seed-file: `.mat` file with all information of simulation. This file is used to execute the code.</sub>
+<sup><sup>1</sup>Seed-file: `.mat` file with all information of simulation. This file is used to execute the code.</sup>
 
 Instructions to Download and setup IbM code:
 1. Download .zip code. Last version: `v2.4.1`. [Download code](https://github.com/Computational-Platform-IbM/IbM/archive/refs/tags/v2.4.0.zip)
@@ -39,13 +39,14 @@ Instructions to Download and setup IbM code:
 3. Open MATLAB
     - For more information about MATLAB Layout and how to change it, click [here](https://www.mathworks.com/help/matlab/matlab_env/change-the-desktop-layout.html).
 4. Go to the **Code folder<sup>2</sup>**...
-    &#09;<br><sub><sup>2</sup>Code folder: folder with `IbM.m` file </sub>
+    &#09;<br><sup><sup>2</sup>Code folder: folder with `IbM.m` file </sup>
     &#09;<br>→ writing `cd newFolder` to *Command Window* - more info about [cd](https://www.mathworks.com/help/matlab/ref/cd.html).
     &#09;<br>→ using *Folder Toolbar* - paste the folder name where the code was extracted.
 5. Generate the path to the main code:
     &#09;<br>→ writing `addpath(genpath('lib'))` to *Command Window*.
 6. Create the seed-file:
-    1. Modify main Excel (lib\planning\Excels\main.xlsx) with all parameters. <br><sub>Instructions on how to use main.xlsx in *Information* sheet, and [Granule version](https://github.com/Computational-Platform-IbM/IbM#granule-version) | [Suspension version](https://github.com/Computational-Platform-IbM/IbM#suspension-version).</sub>
+    1. Modify main Excel (lib\planning\Excels\main.xlsx) with all parameters. 
+    <br><sup>Instructions on how to use main.xlsx in *Information* sheet, and [Granule version](https://github.com/Computational-Platform-IbM/IbM#granule-version) | [Suspension version](https://github.com/Computational-Platform-IbM/IbM#suspension-version).</sup>
     2. Create seed-file writing `create_mat` to *Command Window*.
 
 ## Granule version
