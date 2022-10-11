@@ -4,8 +4,6 @@ From: Gonzalez-Cabaleiro group.
 
 *Contributors: Chiel van Amstel, Eloi Martinez-Rabert, Rebeca Gonzalez-Cabaliero
 
-**:warning: To open the links in a new tab: right click on the link + "Open link in new tab". :warning:**
-
 Individual-based Models (IbM) are characterized for simulating the microbes in an 
 aggregate (granule or biofilm) as a discrete entity with unique traits. Each of the microbe is 
 a small point of reaction that shapes its kinetics function of the local environment and 
@@ -22,6 +20,8 @@ and supporting non-linear growth models [1].
 
 
 ## Before having fun...
+
+**:warning: To open the links in a new tab: right click on the link + "Open link in new tab". :warning:**
 
 ### :gear: MATLAB installation
 
