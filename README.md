@@ -58,16 +58,16 @@ Click [here](https://www.mathworks.com/help/install/) for more information about
 
 ### :card_file_box: Supplementary Information
 
-· During the execution of the `IbM()` , *Warning messages* may be displaied to *Command Window*. In general, *Warning messages* are merely informative about the simulation progress. See list of [Warning messages](https://github.com/Computational-Platform-IbM/IbM#warning-list).
-<br>A MATLAB error looks like:
-> Error using `function` (line x)<br>*Details of error*
-
 · The seed-file can be reviewed writing `load('sim_xxxx.mat')` (or `load('planning\sim_xxxx.mat')` if this isn't in **Code folder**) to *Command Window*, or double click to `sim_xxxx.mat` in *Current folder*. All data is on *Workspace*.
 >`bac`           - Information of initial position (*x,y*), molar mass, radius, species and which cell is active/inactive.
 <br>`constants`     - Summary of all parameters of model (Discretization, Kinetic parameters, Metabolic matrix...).
 <br>`grid`          - Information of grid.
 <br>`init_params`	- Initial conditions of the system (HRT, concentration in aggregate and bulk liquid).
 <br>`settings`      - Settings of the model (discretization, HRT, detachment, pH, model version, parallization).
+
+· During the execution of the `IbM()` , *Warning messages* may be displaied to *Command Window*. In general, *Warning messages* are merely informative about the simulation progress. See list of [Warning messages](https://github.com/Computational-Platform-IbM/IbM#warning-list).
+<br>A MATLAB error looks like:
+> Error using `function` (line x)<br>*Details of error*
 
 ## Granule version
 Lorem ipsum
@@ -125,4 +125,3 @@ All possible *Warning messages* are listed here:
 ### References
 
 [^1]: Hellweger, F.L., *et al.*, (2016). *Nature Reviews Microbiology*. doi: 10.1038/nrmicro.2016.62<br>
-[^2]: Martinez-Rabert, E., *et al.*, (under review). *PLOS Computational Biology*. doi: TBA.<br>
