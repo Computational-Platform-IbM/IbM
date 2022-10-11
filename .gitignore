@@ -12,5 +12,6 @@ IbM_V2/testingRMatrix.mat
 *.vscode/*
 planning/*.mat
 *testing*
+*.xlsx
 !main.xlsx
 *.fig
