@@ -93,8 +93,8 @@ PLOS Computational Biology. doi: TBA
 Lorem ipsum
 
 ### · Draw aggregate (Granule & Suspension version)
-Function to plot cells for a given simulation number and time.
-
+Function to plot cells for a given simulation number and time → `plotBacsMatlab(simulation_number, Time)`,<br>
+where `Time` in days, and `simulation_number` is the chosen simulation. 
 
 
 ## Warning List
