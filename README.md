@@ -88,13 +88,6 @@ All possible *Warning messages* are listed here:
 
 [1] Hellweger, F.L., et al., (2016). *Nature Reviews Microbiology*. doi: 10.1038/nrmicro.2016.62
 
-________________
-Individual based model on bacterial colonies
+## Contact
 
-Mathemathical model simulating the diffusion of compounds and bacterial growth.
-
-To execute the model (Granule versions):
-
-1. Create/modify Excel with all parameters
-2. Create preset-file using the 'create_mat' function
-3. Execute the model with a call to 'IbM(sim_number)'
+Eloi Martinez-Rabert. :envelope: 2424069M@student.gla.ac.uk or eloi.mrp@gmail.com
