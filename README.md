@@ -31,7 +31,8 @@ computer.You can use the [free 30-day trial](https://www.mathworks.com/campaigns
 Click [here](https://www.mathworks.com/help/install/) for more information about MATLAB Installation and Licensing.
 
 ### :arrow_down: Code download and seed-file<sup>1</sup> creation
-<sup><sup>1</sup>Seed-file: `.mat` file with all information of simulation. This file is used to execute the code.</sup>
+<sup><sup>1</sup>Seed-file: `.mat` file with all information of simulation. This file is used to execute the code.</sup><br>
+<sup> All seed-file must be saved ass 'sim_xxxx.mat'. More info in step 6 (Create the seed-file)</sup>
 
 Instructions to Download and run IbM:
 1. Download .zip code. Last version: `v2.4.1`. [Download code](https://github.com/Computational-Platform-IbM/IbM/archive/refs/tags/v2.4.0.zip).
@@ -48,10 +49,10 @@ Instructions to Download and run IbM:
     1. Modify main Excel (lib\planning\Excels\main.xlsx) with all parameters. 
     <br><sup>Instructions on how to use main.xlsx in *Information* sheet, and [Granule version](https://github.com/Computational-Platform-IbM/IbM#granule-version) | [Suspension version](https://github.com/Computational-Platform-IbM/IbM#suspension-version).</sup>
     2. Create seed-file writing `create_mat` to *Command Window*.
-    3. Save seed-file writing <br> `save('planning/sim_xxxx.mat','grid','bac','constants','init_params','settings','-v7.3')`</br> to *Command Window* (:bulb: 'sim_xxxx.mat', where xxxx is the simulation number [from 0001 to 9999]).
+    3. Save seed-file writing <br> `save('planning/sim_xxxx.mat','grid','bac','constants','init_params','settings','-v7.3')`</br> to *Command Window* (:bulb: `sim_xxxx.mat`, where xxxx is the simulation number [from 0001 to 9999]).
 7. Execute IbM code:
     1. Copy the desired seed-file to Code folder (folder with `IbM.m` file)
-    2. Call to `IbM(sim_xxxx)` (:bulb: 'sim_xxxx.mat', where xxxx is the simulation number [from 0001 to 9999]).
+    2. Call to `IbM(sim_xxxx)` (:bulb: `sim_xxxx`, where xxxx is the chosen simulation number).
 
 ## Granule version
 
