@@ -1,6 +1,8 @@
-# IbM
+# IbM 
 
-Individual based model on bacterial colonies
+## Individual based model on bacterial colonies
+
+### From Gonzalez-Cabaleiro group
 
 Mathemathical model simulating the diffusion of compounds and bacterial growth.
 
