@@ -1,4 +1,4 @@
-clear all;
+clear all; %#ok<CLALL>
 filename = './planning/Excels/main.xlsx';
 javaaddpath([pwd '/lib/bacteria/shovingQuadTreekDist.jar']);
 
