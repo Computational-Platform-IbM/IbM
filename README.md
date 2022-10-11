@@ -51,7 +51,7 @@ Click [here](https://www.mathworks.com/help/install/) for more information about
 8. Execute IbM code:
     1. Copy the desired seed-file to Code folder (folder with `IbM.m` file)
     2. Call to `IbM(sim_xxxx)` (:bulb: `sim_xxxx`, where xxxx is the chosen simulation number).
-________________
+----------------
 You can review the seed-file writing `load(sim_xxxx.mat)` to *Command Window* or with double click to `sim_xxxx.mat` in *Current folder*. All data is on *Workspace*.
 <br>`bac`           - Information of initial position (*x,y*), molar mass, radius, species and which cell is active/inactive.
 <br>`constants`     - Summary of all parameters of model (Discretization, Kinetic parameters, Metabolic matrix, and so on).
