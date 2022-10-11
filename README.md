@@ -16,7 +16,7 @@ function the boundary conditions imposed over the limits of the domain. This typ
 is used to describe microbial growth assuming that cellular division occurs a certain 
 microbe’s age, cycle stage or size. Therefore, division or death occurs independently for 
 each of the cells and only function of local conditions, capturing the heterogeneity of the aggregate 
-and supporting non-linear growth models [1].
+and supporting non-linear growth models [[1]](https://github.com/Computational-Platform-IbM/IbM#references).
 ____________________________
 **Methods of IbM can be downloaded [here](https://github.com/Computational-Platform-IbM/IbM/raw/main/Documents/Methods.pdf).**<br>
 Detailed description of [detachment](https://github.com/Computational-Platform-IbM/IbM/blob/main/Documents/detachment.md) and [dynamic time step](https://github.com/Computational-Platform-IbM/IbM/blob/main/Documents/timestepping.md) is also available.
