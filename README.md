@@ -61,12 +61,12 @@ ________________
     1. Copy the desired seed-file to Code folder (folder with `IbM.m` file)
     2. Call to `IbM(sim_xxxx)` (:bulb: `sim_xxxx`, where xxxx is the chosen simulation number).
 
-________________
+
 During the execution of the `IbM()` , *Warning messages* may be displaied to *Command Window*. *Warning messages* are merely informative about the simulation progress (i.e., it is not an Error of the code).
 <br>MATLAB errors looks like:
 > Error using `function` (line x)<br>*Details of error*
 <p>See list of *[Warning messages](https://github.com/Computational-Platform-IbM/IbM#warning-list)*.
-________________
+
 
 8. Visualization of Results. See [Data visualization](https://github.com/Computational-Platform-IbM/IbM#data-visualization) section.
 
