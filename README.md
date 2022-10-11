@@ -30,7 +30,7 @@ This IbM framework is build up in MATLAB. Therefore, MATLAB must be installed in
 
 Click [here](https://www.mathworks.com/help/install/) for more information about MATLAB Installation and Licensing.
 
-### :clipboard: Instructions to Download and Run IbM:
+### :clipboard: Instructions to Download and Run IbM
 
 1. Download .zip code. Last version: `v2.4.1`. [Download code](https://github.com/Computational-Platform-IbM/IbM/archive/refs/tags/v2.4.1.zip).
 2. Extract files to a destination (:bulb: recommendation - Desktop).
@@ -67,6 +67,8 @@ Click [here](https://www.mathworks.com/help/install/) for more information about
 <br>`settings`      - Settings of the model (Time discretization, HRT, detachment, pH submodel, version of model, parallization).
 
 ## Granule version
+
+### :bar_chart: Excel setup
 
 Lorem ipsum
 
