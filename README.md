@@ -85,7 +85,7 @@ Lorem ipsum
 ## Warning List
 
 All possible *Warning messages* are listed here:
-<br><sub>Legend: *WarningTag* (`script.m` source) - Action</sub>
+<br><sub>Format: *WarningTag* (`script.m` source) - Action</sub>
 - *DEBUG:actionRequired* (`lib\determine_diffusion_region.m`) - Higher simulation domain must be set.
 - *dT_diffusion:Limits* (`lib\integTime.m`) - Maximum/Minimum **dt_diffusion** value is reached.
 - *dT_bac:Limits* (`lib\integTime.m`) - Maximum/Minimum **dt_bac** value is reached.
@@ -97,7 +97,9 @@ All possible *Warning messages* are listed here:
 - *CellDivision:TooFastDivision* (`lib\integTime.m`) - **dt_bac** is decreased. 
 - *BulkConcentration:ValueJump* (`lib\integTime.m`) - **dt_bac** is decreased.
 
-
+>**Legend**
+<br>dt_diffusion - step time applied in solving the diffusion-reaction equation 
+<br>dt_bac - step time applied in computation ofbateria mass change, division and inactivation
 
 ## References
 
