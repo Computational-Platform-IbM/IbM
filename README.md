@@ -39,7 +39,7 @@ Instructions to Download and setup IbM code:
     - For more information about MATLAB Layout and how to change it, click [here](https://www.mathworks.com/help/matlab/matlab_env/change-the-desktop-layout.html).
 4. Go to the **Code folder**...
     &#09;<br>→ writing `cd newFolder` to *Command Window* - more info about [cd](https://www.mathworks.com/help/matlab/ref/cd.html).
-    &#09;<br>→ using *Folder Toolbar*.
+    &#09;<br>→ using *Folder Toolbar* - paste the folder name where the code was extracted `...\IbM-2.4.1`.
 5. Generate the path to the main code:
     &#09;<br>→ writing `addpath(genpath('lib'))` to *Command Window*.
 
