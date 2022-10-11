@@ -41,18 +41,19 @@ Instructions to Download and run IbM:
     - For more information about MATLAB Layout and how to change it, click [here](https://www.mathworks.com/help/matlab/matlab_env/change-the-desktop-layout.html).
 4. Go to the **Code folder<sup>2</sup>**...
     &#09;<br><sup><sup>2</sup>Code folder: folder with `IbM.m` file </sup>.
-    &#09;<br>→ writing `cd newFolder` to *Command Window* - more info about [cd](https://www.mathworks.com/help/matlab/ref/cd.html).
-    &#09;<br>→ using *Folder Toolbar* - paste the folder name where the code was extracted.
-5. Generate the path to the main code:
-    &#09;<br>→ writing `addpath(genpath('lib'))` to *Command Window*.
+    &#09;<br>→ writing `cd newFolder` to *Command Window* (more info about [cd](https://www.mathworks.com/help/matlab/ref/cd.html)).
+    &#09;<br>→ or using *Folder Toolbar* - paste the folder name where the code was extracted.
+5. Generate the path to the main code writing `addpath(genpath('lib'))` to *Command Window*.
 6. Create the seed-file:
     1. Modify main Excel (lib\planning\Excels\main.xlsx) with all parameters. 
     <br><sup>Instructions on how to use main.xlsx in *Information* sheet, and [Granule version](https://github.com/Computational-Platform-IbM/IbM#granule-version) | [Suspension version](https://github.com/Computational-Platform-IbM/IbM#suspension-version).</sup>
     2. Create seed-file writing `create_mat` to *Command Window*.
     3. Save seed-file writing <br> `save('planning/sim_xxxx.mat','grid','bac','constants','init_params','settings','-v7.3')`</br> to *Command Window* (:bulb: `sim_xxxx.mat`, where xxxx is the simulation number [from 0001 to 9999]).
-7. Execute IbM code:
+    4. Remove items from workspace, freeing up system memory - writing `clear all` to *Command Window* (more info about [clear](https://www.mathworks.com/help/matlab/ref/clear.html)).
+8. Execute IbM code:
     1. Copy the desired seed-file to Code folder (folder with `IbM.m` file)
     2. Call to `IbM(sim_xxxx)` (:bulb: `sim_xxxx`, where xxxx is the chosen simulation number).
+&#09;<br><sup>:bulb: You can review the seed-file writing `load(sim_xxxx.mat)` to *Command Window* or with double click to `sim_xxxx.mat` in *Current folder*. All data is on *Workspace*.
 
 ## Granule version
 
