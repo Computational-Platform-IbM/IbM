@@ -91,7 +91,7 @@ PLOS Computational Biology. doi: TBA
 
 ## Get Data
 Relevant results are saved every **dt saved** time (specified in Excel, *Discretization* sheet). Results are saved in the corresponding **Result folder** (`\Results\xxxx`, where `xxxx` is the simulation number) in `results1D.mat` file.
->**Results-file structure** (`\xxxx\results1D.mat`)
+>**Results-file structure** (`\xxxx\results1D.mat`)<br>
 <br>`bac_saved`           - Lorem ipsum.
 <br>`conc_saved`          - Lorem ipsum.
 <br>`pH_saved`            - Lorem ipsum.
