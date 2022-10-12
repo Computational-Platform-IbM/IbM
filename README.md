@@ -111,7 +111,7 @@ Function to plot radial distribution (*layered stratification*) and angular dist
  <br>· **Line 107** for angular distribution (*columned stratification*).
 
 ### · Draw substrate/product profiles (Granule version)
-Function to create 2D substrates profiles for a given simulation number → `plot2d_S(simulation_number, substrates_number, Time)`.<br>
+Function to create 2D substrates profiles → `plot2d_S(simulation_number, substrates_number, Time)`.<br>
 <sub>Inputs: `simulation_number` is the chosen simulation, `substrate_number` following substrate order of Excel, and `Time` in days.</sub><br>
 <br>**To modify colours, open `lib\lib\post_processing.m` script. (Line 6)**<br>
 
