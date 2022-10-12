@@ -120,7 +120,7 @@ Function to plot radial distribution (*layered stratification*) and angular dist
 1. Lorem ipsum
 2. Lorem ipsum
 3. Lorem ipsum
-(`writematrix()`...)
+<br>(`writematrix()`...)
 
 ## Warning List
 
