@@ -103,7 +103,7 @@ Function to plot cells for a given simulation number and time → `plotBacsMatla
 > If the simulation has not finishied yet, copy the seed-file (`simulation_xxxx.mat`) to the corresponding **Result folder** (`\Results\xxxx`).
 
 ### · Draw spatial distribution of microbial colonies (Granule version)
-Function to plot radial distribution (*layered stratification*) and angular distribution (*columned stratification*) of microbial colonies.
+Function to plot radial distribution (*layered stratification*) and angular distribution (*columned stratification*) of microbial colonies → `plotStratification(simulation_number, finished, TimeInput)`.<br>
 
 ## Warning List
 
