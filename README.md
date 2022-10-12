@@ -54,7 +54,7 @@ Click [here](https://www.mathworks.com/help/install/) for more information about
     1. Copy the desired seed-file to Code folder (folder with `IbM.m` file)
     2. Call to `IbM(sim_xxxx)` (:bulb: `sim_xxxx`, where xxxx is the chosen simulation number).<br>
     Once simulation has been run, `sim_xxxx.mat` (i.e., seed-file) is moved to the corresponding **Results** folder.
-8. Visualization of Results. See [Data visualization](https://github.com/Computational-Platform-IbM/IbM#data-visualization) section.
+8. Visualization of Results (see [Data visualization](https://github.com/Computational-Platform-IbM/IbM#data-visualization) section) or Get Data (see [Get Data]() section).
 
 ### :card_file_box: Supplementary Information
 
@@ -114,6 +114,9 @@ Function to plot radial distribution (*layered stratification*) and angular dist
 > Resolution of Spatial distribution plots can be modified → `lib\post_processing\plotStratification.m` script.
  <br>· **Line 59** for radial distribution (*layered stratification*).
  <br>· **Line 107** for angular distribution (*columned stratification*).
+
+## Get Data
+Lorem ipsum
 
 ## Warning List
 
