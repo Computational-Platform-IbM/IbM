@@ -97,7 +97,8 @@ In order to setup the IbM for the study of spatial distribution of microbial col
 - ***pH bulk concentration corrected*** - *FALSE*
 - ***pH solving included***             - *FALSE*
 - ***Speciation included***             - *FALSE*
-<p>:warning: *Settings* sheet is a summary of all seetings in the model. **DO NOT CHANGE THEM IN THIS SHEET**, but in the respective tab.
+
+:warning: *Settings* sheet is a summary of all seetings in the model. **DO NOT CHANGE THEM IN THIS SHEET**, but in the respective tab.
 
 ### :newspaper: Publications
 
