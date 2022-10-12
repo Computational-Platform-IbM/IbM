@@ -102,7 +102,7 @@ The data that is saved to the **Results-file** can be modified in the `lib\post_
 ### :clipboard: Instructions to Get Data
 1. Go to the **Result folder** of simulation xxxx (`\Results\xxxx\`) through *Current Folder* browser.
 2. Load **Result-file** (`results1D.mat`) - double-click on `.mat` file or writing `load('results1D.mat')` on *Command Window*.
-3. Saved data to a file (`.txt`,`.dat`,`.csv`,`.xls`,`.xlsm`,`.xlsx`,`.xlsb`) using `writematrix(input_data, filename, __)` function (more info about [writematrix](https://www.mathworks.com/help/matlab/ref/writematrix.html)).
+3. Saved data to a file (`.txt`,`.dat`,`.csv`,`.xls`,`.xlsm`,`.xlsx`,`.xlsb`) using `writematrix(input_data,...)` function (more info about [writematrix](https://www.mathworks.com/help/matlab/ref/writematrix.html)).
     &#09;<br><sup>:warning: `writematrix` cannot save *struct*-typed data. Then, `input_data` must start with *struct* name (`bac_saved`, `conc_saved`, `pH_saved` or `reactor_saved`) followed by a dot `.` and the name of variable (e.g., `writematrix(bac_saved.nBacs,'test.xlsx')`).</sup>
 
 ## Data visualization
