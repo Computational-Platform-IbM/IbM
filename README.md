@@ -25,6 +25,9 @@ Detailed description of [detachment](https://github.com/Computational-Platform-I
 
 **:warning: To open the links in a new tab: right click on the link + "Open link in new tab". :warning:**
 
+### :information_source: Relevant information for reviewers
+Lorem ipsum
+
 ### :gear: MATLAB installation
 
 This IbM framework is build up in MATLAB. Therefore, MATLAB must be installed in your computer.
