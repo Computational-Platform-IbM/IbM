@@ -98,7 +98,7 @@ In order to setup the IbM for the study of spatial distribution of microbial col
 - ***pH solving included***             - *FALSE*
 - ***Speciation included***             - *FALSE*
 - ***Structure model***                 - *TRUE*
-- ***Structure model type***            - *Neut*, *Comp*, *Comm* or *Copr*. Changes in their feeding regime[^2].
+- ***Structure model type***            - *Neut*, *Comp*, *Comm* or *Copr* → changes in  feeding regime[^2].
 
 :warning: *Settings* sheet is a summary of all seetings in the model. **DO NOT CHANGE THEM IN THIS SHEET**, but in the respective tab.
 
