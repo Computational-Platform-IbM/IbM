@@ -107,8 +107,8 @@ Function to plot radial distribution (*layered stratification*) and angular dist
 <sub>Inputs: `simulation_number` is the chosen simulation, `finished` Simulation finished: 0 or 1 [N/Y], `Time` in days.</sub><br>
 Image `.tif` of plots are automaticatly created to **Result folder** (`\Results\xxxx`). 
 > Resolution of Spatial distribution plots can be modified → `lib\post_processing\plotStratification.m` script.
- <br>**Line 59** for radial distribution (*layered stratification*).
- <br>**Line 107** for angular distribution (*columned stratification*).
+ <br>· **Line 59** for radial distribution (*layered stratification*).
+ <br>· **Line 107** for angular distribution (*columned stratification*).
 
 ## Warning List
 
