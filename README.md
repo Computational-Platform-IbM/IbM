@@ -116,7 +116,7 @@ Function to plot radial distribution (*layered stratification*) and angular dist
  <br>· **Line 107** for angular distribution (*columned stratification*).
 
 ## Get Data
-Lorem ipsum
+Lorem ipsum (`writematrix()`...)
 
 ## Warning List
 
