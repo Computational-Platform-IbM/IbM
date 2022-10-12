@@ -26,7 +26,10 @@ Detailed description of [detachment](https://github.com/Computational-Platform-I
 **:warning: To open the links in a new tab: right click on the link + "Open link in new tab". :warning:**
 
 ### :information_source: Relevant information for reviewers
-Lorem ipsum
+
+<!-- **There is no peer-review process at this time.** -->
+
+**There is no peer-review process at this time.**
 
 ### :gear: MATLAB installation
 
