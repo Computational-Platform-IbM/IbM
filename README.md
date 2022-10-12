@@ -97,7 +97,7 @@ Relevant results are saved every **dt saved** time (specified in Excel, *Discret
 <br>`pH_saved`            - Matrix of local pH on the transverse plane of aggregate for all substrates [*columns* - x position; *rows* - time].
 <br>`reactor_saved`       - Bulk liquid concentration (*bulk_conc*), Hydraulic Retention Time (*HRT*), density of granule (*granule_density*) [*columns* - substrate/products; *rows* - time].
 
-Lorem ipsum
+What data is saved in Results-file (`\xxxx\results1D.mat`) can be modified in `lib\post_processing\save_slice.m` script.
 
 ### :clipboard: Instructions to Get Data
 1. Lorem ipsum
