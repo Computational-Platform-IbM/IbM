@@ -54,7 +54,7 @@ Click [here](https://www.mathworks.com/help/install/) for more information about
     1. Copy the desired seed-file to Code folder (folder with `IbM.m` file)
     2. Call to `IbM(sim_xxxx)` (:bulb: `sim_xxxx`, where xxxx is the chosen simulation number).<br>
     Once simulation has been run, `sim_xxxx.mat` (i.e., seed-file) is moved to the corresponding **Results** folder.
-8. Visualization of Results (see [Data visualization](https://github.com/Computational-Platform-IbM/IbM#data-visualization) section) or Get Data (see [Get Data](https://github.com/Computational-Platform-IbM/IbM#get-data) section).
+8. Get Data (see [Get Data](https://github.com/Computational-Platform-IbM/IbM#get-data) section) or Visualization of Results (see [Data visualization](https://github.com/Computational-Platform-IbM/IbM#data-visualization) section).
 
 ### :card_file_box: Supplementary Information
 
@@ -88,6 +88,13 @@ PLOS Computational Biology. doi: TBA
 
 :building_construction: **Comming soon...**
 
+## Get Data
+### :clipboard: Instructions to Get Data
+1. Lorem ipsum
+2. Lorem ipsum
+3. Lorem ipsum
+4. (`writematrix()`...)
+
 ## Data visualization
 
 ### :clipboard: Instructions for Data visualization
@@ -114,13 +121,6 @@ Function to plot radial distribution (*layered stratification*) and angular dist
 > Resolution of Spatial distribution plots can be modified → `lib\post_processing\plotStratification.m` script.
  <br>· **Line 59** for radial distribution (*layered stratification*).
  <br>· **Line 107** for angular distribution (*columned stratification*).
-
-## Get Data
-### :clipboard: Instructions to Get Data
-1. Lorem ipsum
-2. Lorem ipsum
-3. Lorem ipsum
-4. (`writematrix()`...)
 
 ## Warning List
 
