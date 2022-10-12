@@ -83,11 +83,10 @@ Click [here](https://www.mathworks.com/help/install/) for more information about
 > Error using `function` (line x)<br>*Details of error*
 
 ## Granule version
-Lorem ipsum
 
 ### :bar_chart: Excel setup
 
-Lorem ipsum
+#### Structure model[^2]
 
 ### :newspaper: Publications
 
@@ -177,4 +176,5 @@ All possible *Warning messages* are listed here:
 
 ### References
 
-[^1]: Hellweger, F.L., *et al.*, (2016). *Nature Reviews Microbiology*. doi: 10.1038/nrmicro.2016.62<br>
+[^1]: Hellweger, F.L. *et al.*, (2016). *Nature Reviews Microbiology*. doi: 10.1038/nrmicro.2016.62<br>
+[^1]: Martinez-Rabert, E. *et al.*, (under review). *PLOS Computational Biology*. doi: TBA<br>
