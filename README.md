@@ -97,8 +97,9 @@ PLOS Computational Biology. doi: TBA
 
 ### · Draw aggregate (Granule & Suspension version)
 Function to plot cells for a given simulation number and time → `plotBacsMatlab(simulation_number, Time)`.<br>
-<sub>Inputs: `simulation_number` is the chosen simulation, and `Time` in days.</sub>
-<br>**To modify colours, open `lib\debugging\plotBacs.m` script.**
+<sub>Inputs: `simulation_number` is the chosen simulation, and `Time` in days.</sub><br>
+<br>**To modify colours, open `lib\debugging\plotBacs.m` script. (Lines 15-17)**<br>
+:warning: Make sure that *species_per_color* vector corresponds to number of species/metabolisms.
 > If the simulation has not finishied yet, copy the seed-file (`simulation_xxxx.mat`) to the corresponding **Result folder** (`\Results\xxxx`).
 
 ### · Data visualization 2
