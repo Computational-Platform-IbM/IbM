@@ -1,6 +1,14 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [2.4.1]
+### Added
+- Proper README file
+### Fixed
+- Bugs in *Structure model*
+### Removed
+- Unnecessary scripts
+
 ## [2.4.0]
 ### Added
 - Mechanistic detachment implemented
