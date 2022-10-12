@@ -1,12 +1,13 @@
 function plotStratification(simulation_number, finished, TimeInput)
-% create detachment analysis for granule simulations
+% Function to plot radial distribution (layered stratification) 
+% and angular distribution (columned stratification) of microbial colonies.
     
-    BoxChartPr = 1; % Draw BoxChart of relative perimeter size of microcolonies
+    BoxChartPr = 0; % Draw BoxChart of relative perimeter size of microcolonies
     MATLABdraw_layered = 1; % Draw plot -> 1 | No draw plot -> 0
     ATLABdraw_columned = 1; % Draw plot -> 1 | No draw plot -> 0
     
     %% load correct files
-    output_dir = sprintf('../../Results/%04d', simulation_number);
+    output_dir = sprintf('./Results/%04d', simulation_number);
     if finished
         simulation_file = sprintf('%s/sim_%04d.mat', output_dir, simulation_number);
     else
@@ -15,7 +16,7 @@ function plotStratification(simulation_number, finished, TimeInput)
     simulation_result = sprintf('%s/results1D.mat', output_dir);
     profiling_result = sprintf('%s/profilingResults.mat', output_dir);
     
-    folder_route = '../../Results/';
+    folder_route = './Results/';
 
     load(simulation_file);      %#ok<LOAD>
     load(simulation_result);    %#ok<LOAD>
@@ -153,7 +154,7 @@ function plotStratification(simulation_number, finished, TimeInput)
         
         if r == 1
             %% BoxChart of microcolonies            
-            file_name = '../../BoxChart_microcolonies.xlsx';
+            file_name = './BoxChart_microcolonies.xlsx';
             minTol = 0.9; %Minimum relative abundance to assume that is a unique species section
             prev_spc = nSpecies + 10;
             pos = [];
