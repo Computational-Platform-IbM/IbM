@@ -54,7 +54,7 @@ Click [here](https://www.mathworks.com/help/install/) for more information about
     1. Copy the desired seed-file to Code folder (folder with `IbM.m` file)
     2. Call to `IbM(sim_xxxx)` (:bulb: `sim_xxxx`, where xxxx is the chosen simulation number).<br>
     Once simulation has been run, `sim_xxxx.mat` (i.e., seed-file) is moved to the corresponding **Results** folder.
-8. Visualization of Results (see [Data visualization](https://github.com/Computational-Platform-IbM/IbM#data-visualization) section) or Get Data (see [Get Data]() section).
+8. Visualization of Results (see [Data visualization](https://github.com/Computational-Platform-IbM/IbM#data-visualization) section) or Get Data (see [Get Data](https://github.com/Computational-Platform-IbM/IbM#get-data) section).
 
 ### :card_file_box: Supplementary Information
 
