@@ -30,7 +30,7 @@ Detailed description of [detachment](https://github.com/Computational-Platform-I
 <!-- There is no peer-review process at this time. -->
 
 #### PLOS Computational Biology
-Main Excel (more details in [Instructions to Download and Run IbM](https://github.com/Computational-Platform-IbM/IbM#clipboard-instructions-to-download-and-run-ibm)) is altready set with Neutral case [S]<sub>T</sub> = 1.0mM.
+Main Excel (more details in [Instructions to Download and Run IbM](https://github.com/Computational-Platform-IbM/IbM#clipboard-instructions-to-download-and-run-ibm)) is altready set with *Neutralism* case [S]<sub>T</sub>=1.0mM.
 <br>To generate seed-file
 
 **Thanks for your help in improving the quality of our manuscript.**
