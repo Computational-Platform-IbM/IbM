@@ -86,7 +86,7 @@ Click [here](https://www.mathworks.com/help/install/) for more information about
 
 ### :bar_chart: Excel setup
 
-#### Spatial distribution of microbial colonies study[^2]
+#### Microbial spatial distribution study[^2]
 Lorem ipsum
 
 ### :newspaper: Publications
