@@ -13,6 +13,7 @@ IbM_V2/testingRMatrix.mat
 planning/*.mat
 *testing*
 *.xlsx
+!planning/*.xlsx
 !main.xlsx
 *.fig
 *.tif
