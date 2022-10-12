@@ -89,14 +89,15 @@ Click [here](https://www.mathworks.com/help/install/) for more information about
 #### Microbial spatial distribution study[^2]
 :bulb: You can find an Excel template (`stratifications_template.xlsx`) in `planning\Excels\Templates`. Remember to copy this Excel to `planning\Excels\`, and rename it to `main.xlsx`.<p>
 In order to setup the IbM for the study of spatial distribution of microbial colonies, the following key settings must be selected on the main Excel (see *Settings* sheet in `main.xlsx`):
-- ***Dynamic dT*** - 
--
--
--
--
--
--
--
+- ***Dynamic dT***                      - *TRUE*
+- ***Variable HRT***                    - *TRUE*
+- ***Initialisation method***           - *granule*
+- ***kDist***                           - *1.0*
+- ***Inactivation enabled***            - *TRUE*
+- ***pH bulk concentration corrected*** - *FALSE*
+- ***pH solving included***             - *FALSE*
+- ***Speciation included***             - *FALSE*
+Lorem ipsum
 
 ### :newspaper: Publications
 
