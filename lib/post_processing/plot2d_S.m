@@ -1,4 +1,4 @@
-function plot2dSubsProfile(simulation_number, substrates_number, Time)
+function plot2d_S(simulation_number, substrates_number, Time)
     % Function to create 2D substrates profiles for a given simulation number
     % Time (days)
         
