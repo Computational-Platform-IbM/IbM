@@ -102,7 +102,7 @@ The data that is saved to the **Results-file** can be modified in the `lib\post_
 ### :clipboard: Instructions to Get Data
 1. Go to the **Code folder** (folder with `IbM.m` file).
 2. Generate the path to the main code writing `addpath(genpath('lib'))` to *Command Window* (if not already generated).
-3. Saved data using `writematrix()` function (more info about [writematrix()](https://www.mathworks.com/help/matlab/ref/writematrix.html).
+3. Saved data to a file (`.txt`,`.dat`,`.csv`,`.xls`,`.xlsm`,`.xlsx` or `.xlsb`) using `writematrix()` function (more info about [writematrix()](https://www.mathworks.com/help/matlab/ref/writematrix.html).
 
 
 ## Data visualization
