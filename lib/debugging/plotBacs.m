@@ -6,10 +6,16 @@ function f = plotBacs(g, bac, constants, Time)
     s = bac.species;
     act = bac.active;
     
+    %-- Comammox Nitrospira --%
 %     colors_species_raw = {'#E69F00','#56B4E9','#009E73','#F0E442','#0072B2','#D55E00'};
-    colors_species_raw = {'#E69F00','#56B4E9','#33b190','#F0E442','#0072B2','#D55E00'};
+%     colors_species_raw = {'#E69F00','#56B4E9','#33b190','#F0E442','#0072B2','#D55E00'};
     %                      orange   light blue  green    yellow   dark blue    red
-    species_per_color = { 'An-NRMX', 'CMX',    'NOB',    'AOB',    'NRMX',    'AMX'};
+%     species_per_color = { 'An-NRMX', 'CMX',    'NOB',    'AOB',    'NRMX',    'AMX'};
+    %-- Structure model --%
+    colors_species_raw = {'#c042fe', '#009e47', '#e59100', '#f70073'};
+    coloring_rgb = [192 66 254; 0 158 71; 229 145 0; 247 0 115]./255;
+    species_per_color = { 'B1', 'B2', 'B3'};
+    
     nSpecies = length(constants.speciesNames);
     species_index = zeros(nSpecies, 1);
     for si = 1:nSpecies
@@ -24,9 +30,11 @@ function f = plotBacs(g, bac, constants, Time)
     
     for i = 1:length(x)
         if act(i)
-            col = coloring{s(i)};
+%             col = coloring{s(i)};
+            col = [coloring_rgb(s(i), :) 1];
         else
-            col = [0 0 0];
+%             col = [0 0 0];
+            col = [coloring_rgb(s(i), :) 0.3];
         end
         rectangle('Curvature', [1 1], 'Position', [x(i) - r(i), y(i) - r(i), 2 * r(i), 2 * r(i)], 'LineWidth', 0.1, 'EdgeColor', col, 'FaceColor', col);
     end
