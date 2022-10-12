@@ -29,7 +29,8 @@ Detailed description of [detachment](https://github.com/Computational-Platform-I
 
 <!-- There is no peer-review process at this time. -->
 
-There is no peer-review process at this time.
+#### PLOS Computational Biology
+Lorem ipsum
 
 ### :gear: MATLAB installation
 
