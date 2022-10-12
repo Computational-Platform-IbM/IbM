@@ -100,16 +100,16 @@ Relevant results are saved every **dt saved** time (specified in Excel, *Discret
 The data that is saved to the **Results-file** can be modified in the `lib\post_processing\save_slice.m` script.
 
 ### :clipboard: Instructions to Get Data
-1. Lorem ipsum
-2. Lorem ipsum
-3. Lorem ipsum
-4. (`writematrix()`...)
+1. Go to the **Code folder** (folder with `IbM.m` file).
+2. Generate the path to the main code writing `addpath(genpath('lib'))` to *Command Window* (if not already generated).
+3. Saved data using `writematrix()` function (more info about [writematrix()](https://www.mathworks.com/help/matlab/ref/writematrix.html).
+
 
 ## Data visualization
 
 ### :clipboard: Instructions for Data visualization
 1. Go to the **Code folder** (folder with `IbM.m` file).
-2. Generate the path to the main code writing `addpath(genpath('lib'))` to *Command Window*.
+2. Generate the path to the main code writing `addpath(genpath('lib'))` to *Command Window* (if not already generated).
 3. Run Data visualization → `function()` listed below. 
 
 ### · Draw aggregate/s (Granule & Suspension version)
