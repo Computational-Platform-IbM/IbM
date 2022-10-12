@@ -92,10 +92,10 @@ PLOS Computational Biology. doi: TBA
 ## Get Data
 Relevant results are saved every **dt saved** time (specified in Excel, *Discretization* sheet). Results are saved in the corresponding **Result folder** (`\Results\xxxx`, where `xxxx` is the simulation number) in `results1D.mat` file.
 >**Results-file structure** (`\xxxx\results1D.mat`)<p>
-`bac_saved`               - Number of cells (*nBacs*), position (*x,y*), radius (*radius*), species/metabolism (*species*), state (*active*), actual growth rate (*mu*).
-<br>`conc_saved`          - Lorem ipsum.
-<br>`pH_saved`            - Lorem ipsum.
-<br>`reactor_saved`       - Lorem ipsum.
+`bac_saved`               - Number of cells (*nBacs*), position (*x,y*), radius (*radius*), species/metabolism (*species*), state (*active*), actual growth rate (*mu*) [*columns* - cell iD; *rows* - time].
+<br>`conc_saved`          - 3D Matrix of concentration profiles on the transverse plane of aggregate for all substrates [*columns* - x position; *rows* - time; *z* - substrate/product]
+<br>`pH_saved`            - Matrix of local pH on the transverse plane of aggregate for all substrates [*columns* - x position; *rows* - time].
+<br>`reactor_saved`       - Bulk liquid concentration (*bulk_conc*), Hydraulic Retention Time (*HRT*), density of granule (*granule_density*) [*columns* - substrate/products; *rows* - time].
 
 Lorem ipsum
 
