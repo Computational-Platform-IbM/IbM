@@ -27,9 +27,9 @@ Detailed description of [detachment](https://github.com/Computational-Platform-I
 
 ### :information_source: Relevant information for reviewers
 
-<!-- **There is no peer-review process at this time.** -->
+<!-- There is no peer-review process at this time. -->
 
-**There is no peer-review process at this time.**
+There is no peer-review process at this time.
 
 ### :gear: MATLAB installation
 
