@@ -86,7 +86,7 @@ Click [here](https://www.mathworks.com/help/install/) for more information about
 
 ### :bar_chart: Excel setup
 
-#### Structures model[^2]
+#### Spatial distributions study[^2]
 Lorem ipsum
 
 ### :newspaper: Publications
