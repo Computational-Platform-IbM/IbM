@@ -59,8 +59,8 @@ Click [here](https://www.mathworks.com/help/install/) for more information about
 ### :card_file_box: Supplementary Information
 
 · The seed-file can be reviewed writing `load('sim_xxxx.mat')` (or `load('planning\sim_xxxx.mat')` if this isn't in **Code folder**) to *Command Window*, or double click to `sim_xxxx.mat` in *Current folder*. All data is on *Workspace*.
->**Seed-file structure** (`sim_xxxx.mat`)
-<br>`bac`           - Information of initial position (*x,y*), molar mass, radius, species and which cell is active/inactive.
+>**Seed-file structure** (`sim_xxxx.mat`)<p>
+`bac`           - Information of initial position (*x,y*), molar mass, radius, species and which cell is active/inactive.
 <br>`constants`     - Summary of all parameters of model (Discretization, Kinetic parameters, Metabolic matrix...).
 <br>`grid`          - Information of grid.
 <br>`init_params`	- Initial conditions of the system (HRT, concentration in aggregate and bulk liquid).
@@ -91,8 +91,8 @@ PLOS Computational Biology. doi: TBA
 
 ## Get Data
 Relevant results are saved every **dt saved** time (specified in Excel, *Discretization* sheet). Results are saved in the corresponding **Result folder** (`\Results\xxxx`, where `xxxx` is the simulation number) in `results1D.mat` file.
->**Results-file structure** (`\xxxx\results1D.mat`)
-<p>`bac_saved`           - Lorem ipsum.
+>**Results-file structure** (`\xxxx\results1D.mat`)<p>
+`bac_saved`           - Lorem ipsum.
 <br>`conc_saved`          - Lorem ipsum.
 <br>`pH_saved`            - Lorem ipsum.
 <br>`reactor_saved`       - Lorem ipsum.
