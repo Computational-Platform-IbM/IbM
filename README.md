@@ -102,6 +102,11 @@ Function to plot cells for a given simulation number and time → `plotBacsMatla
 :warning: Make sure that *species_per_color* vector corresponds to number of species/metabolisms.
 > If the simulation has not finishied yet, copy the seed-file (`simulation_xxxx.mat`) to the corresponding **Result folder** (`\Results\xxxx`).
 
+### · Draw substrate/product profiles (Granule version)
+Function to draw 2D substrate/product profiles → `plot2d_S(simulation_number, substrates_number, Time)`.<br>
+<sub>Inputs: `simulation_number` is the chosen simulation, `substrate_number` following substrate order of Excel, and `Time` in days.</sub><br>
+<br>**To modify colours, open `lib\lib\post_processing.m` script. (Line 6)**<br>
+
 ### · Draw spatial distribution of microbial colonies (Granule version)
 Function to plot radial distribution (*layered stratification*) and angular distribution (*columned stratification*) of microbial colonies → `plotStratification(simulation_number, finished, Time)`.<br>
 <sub>Inputs: `simulation_number` is the chosen simulation, `finished` Simulation finished: 0 or 1 [N/Y], `Time` in days.</sub><br>
@@ -109,11 +114,6 @@ Function to plot radial distribution (*layered stratification*) and angular dist
 > Resolution of Spatial distribution plots can be modified → `lib\post_processing\plotStratification.m` script.
  <br>· **Line 59** for radial distribution (*layered stratification*).
  <br>· **Line 107** for angular distribution (*columned stratification*).
-
-### · Draw substrate/product profiles (Granule version)
-Function to draw 2D substrate/product profiles → `plot2d_S(simulation_number, substrates_number, Time)`.<br>
-<sub>Inputs: `simulation_number` is the chosen simulation, `substrate_number` following substrate order of Excel, and `Time` in days.</sub><br>
-<br>**To modify colours, open `lib\lib\post_processing.m` script. (Line 6)**<br>
 
 ## Warning List
 
