@@ -87,7 +87,7 @@ Click [here](https://www.mathworks.com/help/install/) for more information about
 ### :bar_chart: Excel setup
 
 #### Microbial spatial distribution study[^2]
-You can find an Excel template (`stratifications_template.xlsx`) in `planning\Excels\Templates`. Remember to copy this Excel to `planning\Excels\`, and rename it to `main.xlsx`.<br>
+:bulb: You can find an Excel template (`stratifications_template.xlsx`) in `planning\Excels\Templates`. Remember to copy this Excel to `planning\Excels\`, and rename it to `main.xlsx`.<p>
 In order to setup the IbM for the study of spatial distribution of microbial colonies, the following key settings must be selected on the main Excel (`planning\Excels\main.xlsx`):
 1. Lorem ipsum
 2. Lorem ipsum
