@@ -31,7 +31,7 @@ Detailed description of [detachment](https://github.com/Computational-Platform-I
 
 #### PLOS Computational Biology
 Main Excel (see [Instructions to Download and Run IbM](https://github.com/Computational-Platform-IbM/IbM#clipboard-instructions-to-download-and-run-ibm)) is altready set with *Neutralism* case ([S]<sub>T</sub>=1.0mM).
-<br>To create the seed-files for the other cases, see [Excel setup](https://github.com/Computational-Platform-IbM/IbM#bar_chart-excel-setup) of Granule version).
+<br>To create the seed-files for the other cases, see [Excel setup](https://github.com/Computational-Platform-IbM/IbM#bar_chart-excel-setup) of Granule version (Structures model).
 
 **Thanks for your help in improving the quality of our manuscript.**
 
@@ -86,7 +86,7 @@ Click [here](https://www.mathworks.com/help/install/) for more information about
 
 ### :bar_chart: Excel setup
 
-#### Structure model[^2]
+#### Structures model[^2]
 
 ### :newspaper: Publications
 
