@@ -1,7 +1,5 @@
 # Individual-based Model framework
 
-From: Gonzalez-Cabaleiro group.
-
 *Contributors: Chiel van Amstel, Eloi Martinez-Rabert, Rebeca Gonzalez-Cabaliero
 
 Individual-based Models (IbM) are characterized for simulating the microbes in an 
