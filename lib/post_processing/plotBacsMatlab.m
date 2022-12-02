@@ -27,8 +27,8 @@ function plotBacsMatlab(simulation_number, Time)
     
     maxT = constants.simulation_end;
     dt_save = constants.dT_save;
-    maxi = maxT/dt_save;
-    i = ceil((Time*24)/24) + 2;
+    maxi = ceil(maxT/dt_save);
+    i = ceil((Time*24)/dt_save) + 2; 
     if (i > maxi), i = maxi;  end
     
     nBac = bac_saved.nBacs(i);
