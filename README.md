@@ -141,6 +141,11 @@ E. Martinez-Rabert, C. Smith, W. T. Sloang, R. Gonzalez-Cabaleiro (under review)
 "Competitive and substrate limited environments drive metabolic heterogeneity for Comammox Nitrospira". 
 ISME Journal. doi: TBA
 ```
+```
+E. Martinez-Rabert, C. Smith, W. T. Sloang, R. Gonzalez-Cabaleiro (under review), 
+"Competitive and substrate limited environments drive metabolic heterogeneity for Comammox Nitrospira". 
+ISME Journal. doi: TBA
+```
 
 ## Get Data
 Relevant results are saved every **dt saved** time (specified in Excel, *Discretization* sheet). Results are saved in the corresponding **Result folder** (`\Results\xxxx`, where `xxxx` is the simulation number) in `results1D.mat` file.
