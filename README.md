@@ -191,6 +191,7 @@ Currenlty platform nOEN (n-Order Ecolgoical Network) is in progress. Scripts to 
 1. Copy `flocbyfloc.m` and `f2OEN` scripts to `lib\post_processing` folder.
 2. Run `flocbyfloc(simulation_number, substrates_number, Time)`. An Excel file ('RawData_flocbyfloc.xlsx') is automatically generated in the **Main folder** with the mass of species for each floc at time 0 (*t_0* sheet) and at the end of simulation (*t_max* sheet).<br>
 <sub>Inputs: `simulation_number` is the chosen simulation, `substrate_number` following substrate order of Excel, and `Time` in days.</sub><br>
+3. 
 
 ## Warning List
 
