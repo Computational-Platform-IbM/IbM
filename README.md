@@ -1,6 +1,6 @@
 # Individual-based Model framework
 
-*Contributors: Chiel van Amstel, Eloi Martinez-Rabert, Rebeca Gonzalez-Cabaliero
+*Contributors: Chiel van Amstel, Eloi Martinez-Rabert, Rebeca Gonzalez-Cabaleiro
 
 Individual-based Models (IbM) are characterized for simulating the microbes in an 
 aggregate (granule or biofilm) as a discrete entity with unique traits. Each of the microbe is 
