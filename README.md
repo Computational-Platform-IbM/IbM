@@ -137,9 +137,9 @@ In order to setup the IbM for this study, the following key settings must be sel
 ### :newspaper: Publications
 
 ```
-E. Martinez-Rabert, C. van Amstel, C. Smith, W. T. Sloang, R. Gonzalez-Cabaleiro (under review), 
-"Environmental and ecological controls of the spatial distribution of microbial populations in aggregates". 
-PLOS Computational Biology. doi: TBA
+E. Martinez-Rabert, C. Smith, W. T. Sloang, R. Gonzalez-Cabaleiro (under review), 
+"Competitive and substrate limited environments drive metabolic heterogeneity for Comammox Nitrospira". 
+ISME Journal. doi: TBA
 ```
 
 ## Get Data
