@@ -34,7 +34,7 @@ Main Excel (see [Instructions to Download and Run IbM](https://github.com/Comput
 **Thanks for your help in improving the quality of our manuscript.**
 
 #### ISME Journal
-Delete current Main Excel (see [Instructions to Download and Run IbM](https://github.com/Computational-Platform-IbM/IbM#clipboard-instructions-to-download-and-run-ibm)), copy suspension_template.xlsx to `planning\Excels\`, and rename it to `main.xlsx`.<p>
+Delete current Main Excel (see [Instructions to Download and Run IbM](https://github.com/Computational-Platform-IbM/IbM#clipboard-instructions-to-download-and-run-ibm)), copy suspension_template.xlsx to `planning\Excels\`, and rename it to `main.xlsx`.
 <br>To create the seed-file(s) for the other cases, see [Excel setup](https://github.com/Computational-Platform-IbM/IbM#bar_chart-excel-setup-1) of Suspension version (**Metabolic heterogeneity of Comammox *Nitrospira* **).
 
 **Thanks for your help in improving the quality of our manuscript.**
