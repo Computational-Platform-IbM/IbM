@@ -85,7 +85,7 @@ Click [here](https://www.mathworks.com/help/install/) for more information about
 ### :bar_chart: Excel setup
 
 #### · Microbial spatial distribution study[^2]
-:bulb: You can find an Excel template (`stratifications_template.xlsx`) in `planning\Excels\Templates`. Remember to copy this Excel to `planning\Excels\`, and rename it to `main.xlsx`.<p>
+:bulb: You can find an Excel template (`granule_template.xlsx`) in `planning\Excels\Templates`. Remember to copy this Excel to `planning\Excels\`, and rename it to `main.xlsx`.<p>
 In order to setup the IbM for this study, the following key settings must be selected on the main Excel (see *Settings* sheet in `main.xlsx`):
 - ***Dynamic dT***                      - *TRUE*
 - ***Variable HRT***                    - *TRUE*
@@ -110,7 +110,31 @@ PLOS Computational Biology. doi: TBA
 
 ## Suspension version
 
-:building_construction: **Comming soon...**
+### :bar_chart: Excel setup
+
+#### · Metabolic heterogeneity of Comammox *Nitrospira* [^3]
+:bulb: You can find an Excel template (`suspension_template.xlsx`) in `planning\Excels\Templates`. Remember to copy this Excel to `planning\Excels\`, and rename it to `main.xlsx`.<p>
+In order to setup the IbM for this study, the following key settings must be selected on the main Excel (see *Settings* sheet in `main.xlsx`):
+- ***Dynamic dT***                      - *TRUE*
+- ***Variable HRT***                    - *FALSE*
+- ***Initialisation method***           - *suspension*
+- ***kDist***                           - *1.50*
+- ***Inactivation enabled***            - *TRUE*
+- ***pH bulk concentration corrected*** - *FALSE*
+- ***pH solving included***             - *FALSE*
+- ***Speciation included***             - *FALSE*
+- ***Structure model***                 - *FALSE*
+- ***Structure model type***            - *-*
+
+:warning: *Settings* sheet is a summary of all seetings in the model. **DO NOT CHANGE THEM IN THIS SHEET**, but in the respective tab.
+
+### :newspaper: Publications
+
+```
+E. Martinez-Rabert, C. van Amstel, C. Smith, W. T. Sloang, R. Gonzalez-Cabaleiro (under review), 
+"Environmental and ecological controls of the spatial distribution of microbial populations in aggregates". 
+PLOS Computational Biology. doi: TBA
+```
 
 ## Get Data
 Relevant results are saved every **dt saved** time (specified in Excel, *Discretization* sheet). Results are saved in the corresponding **Result folder** (`\Results\xxxx`, where `xxxx` is the simulation number) in `results1D.mat` file.
@@ -190,3 +214,4 @@ All possible *Warning messages* are listed here:
 
 [^1]: Hellweger, F.L. *et al.*, (2016). *Nature Reviews Microbiology*. doi: 10.1038/nrmicro.2016.62<br>
 [^2]: Martinez-Rabert, E. *et al.*, (under review). *PLOS Computational Biology*. doi: TBA<br>
+[^3]: Martinez-Rabert, E. *et al.*, (under review). *ISME Journal*. doi: TBA<br>
