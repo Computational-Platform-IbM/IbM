@@ -1,0 +1,1 @@
+> Folder to drop the data which will be used in visualization (.xlsx format)
