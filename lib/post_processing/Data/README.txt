@@ -1,1 +1,1 @@
-> Folder to drop the data which will be used in visualization (.xlsx format). More information [here](https://github.com/Computational-Platform-IbM/IbM#data-visualization)
+> Folder to drop the data which will be used in visualization (.xlsx format). More information: https://github.com/Computational-Platform-IbM/IbM#data-visualization.
