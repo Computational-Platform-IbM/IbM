@@ -27,13 +27,13 @@ Detailed description of [detachment](https://github.com/Computational-Platform-I
 
 <!-- There is no peer-review process at this time. -->
 
-#### ·PLOS Computational Biology
+#### · PLOS Computational Biology
 Main Excel (see [Instructions to Download and Run IbM](https://github.com/Computational-Platform-IbM/IbM#clipboard-instructions-to-download-and-run-ibm)) is already set with *Neutralism* case ([S]<sub>T</sub>=1.0mM).
 <br>To create the seed-file(s) for the other cases, see [Excel setup](https://github.com/Computational-Platform-IbM/IbM#bar_chart-excel-setup) of Granule version (**Microbial spatial distribution study**).
 
 **Thanks for your help in improving the quality of our manuscript.**
 
-#### ·ISME Journal
+#### · ISME Journal
 Delete current Main Excel (see [Instructions to Download and Run IbM](https://github.com/Computational-Platform-IbM/IbM#clipboard-instructions-to-download-and-run-ibm)), copy 'suspension_template.xlsx' to `planning\Excels\`, and rename it to `main.xlsx`.
 <br>To create the seed-file(s) for the other cases, see [Excel setup](https://github.com/Computational-Platform-IbM/IbM#bar_chart-excel-setup-1) of Suspension version (**Metabolic heterogeneity of Comammox *Nitrospira***).
 
