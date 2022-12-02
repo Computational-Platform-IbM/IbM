@@ -191,7 +191,7 @@ Currenlty platform nOEN (n-Order Ecolgoical Network) is in progress. Scripts to 
 1. Copy `flocbyfloc.m` and `f2OEN.m` scripts to `lib\post_processing` folder.
 2. Run `flocbyfloc(simulation_number, substrates_number, Time)`. An Excel file ('RawData_flocbyfloc.xlsx') is automatically generated in the **Main folder** with the mass of species for each floc at time 0 (*t_0* sheet) and at the end of simulation (*t_max* sheet).<br>
 <sub>Inputs: `simulation_number` is the chosen simulation, `substrate_number` following substrate order of Excel, and `Time` in days.</sub><br>
-3. Drop .xlsx file (name 'data_2OEN.xlsx') with the list of flocs that you want analyze to `lib\post_processing\Data`, following the same structure as 'RawData_flocbyfloc.xlsx' (*t_0* and *t_max* sheets).
+3. Drop .xlsx file (name 'data_2OEN.xlsx') with the list of flocs that you want analyze to `lib\post_processing\Data` folder, following the same structure as 'RawData_flocbyfloc.xlsx' (*t_0* and *t_max* sheets).
 4. Run `f2OEN` function. The function will give the corresponding ecological anlaysis with the sample size of each pirewise interaction and the representation of the data in which Kendall's τ has been calculated.
 
 ## Warning List
