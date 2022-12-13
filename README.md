@@ -27,12 +27,6 @@ Detailed description of [detachment](https://github.com/Computational-Platform-I
 
 <!-- There is no peer-review process at this time. -->
 
-#### · PLOS Computational Biology
-Main Excel (see [Instructions to Download and Run IbM](https://github.com/Computational-Platform-IbM/IbM#clipboard-instructions-to-download-and-run-ibm)) is already set with *Neutralism* case ([S]<sub>T</sub>=1.0mM).
-<br>To create the seed-file(s) for the other cases, see [Excel setup](https://github.com/Computational-Platform-IbM/IbM#bar_chart-excel-setup) of Granule version (**Microbial spatial distribution study**).
-
-**Thanks for your help in improving the quality of our manuscript.**
-
 #### · ISME Journal
 Delete current Main Excel (see [Instructions to Download and Run IbM](https://github.com/Computational-Platform-IbM/IbM#clipboard-instructions-to-download-and-run-ibm)), copy `CmxNitrospira_template.xlsx` to `planning\Excels\`, and rename it to `main.xlsx`.
 <br>To create the seed-file(s) for the other cases, see [Excel setup](https://github.com/Computational-Platform-IbM/IbM#bar_chart-excel-setup-1) of Suspension version (**Metabolic heterogeneity of Comammox *Nitrospira***).
@@ -109,7 +103,7 @@ In order to setup the IbM for this study, the following key settings must be sel
 ### :newspaper: Publications
 
 ```
-E. Martinez-Rabert, C. van Amstel, C. Smith, W. T. Sloang, R. Gonzalez-Cabaleiro (under review), 
+E. Martinez-Rabert, C. van Amstel, C. Smith, W. T. Sloang, R. Gonzalez-Cabaleiro (accepted), 
 "Environmental and ecological controls of the spatial distribution of microbial populations in aggregates". 
 PLOS Computational Biology. doi: TBA
 ```
@@ -227,5 +221,5 @@ All possible *Warning messages* are listed here:
 ### References
 
 [^1]: Hellweger, F.L. *et al.*, (2016). *Nature Reviews Microbiology*. doi: 10.1038/nrmicro.2016.62<br>
-[^2]: Martinez-Rabert, E. *et al.*, (under review). *PLOS Computational Biology*. doi: TBA<br>
+[^2]: Martinez-Rabert, E. *et al.*, (accepted). *PLOS Computational Biology*. doi: TBA<br>
 [^3]: Martinez-Rabert, E. *et al.*, (under review). *ISME Journal*. doi: TBA<br>
