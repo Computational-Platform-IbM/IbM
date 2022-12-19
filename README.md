@@ -103,7 +103,7 @@ In order to setup the IbM for this study, the following key settings must be sel
 ### :newspaper: Publications
 
 ```
-E. Martinez-Rabert, C. van Amstel, C. Smith, W. T. Sloang, R. Gonzalez-Cabaleiro (accepted), 
+E. Martinez-Rabert, C. van Amstel, C. Smith, W. T. Sloang, R. Gonzalez-Cabaleiro (2022), 
 "Environmental and ecological controls of the spatial distribution of microbial populations in aggregates". 
 PLOS Computational Biology. doi: 10.1371/journal.pcbi.1010807
 ```
@@ -221,5 +221,5 @@ All possible *Warning messages* are listed here:
 ### References
 
 [^1]: Hellweger, F.L. *et al.*, (2016). *Nature Reviews Microbiology*. doi: 10.1038/nrmicro.2016.62<br>
-[^2]: Martinez-Rabert, E. *et al.*, (accepted). *PLOS Computational Biology*. doi: 10.1371/journal.pcbi.1010807<br>
+[^2]: Martinez-Rabert, E. *et al.*, (2022). *PLOS Computational Biology*. doi: 10.1371/journal.pcbi.1010807<br>
 [^3]: Martinez-Rabert, E. *et al.*, (under review). *ISME Journal*. doi: TBA<br>
