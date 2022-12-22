@@ -113,7 +113,7 @@ PLOS Computational Biology. doi: 10.1371/journal.pcbi.1010807
 ### :bar_chart: Excel setup
 
 #### · Metabolic heterogeneity of Comammox *Nitrospira* [^3]
-:bulb: You can find an Excel template (`suspension_template.xlsx`) in `planning\Excels\Templates`. Remember to copy this Excel to `planning\Excels\`, and rename it to `main.xlsx`.<p>
+:bulb: You can find an Excel template (`CmxNitrospira_template.xlsx`) in `planning\Excels\Templates`. Remember to copy this Excel to `planning\Excels\`, and rename it to `main.xlsx`.<p>
 In order to setup the IbM for this study, the following key settings must be selected on the main Excel (see *Settings* sheet in `main.xlsx`):
 - ***Dynamic dT***                      - *TRUE*
 - ***Variable HRT***                    - *FALSE*
