@@ -27,7 +27,7 @@ Detailed description of [detachment](https://github.com/Computational-Platform-I
 
 <!-- There is no peer-review process at this time. -->
 
-#### · ISME Journal
+#### · ISME Communications Journal
 Delete current Main Excel (see [Instructions to Download and Run IbM](https://github.com/Computational-Platform-IbM/IbM#clipboard-instructions-to-download-and-run-ibm)), copy `CmxNitrospira_template.xlsx` from `planning\Excels\Templates` to `planning\Excels\`, and rename it to `main.xlsx`.
 <br>To create the seed-file(s) for the other cases, see [Excel setup](https://github.com/Computational-Platform-IbM/IbM#bar_chart-excel-setup-1) of Suspension version (**Metabolic heterogeneity of Comammox *Nitrospira***).
 
@@ -222,4 +222,4 @@ All possible *Warning messages* are listed here:
 
 [^1]: Hellweger, F.L. *et al.*, (2016). *Nature Reviews Microbiology*. doi: 10.1038/nrmicro.2016.62<br>
 [^2]: Martinez-Rabert, E. *et al.*, (2022). *PLOS Computational Biology*. doi: 10.1371/journal.pcbi.1010807<br>
-[^3]: Martinez-Rabert, E. *et al.*, (under review). *ISME Journal*. doi: TBA<br>
+[^3]: Martinez-Rabert, E. *et al.*, (under review). *ISME Communications Journal*. doi: TBA<br>
