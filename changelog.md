@@ -1,15 +1,20 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [2.4.1]
+## [2.4.1] - 2022-10-12
 ### Added
 - Proper README file
+- Function to plot substrate/product profiles
+- Function to plot spatial distribution of microbial colonies
+- Function to perform the ecological analysis - 2OEN.
+- Unification of Granule and Suspension versions.
 ### Fixed
-- Bugs in *Structure model*
-### Removed
-- Unnecessary scripts
+- Bugs in *Structure model*.
+### Fixed
+- Unnecessary scripts.
+- Debugging code.
 
-## [2.4.0]
+## [2.4.0] - 2022-03-27
 ### Added
 - Mechanistic detachment implemented
 - Function to plot detachment time per grid cell
@@ -124,7 +129,7 @@ Direct import of code from RGC with minor bug fixes.
 - Bugs regarding reaction matrix, diffusion and bulk concentration.
 
 
-
+[2.4.1]: https://github.com/Computational-Platform-IbM/IbM/compare/v2.4.0...v2.4.1
 [2.4.0]: https://github.com/Computational-Platform-IbM/IbM/compare/v2.3.0...v2.4.0
 [2.3.0]: https://github.com/Computational-Platform-IbM/IbM/compare/v2.2.0...v2.3.0
 [2.2.0]: https://github.com/Computational-Platform-IbM/IbM/compare/v2.1.0...v2.2.0
