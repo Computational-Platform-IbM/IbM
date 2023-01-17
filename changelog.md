@@ -1,15 +1,23 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [Unreleased]
+## [2.4.1] - 2022-10-12
+### Added
+- Proper README file
+- Function to plot substrate/product profiles
+- Function to plot spatial distribution of microbial colonies
+- Function to perform the ecological analysis - 2OEN.
+### Fixed
+- Bugs in *Structure model*.
+### Fixed
+- Unnecessary scripts.
+- Debugging code.
+
+## [2.4.0] - 2022-03-27
 ### Added
 - Detachment implemented with similar algorithm as in iDynomics
 - Function to plot detachment time per grid cell
 - Function to plot bacteria with overlay of detachment times
-- 
-### Changed
-### Fixed
-### Removed
 
 ## [2.3.0] - 2021-11-15
 ### Added
