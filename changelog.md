@@ -8,6 +8,8 @@ All notable changes to this project will be documented in this file.
 - Function to plot spatial distribution of microbial colonies
 - Function to perform the ecological analysis - 2OEN.
 - Unification of Granule and Suspension versions.
+### Changed
+- Excel templates. Now specific for under review/published studies.
 ### Fixed
 - Bugs in *Structure model*.
 ### Fixed
