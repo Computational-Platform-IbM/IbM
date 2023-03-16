@@ -44,7 +44,7 @@ Click [here](https://www.mathworks.com/help/install/) for more information about
 
 ### :clipboard: Instructions to Download and Run IbM
 
-1. Download .zip code. Last version: `v2.4.2`. [Download code](https://github.com/Computational-Platform-IbM/IbM/archive/refs/tags/v2.4.2.zip).
+1. Download .zip code. Last version: `v2.4.3`. [Download code](https://github.com/Computational-Platform-IbM/IbM/archive/refs/tags/v2.4.3.zip).
 2. Extract files to a destination (:bulb: recommendation - Desktop).
 3. Open MATLAB.
     - For more information about MATLAB Layout and how to change it, click [here](https://www.mathworks.com/help/matlab/matlab_env/change-the-desktop-layout.html).
