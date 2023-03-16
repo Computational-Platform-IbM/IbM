@@ -181,12 +181,12 @@ Function to plot radial distribution (*layered stratification*) and angular dist
  <br>· **Line 107** for angular distribution (*columned stratification*).
 
 ### · Ecological analysis (Suspension version)
-Currenlty the platform nOEN (n-Order Ecological Network) is in progress:building_construction:. Scripts to perform the pairwise ecological analysis (2OEN) can be downloaded [here](https://github.com/soundslikealloy/nOEN/tree/main/nOEN.v0).
-1. Copy `flocbyfloc.m` and `f2OEN.m` scripts to `lib\post_processing` folder.
-2. Run `flocbyfloc(simulation_number, substrates_number, Time)`. An Excel file (`RawData_flocbyfloc.xlsx`) is automatically generated with the mass of all species for each floc at time 0 (*t_0* sheet) and at the end of simulation (*t_max* sheet).<br>
+Function to plot pairwise interactions → `flocbyfloc(simulation_number, nReplicates, finished)`.<br>
+<sub>Inputs: `simulation_number` is the chosen simulation, `finished` Simulation finished: 0 or 1 [N/Y], `Time` in days.</sub><br>
+1. Run `flocbyfloc(simulation_number, substrates_number, Time)`. An Excel file (`RawData_flocbyfloc.xlsx`) is automatically generated with the mass of all species for each floc at time 0 (*t_0* sheet) and at the end of simulation (*t_max* sheet).<br>
 <sub>Inputs: `simulation_number` is the chosen simulation, `substrate_number` following substrate order of Excel, and `Time` in days.</sub><br>
-3. Drop .xlsx file (name `data_2OEN.xlsx`) with the list of flocs that you want analyze to `lib\post_processing\Data` folder, following the same structure as `RawData_flocbyfloc.xlsx` (*t_0* and *t_max* sheets).
-4. Run `f2OEN` function. This will give the corresponding ecological anlaysis with the sample size of each pirewise interaction and the representation of the data in which Kendall's τ has been calculated.
+2. Drop .xlsx file (name `data_2OEN.xlsx`) with the list of flocs that you want analyze to `lib\post_processing\Data` folder, following the same structure as `RawData_flocbyfloc.xlsx` (*t_0* and *t_max* sheets).
+3. Run `f2OEN` function. This will give the corresponding ecological anlaysis with the sample size of each pirewise interaction and the representation of the data in which Kendall's τ has been calculated.
 
 ## Warning List
 
