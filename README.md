@@ -172,6 +172,10 @@ Function to draw 2D substrate/product profiles → `plot2d_S(simulation_number, 
 <sub>Inputs: `simulation_number` is the chosen simulation, `substrate_number` following substrate order of Excel, and `Time` in days.</sub><br>
 <br>**To modify colours, open `lib\lib\post_processing.m` script. (Line 6)**<br>
 
+### · Draw aggregate/s (Granule & Suspension version)
+Function to plot over time (_i_) number of bacteria (active and inactive) in the simulation domain, (_ii_) active mass per species, (_iii_) density of the reactor, (_iv_) oxygen uptake rate, and (_v_) bulk liquid concentrations over time for a given simulation number and its replicates → `analyseGranule_replicates(simulation_number, nReplicates, finished)`.<br>
+<sub>Inputs: `simulation_number` is the chosen simulation, `nReplicates` is the number of replicates (subsequent numbers), and `finished` indicates if simulation is completed (1) or not (0) .</sub><br>
+
 ### · Draw spatial distribution of microbial colonies (Granule version)
 Function to plot radial distribution (*layered stratification*) and angular distribution (*columned stratification*) of microbial colonies → `plotStratification(simulation_number, finished, Time)`.<br>
 <sub>Inputs: `simulation_number` is the chosen simulation, `finished` Simulation finished: 0 or 1 [N/Y], `Time` in days.</sub><br>
