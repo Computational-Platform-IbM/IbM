@@ -131,9 +131,7 @@ In order to setup the IbM for this study, the following key settings must be sel
 ### :newspaper: Publications
 
 ```
-E. Martinez-Rabert, C. Smith, W. T. Sloang, R. Gonzalez-Cabaleiro (under review), 
-"Competitive and substrate limited environments drive metabolic heterogeneity for Comammox Nitrospira". 
-ISME Journal. doi: TBA
+Martinez-Rabert, E., Smith, C.J., Sloan, W.T. et al. Competitive and substrate limited environments drive metabolic heterogeneity for comammox Nitrospira. ISME COMMUN. 3, 91 (2023). https://doi.org/10.1038/s43705-023-00288-8
 ```
 
 ## Get Data
