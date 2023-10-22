@@ -220,4 +220,4 @@ All possible *Warning messages* are listed here:
 
 [^1]: Hellweger, F.L. *et al.*, (2016). *Nature Reviews Microbiology*. doi: 10.1038/nrmicro.2016.62<br>
 [^2]: Martinez-Rabert, E. *et al.*, (2022). *PLOS Computational Biology*. doi: 10.1371/journal.pcbi.1010807<br>
-[^3]: Martinez-Rabert, E. *et al.*, (under review). *ISME Communications Journal*. doi: TBA<br>
+[^3]: Martinez-Rabert, E. *et al.*, (2023). *ISME Communications Journal*. doi: 10.1038/s43705-023-00288-8<br>
